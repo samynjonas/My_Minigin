@@ -32,6 +32,7 @@ namespace dae
 		bool IsDown(unsigned int button) const;
 		bool isUp(unsigned int button) const;
 		bool isPressed(unsigned int button) const;
+		glm::vec2 GetAxis(bool isLeft) const;
 
 		Controller(const Controller& other) = delete;
 		Controller(Controller&& other) = delete;

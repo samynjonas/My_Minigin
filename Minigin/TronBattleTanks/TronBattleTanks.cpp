@@ -113,13 +113,20 @@ void load()
 		scene.Add(TitleGo);
 	}
 
-	std::vector<unsigned int> controller1_Input
+	std::vector<unsigned int> ShootInput
 	{
 		Controller::GamepadInput::A
 	};
+
+	std::vector<unsigned int> MoveInput
+	{
+		Controller::GamepadInput::LEFT_THUMB
+	};
 	
-	auto player1_ShootCommand{ std::make_unique<dae::TestCommand_playSound>(tank.get()) };
-	InputManager::GetInstance().BindCommand(controller1_Input, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
+	auto player1_ShootCommand{	std::make_unique<dae::TestCommand_playSound>(tank.get()) };
+	auto player1_MoveCommand{	std::make_unique<dae::MoveCommand>(tank.get(), 0.25f) };
+	InputManager::GetInstance().BindCommand(ShootInput,		InputManager::InputType::OnButtonDown,	std::move(player1_ShootCommand),	0);
+	InputManager::GetInstance().BindCommand(MoveInput,		InputManager::InputType::OnAnalog,		std::move(player1_MoveCommand),		0);
 }
 
 

@@ -1,11 +1,12 @@
 #pragma once
 #include "Singleton.h"
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <memory>
 
 #include "Controller.h"
 #include "Command.h"
+#include "ActionCommands.h"
 
 namespace dae
 {
@@ -16,7 +17,8 @@ namespace dae
 		{
 			OnButtonDown,
 			OnButtonUp,
-			OnButtonPress
+			OnButtonPress,
+			OnAnalog
 		};
 
 		struct inputInfo
@@ -32,11 +34,12 @@ namespace dae
 
 		bool ProcessInput();
 		void BindCommand(const std::vector<unsigned int>& buttons, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex);
-		
 
 	private:
 		std::vector<std::unique_ptr<dae::Controller>> m_pControllers{};
-		std::map<inputInfo, std::unique_ptr<Command>>m_ControllerCommands{};
+		
+		std::vector<inputInfo> m_InputInfo;
+		std::vector<std::unique_ptr<Command>> m_ControllerCommands{};
 
 		void HandleControllerID(int playerIndex);
 	};

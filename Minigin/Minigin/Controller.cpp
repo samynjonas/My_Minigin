@@ -46,6 +46,57 @@ public:
 		return m_CurrentState.Gamepad.wButtons & button;
 	}
 
+	float ApplyDeadzone(const float& axisValue) const
+	{
+		constexpr float DEAD_ZONE_THRESHOLD{ 0.2f };
+
+		if (std::abs(axisValue) < DEAD_ZONE_THRESHOLD)
+		{
+			return 0.0f;
+		}
+		return axisValue;
+	}
+
+	glm::vec2 GetAxis(bool isLeft) const
+	{		
+		if (isLeft)
+		{
+			float thumbLX = static_cast<float>(m_CurrentState.Gamepad.sThumbLX);
+			float thumbLY = static_cast<float>(m_CurrentState.Gamepad.sThumbLY);
+
+			if (thumbLX == 0 && thumbLY == 0)
+			{
+				return glm::vec2(0, 0);
+			}
+
+			float normalizedLX = thumbLX / static_cast<float>(SHRT_MAX);
+			float normalizedLY = thumbLY / static_cast<float>(SHRT_MAX);
+
+			normalizedLX = ApplyDeadzone(normalizedLX);
+			normalizedLY = ApplyDeadzone(normalizedLY);
+
+			return glm::vec2(normalizedLX, -normalizedLY);
+		}
+		else
+		{
+			float thumbRX = static_cast<float>(m_CurrentState.Gamepad.sThumbRX);
+			float thumbRY = static_cast<float>(m_CurrentState.Gamepad.sThumbRY);
+
+			if (thumbRX == 0 && thumbRY == 0)
+			{
+				return glm::vec2(0, 0);
+			}
+
+			float normalizedRX = thumbRX / static_cast<float>(SHRT_MAX);
+			float normalizedRY = thumbRY / static_cast<float>(SHRT_MAX);
+
+			normalizedRX = ApplyDeadzone(normalizedRX);
+			normalizedRY = ApplyDeadzone(normalizedRY);
+		
+			return glm::vec2(normalizedRX, -normalizedRY);
+		}
+	}
+
 private:
 	XINPUT_STATE m_PreviousState{};
 	XINPUT_STATE m_CurrentState{};
@@ -88,4 +139,9 @@ bool Controller::isUp(unsigned int button) const
 bool Controller::isPressed(unsigned int button) const
 {
 	return pImpl->IsPressed(button);
+}
+
+glm::vec2 Controller::GetAxis(bool isLeft) const
+{
+	return pImpl->GetAxis(isLeft);
 }

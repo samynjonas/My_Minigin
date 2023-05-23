@@ -29,26 +29,38 @@ bool dae::InputManager::ProcessInput()
 
 	bool isActivated{ false };
 
-	for (const auto& command : m_ControllerCommands)
+	for (size_t index = 0; index < m_InputInfo.size(); index++)
 	{
-		switch (command.first.type)
+		Command* command = m_ControllerCommands[index].get();
+		switch (m_InputInfo[index].type)
 		{
 		case InputType::OnButtonDown:
-			isActivated = m_pControllers[command.first.playerIndex]->IsDown(command.first.buttons[0]);
+			isActivated = m_pControllers[m_InputInfo[index].playerIndex]->IsDown(m_InputInfo[index].buttons[0]);
 			break;
 		case InputType::OnButtonUp:
-			isActivated = m_pControllers[command.first.playerIndex]->isUp(command.first.buttons[0]);
+			isActivated = m_pControllers[m_InputInfo[index].playerIndex]->isUp(m_InputInfo[index].buttons[0]);
 			break;
 		case InputType::OnButtonPress:
-			isActivated = m_pControllers[command.first.playerIndex]->isPressed(command.first.buttons[0]);
+			isActivated = m_pControllers[m_InputInfo[index].playerIndex]->isPressed(m_InputInfo[index].buttons[0]);
 			break;
+		case InputType::OnAnalog:
+		{
+			//TODO improve this
+			MoveCommand* moveCommand = dynamic_cast<MoveCommand*>(command);
+			if (moveCommand != nullptr)
+			{
+				moveCommand->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(true));
+				isActivated = true;
+			}
+		}
+		break;
 		default:
 			break;
 		}
 
 		if (isActivated)
 		{
-			command.second->Execute();
+			command->Execute();
 		}
 	}
 	return true;
@@ -72,14 +84,15 @@ void dae::InputManager::BindCommand(const std::vector<unsigned int>& buttons, In
 	info.type = inputType;
 	info.playerIndex = playerIndex;
 
-	m_ControllerCommands.emplace(info, std::move(pCommand));
+	m_InputInfo.push_back(info);
+	m_ControllerCommands.push_back(std::move(pCommand));
 }
 
 void dae::InputManager::HandleControllerID(int playerIndex)
 {
 	for (int index = static_cast<int>(m_pControllers.size()) - 1; index < playerIndex + 1; ++index)
 	{
-		std::cout << "Controller connected" << std::endl;
+		std::cout << "Controller: " << playerIndex << "connected" << std::endl;
 
 		//Add new controller to vector
 		m_pControllers.push_back(std::make_unique<Controller>(static_cast<int>(m_pControllers.size())));
