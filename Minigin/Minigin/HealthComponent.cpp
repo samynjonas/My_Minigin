@@ -15,7 +15,7 @@ dae::HealthComponent::~HealthComponent()
 
 }
 
-void dae::HealthComponent::Update(float)
+void dae::HealthComponent::Update()
 {
 
 }

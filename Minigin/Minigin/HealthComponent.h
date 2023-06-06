@@ -15,7 +15,7 @@ namespace dae
 		HealthComponent& operator=(const HealthComponent& other) = delete;
 		HealthComponent& operator=(HealthComponent&& other) = delete;
 
-		void Update(float deltaTime) override;
+		void Update() override;
 
 		void SetMaxHealth(int amount, bool setHealth = true)
 		{

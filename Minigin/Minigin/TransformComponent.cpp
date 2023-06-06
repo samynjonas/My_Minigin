@@ -1,5 +1,6 @@
 #include "TransformComponent.h"
 #include "GameObject.h"
+#include "CollisionManager.h"
 
 dae::TransformComponent::TransformComponent()
 	: Component()
@@ -114,11 +115,12 @@ void dae::TransformComponent::UpdateTranslation()
 		m_WorldPosition = parentPos + m_LocalPosition;
 	}
 
-
 	for (auto& child : GetOwner()->GetChildren())
 	{
 		child->transform()->UpdateTranslation();
 	}
+
+	CollisionManager::GetInstance().SetDirty();
 }
 
 void dae::TransformComponent::UpdateRotation()

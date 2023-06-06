@@ -7,7 +7,13 @@ namespace dae
 	enum Event
 	{
 		PlayerDied,
-		ScoreUpdated
+		ScoreUpdated,
+		CollisionEnter,
+		CollisionStay,
+		CollisionExit,
+		TriggerEnter,
+		TriggerStay,
+		TriggerExit
 	};
 
 

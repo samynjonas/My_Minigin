@@ -57,28 +57,28 @@ void load()
 
 	auto background = std::make_shared<dae::GameObject>();
 	{
-		background->Initialize("background_GB");
+		background->Initialize("background_GB", &scene);
 		background->renderer()->SetTexture("background.tga");
 		scene.Add(background);
 	}
 
 	auto remainingLivesGO = std::make_shared<dae::GameObject>();
-	remainingLivesGO->Initialize("RemainingLives");
+	remainingLivesGO->Initialize("RemainingLives", &scene);
 	TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
 	pRemainingLives->Initialize("Remaining lives = 1", font);
 	remainingLivesGO->transform()->SetLocalPosition({ 25, 350 });
 	scene.Add(remainingLivesGO);
 
 	auto scoreGO = std::make_shared<dae::GameObject>();
-	scoreGO->Initialize("RemainingLives");
+	scoreGO->Initialize("RemainingLives", &scene);
 	TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
 	pScoreTXT->Initialize("Remaining lives = 1", font);
-	scoreGO->transform()->SetLocalPosition({ 0, 0 });
+	scoreGO->transform()->SetLocalPosition({ 25, 400 });
 	scene.Add(scoreGO);
 
 	auto tank = std::make_shared<dae::GameObject>();
 	{
-		tank->Initialize("Tank");
+		tank->Initialize("Tank", &scene);
 		tank->renderer()->SetTexture("Sprites/BlueTank.png");
 		tank->transform()->SetLocalPosition({250, 250 });
 		HealthComponent* pHealth = tank->AddComponent<dae::HealthComponent>();
@@ -103,7 +103,7 @@ void load()
 
 	auto TitleGo = std::make_shared<GameObject>();
 	{
-		TitleGo->Initialize("Text_GB");
+		TitleGo->Initialize("Text_GB", &scene);
 
 		auto textcomp = TitleGo->AddComponent<TextComponent>();
 
@@ -123,8 +123,8 @@ void load()
 		Controller::GamepadInput::LEFT_THUMB
 	};
 
-	auto player1_ShootCommand{ std::make_unique<dae::TestCommand_playSound>(tank.get()) };
-	auto player1_MoveCommand{ std::make_unique<dae::MoveCommand>(tank.get(), 0.25f) };
+	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(tank.get()) };
+	auto player1_MoveCommand{ std::make_unique<dae::MoveCommand>(tank.get(), 50.f) };
 	InputManager::GetInstance().BindCommand(ShootInput, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
 	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 }

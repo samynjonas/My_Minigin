@@ -15,7 +15,7 @@ namespace dae
 		ScoreComponent& operator=(const ScoreComponent& other) = delete;
 		ScoreComponent& operator=(ScoreComponent&& other) = delete;
 
-		void Update(float) override;
+		void Update() override;
 
 		void AddScore(int amount)
 		{

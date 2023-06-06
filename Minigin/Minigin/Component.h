@@ -14,7 +14,7 @@ namespace dae
 		Component& operator=(const Component& other) = delete;
 		Component& operator=(Component&& other) = delete;
 
-		virtual void Update(float deltaTime) = 0;
+		virtual void Update() = 0;
 		void SetOwner(GameObject* pOwner);
 
 	protected:

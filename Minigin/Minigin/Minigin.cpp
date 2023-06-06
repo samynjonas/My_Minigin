@@ -9,6 +9,8 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "MiniginTimer.h"
+#include "CollisionManager.h"
 
 #include <chrono>
 #include <thread>
@@ -85,6 +87,8 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+	auto& time = MiniginTimer::GetInstance();
+	auto& collisionManager = CollisionManager::GetInstance();
 
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	bool doContinue = true;
@@ -93,9 +97,11 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		const auto currentTime{ std::chrono::high_resolution_clock::now() };
 
 		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+		time.SetDeltaTime(deltaTime);
 
 		doContinue = input.ProcessInput();
-		sceneManager.Update(deltaTime);
+		sceneManager.Update();
+		collisionManager.Update();
 		renderer.Render();
 
 		lastTime = currentTime;

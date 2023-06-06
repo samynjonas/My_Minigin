@@ -2,6 +2,7 @@
 #include "Component.h"
 #include <string>
 #include <memory>
+#include <glm/glm.hpp>
 
 namespace dae
 {
@@ -16,11 +17,13 @@ namespace dae
 		RenderComponent& operator=(const RenderComponent& other) = delete;
 		RenderComponent& operator=(RenderComponent&& other) = delete;
 
-		void Update(float deltaTime) override;
+		void Update() override;
 		void Render();
 
 		void SetTexture(const std::string& filename);
 		void SetTexture(std::shared_ptr<Texture2D> pTexture);
+
+		glm::vec2 GetTextureDimensions() const;
 
 	private:
 		std::shared_ptr<Texture2D> m_pTexture{};

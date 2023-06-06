@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GameObject.h"
 #include "TransformComponent.h"
+#include "MiniginTimer.h"
 
 dae::MoveCommand::MoveCommand(GameObject* pGameObject, float moveSpeed)
 	: Command(pGameObject)
@@ -13,7 +14,7 @@ dae::MoveCommand::MoveCommand(GameObject* pGameObject, float moveSpeed)
 void dae::MoveCommand::Execute()
 {
 	glm::vec2 currPos{ m_pTransform->GetWorldPosition() };
-	currPos += m_AxisValue * m_MoveSpeed;							//TODO add elapsedSec
+	currPos += m_AxisValue * m_MoveSpeed * MiniginTimer::GetInstance().GetDeltaTime();							//TODO add elapsedSec
 	m_pTransform->SetLocalPosition({ currPos.x, currPos.y });
 }
 

@@ -16,20 +16,22 @@ using namespace dae;
 
 dae::GameObject::~GameObject() = default;
 
-void GameObject::Initialize(const std::string& name)
+void GameObject::Initialize(const std::string& name, Scene* pScene)
 {
 	m_Name = name;
+
+	m_pScene = pScene;
 
 	//These need to be a part of every gameobject
 	m_pTransformComponent	= AddComponent<TransformComponent>();
 	m_pRenderComponent		= AddComponent<RenderComponent>();
 }
 
-void GameObject::Update(float deltaTime)
+void GameObject::Update()
 {
 	for (const auto& pComponent : m_vecComponents)
 	{
-		pComponent->Update(deltaTime);		
+		pComponent->Update();		
 	}
 }
 

@@ -15,13 +15,11 @@ namespace dae
 		GunComponent& operator=(const GunComponent& other) = delete;
 		GunComponent& operator=(GunComponent&& other) = delete;
 
-		void Update(float deltaTime) override;
+		void Update() override;
 
 		void Fire();
 
 	private:
-
-
 		std::shared_ptr<dae::GameObject> Bullet(float x, float y);
 	};
 }

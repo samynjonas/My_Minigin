@@ -42,7 +42,7 @@ void dae::TextComponent::SetText(const std::string& text)
 	m_NeedsUpdate = true;
 }
 
-void dae::TextComponent::Update(float)
+void dae::TextComponent::Update()
 {
 	if (m_NeedsUpdate)
 	{

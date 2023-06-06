@@ -19,7 +19,7 @@ namespace dae
 		TextComponent& operator=(const TextComponent& other) = delete;
 		TextComponent& operator=(TextComponent&& other) = delete;
 
-		void Update(float deltaTime) override;
+		void Update() override;
 
 		void SetText(const std::string& text);
 		void SetFont(std::shared_ptr<Font> font);

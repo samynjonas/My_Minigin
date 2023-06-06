@@ -9,14 +9,15 @@ namespace dae
 	class Component;
 	class RenderComponent;
 	class TransformComponent;
+	class Scene;
 
 	class GameObject final : public std::enable_shared_from_this<GameObject>
 	{
 	public:
-		virtual void Update(float deltaTime);
+		virtual void Update();
 		virtual void Render() const;
 
-		void Initialize(const std::string& name);
+		void Initialize(const std::string& name, Scene* pScene);
 
 		GameObject() = default;
 		virtual ~GameObject();
@@ -79,6 +80,10 @@ namespace dae
 			}
 		}
 
+		Scene* GetScene() const
+		{
+			return m_pScene;
+		}
 		
 		void SetParent(GameObject* pParent);
 		GameObject* GetParent()
@@ -92,6 +97,8 @@ namespace dae
 
 	private:
 		std::string m_Name{};
+
+		Scene* m_pScene{};
 
 		//Components
 		std::vector<std::unique_ptr<Component>> m_vecComponents;

@@ -7,7 +7,7 @@ dae::ScoreComponent::ScoreComponent()
 
 }
 
-void dae::ScoreComponent::Update(float)
+void dae::ScoreComponent::Update()
 {
 
 }

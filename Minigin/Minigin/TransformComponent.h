@@ -15,7 +15,7 @@ namespace dae
 		TransformComponent& operator=(const TransformComponent& other) = delete;
 		TransformComponent& operator=(TransformComponent&& other) = delete;
 
-		void Update(float) override {};
+		void Update() override {};
 
 		//Translation
 		const glm::vec2& GetLocalPosition() const;
