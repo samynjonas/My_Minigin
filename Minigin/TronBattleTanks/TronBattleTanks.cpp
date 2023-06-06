@@ -61,26 +61,26 @@ void load()
 		background->renderer()->SetTexture("background.tga");
 		scene.Add(background);
 	}
-	
+
 	auto remainingLivesGO = std::make_shared<dae::GameObject>();
 	remainingLivesGO->Initialize("RemainingLives");
 	TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
 	pRemainingLives->Initialize("Remaining lives = 1", font);
-	remainingLivesGO->transform()->SetPosition(25, 350, 0);
+	remainingLivesGO->transform()->SetLocalPosition({ 25, 350 });
 	scene.Add(remainingLivesGO);
-	
+
 	auto scoreGO = std::make_shared<dae::GameObject>();
 	scoreGO->Initialize("RemainingLives");
 	TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
 	pScoreTXT->Initialize("Remaining lives = 1", font);
-	scoreGO->transform()->SetPosition(25, 400, 0);
+	scoreGO->transform()->SetLocalPosition({ 0, 0 });
 	scene.Add(scoreGO);
-	
+
 	auto tank = std::make_shared<dae::GameObject>();
 	{
 		tank->Initialize("Tank");
 		tank->renderer()->SetTexture("Sprites/BlueTank.png");
-		tank->transform()->SetPosition(250, 250, 0);
+		tank->transform()->SetLocalPosition({250, 250 });
 		HealthComponent* pHealth = tank->AddComponent<dae::HealthComponent>();
 
 		pHealth->AddObserver(pAchiementObserver.get());
@@ -99,7 +99,7 @@ void load()
 		tank->AddComponent<dae::GunComponent>();
 
 		scene.Add(tank);
-	}	
+	}
 
 	auto TitleGo = std::make_shared<GameObject>();
 	{
@@ -109,7 +109,7 @@ void load()
 
 		textcomp->Initialize("Tron battle tanks", font);
 
-		TitleGo->transform()->SetPosition(80, 20, 0);
+		TitleGo->transform()->SetLocalPosition({ 80, 20 });
 		scene.Add(TitleGo);
 	}
 
@@ -122,11 +122,11 @@ void load()
 	{
 		Controller::GamepadInput::LEFT_THUMB
 	};
-	
-	auto player1_ShootCommand{	std::make_unique<dae::TestCommand_playSound>(tank.get()) };
-	auto player1_MoveCommand{	std::make_unique<dae::MoveCommand>(tank.get(), 0.25f) };
-	InputManager::GetInstance().BindCommand(ShootInput,		InputManager::InputType::OnButtonDown,	std::move(player1_ShootCommand),	0);
-	InputManager::GetInstance().BindCommand(MoveInput,		InputManager::InputType::OnAnalog,		std::move(player1_MoveCommand),		0);
+
+	auto player1_ShootCommand{ std::make_unique<dae::TestCommand_playSound>(tank.get()) };
+	auto player1_MoveCommand{ std::make_unique<dae::MoveCommand>(tank.get(), 0.25f) };
+	InputManager::GetInstance().BindCommand(ShootInput, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
+	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 }
 
 

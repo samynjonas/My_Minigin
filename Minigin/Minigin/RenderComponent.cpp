@@ -29,7 +29,7 @@ void dae::RenderComponent::Render()
 		return;
 	}
 
-	const auto& pos = GetOwner()->transform()->GetPosition();
+	const auto& pos = GetOwner()->transform()->GetWorldPosition();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 

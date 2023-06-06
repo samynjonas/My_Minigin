@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace dae
 {
@@ -34,7 +35,7 @@ namespace dae
 			return m_pRenderComponent;
 		}
 
-		template <class T> 
+		template <class T>
 		T* GetComponent() const
 		{
 			static_assert(std::is_base_of<Component, T>(), "Needs to be component");
@@ -78,6 +79,17 @@ namespace dae
 			}
 		}
 
+		
+		void SetParent(GameObject* pParent);
+		GameObject* GetParent()
+		{
+			return m_pParent;
+		}
+		std::vector<GameObject*> GetChildren() const
+		{
+			return m_pChildren;
+		}
+
 	private:
 		std::string m_Name{};
 
@@ -86,8 +98,7 @@ namespace dae
 		TransformComponent* m_pTransformComponent{ nullptr };
 		RenderComponent* m_pRenderComponent{ nullptr };
 
-
-
-
+		GameObject* m_pParent{ nullptr };
+		std::vector<GameObject*> m_pChildren;
 	};
 }

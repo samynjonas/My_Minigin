@@ -12,9 +12,9 @@ dae::MoveCommand::MoveCommand(GameObject* pGameObject, float moveSpeed)
 
 void dae::MoveCommand::Execute()
 {
-	glm::vec2 currPos{ m_pTransform->GetPosition() };
-	currPos += m_AxisValue * m_MoveSpeed; //TODO add elapsedSec
-	m_pTransform->SetPosition(currPos.x, currPos.y, 0);
+	glm::vec2 currPos{ m_pTransform->GetWorldPosition() };
+	currPos += m_AxisValue * m_MoveSpeed;							//TODO add elapsedSec
+	m_pTransform->SetLocalPosition({ currPos.x, currPos.y });
 }
 
 void dae::MoveCommand::SetAxisValue(const glm::vec2& axisValue)

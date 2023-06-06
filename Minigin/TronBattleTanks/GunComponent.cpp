@@ -27,17 +27,17 @@ void dae::GunComponent::Fire()
 	//Spawn in a bullet at players position -- should later be changed to gun barrel
 	Bullet
 	(
-		GetOwner()->transform()->GetPosition().x,
-		GetOwner()->transform()->GetPosition().y
+		GetOwner()->transform()->GetWorldPosition().x,
+		GetOwner()->transform()->GetWorldPosition().y
 	);
 }
 
-std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
+std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float, float)
 {
-	std::shared_ptr<dae::GameObject> pBullet = std::make_shared<dae::GameObject>();
-	pBullet->Initialize("Bullet");
-	pBullet->renderer()->SetTexture("Sprites/BulletPlayer.png");
-	pBullet->transform()->SetPosition(x, y, 0);
-
-	return pBullet;
+	//std::shared_ptr<dae::GameObject> pBullet = std::make_shared<dae::GameObject>();
+	//pBullet->Initialize("Bullet");
+	//pBullet->renderer()->SetTexture("Sprites/BulletPlayer.png");
+	//pBullet->transform()->SetWorldPosition({ x, y });
+	
+	return nullptr;
 }

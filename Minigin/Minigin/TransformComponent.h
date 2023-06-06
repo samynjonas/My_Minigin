@@ -15,23 +15,38 @@ namespace dae
 		TransformComponent& operator=(const TransformComponent& other) = delete;
 		TransformComponent& operator=(TransformComponent&& other) = delete;
 
-		void Update(float deltaTime) override;
+		void Update(float) override {};
 
-		const glm::vec3& GetPosition() const
-		{
-			return m_Position;
-		}
-		void SetPosition(float x, float y, float z);
+		//Translation
+		const glm::vec2& GetLocalPosition() const;
+		const glm::vec2& GetWorldPosition();
 
-		const float& GetRotation() const
-		{
-			return m_Rotation;
-		}
-		void SetRotation(float angle);
+		void SetLocalPosition(const glm::vec2& position); //Sets the local position
+		void SetWorldPosition(const glm::vec2& position); //Sets the world position
 
+		void Translate(const glm::vec2& translation, bool isLocal = false); //Adds to position
+
+		//Rotation
+		const float& GetLocalRotation() const;
+		const float& GetWorldRotation();
+
+		void SetLocalRotation(const float& degrees); //Sets the local rotation
+		void SetWorldRotation(const float& degrees); //Sets the world rotation
+
+		void Rotate(const float& degrees, bool isLocal = false); //Adds to rotation
+
+		void UpdateTranslation();
+		void UpdateRotation();
 	private:
-		glm::vec3 m_Position{ 0.f, 0.f , 0.f };
-		float m_Rotation{ 0.f };
+
+		glm::vec2 m_WorldPosition{ 0.f, 0.f};
+		glm::vec2 m_LocalPosition{};
+		
+		float m_WorldRotation{ 0.f };
+		float m_LocalRotation{ 0.f };
+
+		bool m_IsPositionDirty{ false };
+		bool m_IsRotationDirty{ false };
 
 	};
 
