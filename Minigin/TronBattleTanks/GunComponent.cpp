@@ -31,8 +31,8 @@ void dae::GunComponent::Fire()
 	//Spawn in a bullet at players position -- should later be changed to gun barrel
 	Bullet
 	(
-		GetOwner()->transform()->GetWorldPosition().x + GetOwner()->renderer()->GetTextureDimensions().x / 2,
-		GetOwner()->transform()->GetWorldPosition().y + GetOwner()->renderer()->GetTextureDimensions().y / 2
+		GetOwner()->transform()->GetLocalPosition().x + GetOwner()->renderer()->GetTextureDimensions().x / 2,
+		GetOwner()->transform()->GetLocalPosition().y + GetOwner()->renderer()->GetTextureDimensions().y / 2
 	);
 }
 
@@ -44,16 +44,19 @@ std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
 	auto scene = pParent->GetScene();
 
 	pBullet->Initialize("Bullet", scene);
+	scene->Add(pBullet);
+
 	pBullet->renderer()->SetTexture("Sprites/BulletPlayer.png");
 	pBullet->transform()->SetLocalPosition({ x, y });
 
 	auto rb = pBullet->AddComponent<RigidbodyComponent>();
 	rb->ApplyForce({ 150.f, 0.f }, RigidbodyComponent::ForceMode::Force);
+	rb->PhysicsMaterial().bounciness = 1;
 
 	auto collider = pBullet->AddComponent<BoxColliderComponent>();
-	collider->Initialize(static_cast<int>(x), static_cast<int>(y), 50, 50);
+	collider->Initialize();
+	collider->AddObserver(rb);
 
-	scene->Add(pBullet);
 
 	return pBullet;
 }

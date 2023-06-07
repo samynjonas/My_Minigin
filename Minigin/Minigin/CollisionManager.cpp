@@ -24,6 +24,11 @@ void dae::CollisionManager::Update()
 {
 	if (m_IsDirty)
 	{
+		for (auto& collider : m_pColliders) //Running through twice - should be more effecient
+		{
+			collider->SetOverlapping(false);
+		}
+
 		for (auto& collider : m_pColliders)
 		{
 			if (collider->IsSleeping())

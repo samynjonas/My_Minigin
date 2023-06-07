@@ -27,6 +27,8 @@
 #include "ScoreComponent.h"
 #include "GunComponent.h"
 #include "MapGeneratorComponent.h"
+#include "RigidbodyComponent.h"
+#include "BoxColliderComponent.h"
 
 #include "servicelocator.h"
 #include "sound_system.h"
@@ -92,9 +94,17 @@ void load()
 	auto tank = std::make_shared<dae::GameObject>();
 	{
 		tank->Initialize("Tank", &scene);
+		scene.Add(tank);
+		
 		tank->renderer()->SetTexture("Sprites/BlueTank.png");
 		tank->transform()->SetLocalPosition({250, 250 });
 		HealthComponent* pHealth = tank->AddComponent<dae::HealthComponent>();
+
+		auto rb = tank->AddComponent<dae::RigidbodyComponent>();
+		
+		auto collider = tank->AddComponent<dae::BoxColliderComponent>();
+		collider->Initialize(6, 6, 20, 20);
+		collider->AddObserver(rb);
 
 		pHealth->AddObserver(pAchiementObserver.get());
 		pHealth->AddObserver(pRemainingLives);
@@ -111,7 +121,6 @@ void load()
 
 		tank->AddComponent<dae::GunComponent>();
 
-		scene.Add(tank);
 	}
 
 	auto TitleGo = std::make_shared<GameObject>();
@@ -137,7 +146,7 @@ void load()
 	};
 
 	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(tank.get()) };
-	auto player1_MoveCommand{ std::make_unique<dae::MoveCommand>(tank.get(), 50.f) };
+	auto player1_MoveCommand{ std::make_unique<dae::GridMoveCommand>(tank.get(), 50.f) };
 	InputManager::GetInstance().BindCommand(ShootInput, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
 	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 }

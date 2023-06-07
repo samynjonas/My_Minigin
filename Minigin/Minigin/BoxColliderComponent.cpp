@@ -18,7 +18,10 @@ dae::BoxColliderComponent::~BoxColliderComponent()
 
 void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic)
 {
-	m_pColliderRect = std::make_unique<Rect>(x, y, width, height);
+	auto parentPos = GetOwner()->transform()->GetWorldPosition();
+	m_PositionOffset = glm::vec2(x, y);
+
+	m_pColliderRect = std::make_unique<Rect>(static_cast<int>(parentPos.x) + x, static_cast<int>(parentPos.y) + y, width, height);
 
 	CollisionManager::GetInstance().RegisterCollider(this);
 	m_IsStatic = isStatic;
@@ -26,9 +29,13 @@ void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, 
 
 void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic)
 {
-	auto parentPos = GetOwner()->transform()->GetWorldPosition();
+	Initialize(0, 0, width, height, isStatic);
+}
 
-	Initialize(static_cast<int>(parentPos.x), static_cast<int>(parentPos.y), width, height, isStatic);
+void dae::BoxColliderComponent::Initialize(bool isStatic)
+{
+	auto textureDim = GetOwner()->renderer()->GetTextureDimensions();
+	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic);
 }
 
 
@@ -67,23 +74,33 @@ bool dae::BoxColliderComponent::IsOverlapping(const Rect* other)
 void dae::BoxColliderComponent::SetOverlapping(bool isOverlapping)
 {
 	m_IsOverlapping = isOverlapping;
+	if (m_WasOverlapping != m_IsOverlapping)
+	{
+		m_IsDirty = true;
+	}
 }
 
 void dae::BoxColliderComponent::Update()
 {
-	if (m_IsOverlapping)
+	if (m_IsDirty)
 	{
-		OnCollisionEnter();
-		m_IsOverlapping = false;
+		if (m_IsOverlapping && m_WasOverlapping == false)
+		{
+			OnCollisionEnter();
+		}
+		else if(m_IsOverlapping == false && m_WasOverlapping)
+		{
+			OnCollisionExit();
+		}
+		m_WasOverlapping = m_IsOverlapping;
+		m_IsDirty = false;
 	}
 }
 
 void dae::BoxColliderComponent::UpdateTransform()
 {
-	m_pColliderRect.get()->_x		= static_cast<int>(GetOwner()->transform()->GetWorldPosition().x);
-	m_pColliderRect.get()->_y		= static_cast<int>(GetOwner()->transform()->GetWorldPosition().y);
-	m_pColliderRect.get()->_width	= static_cast<int>(GetOwner()->renderer()->GetTextureDimensions().x);
-	m_pColliderRect.get()->_height	= static_cast<int>(GetOwner()->renderer()->GetTextureDimensions().y);
+	m_pColliderRect.get()->_x		= static_cast<int>(GetOwner()->transform()->GetWorldPosition().x + m_PositionOffset.x);
+	m_pColliderRect.get()->_y		= static_cast<int>(GetOwner()->transform()->GetWorldPosition().y + m_PositionOffset.x);
 
 }
 

@@ -2,6 +2,7 @@
 #include "Component.h"
 #include <memory>
 #include "subject.h"
+#include "glm/glm.hpp"
 
 #include <iostream>
 
@@ -22,8 +23,6 @@ namespace dae
 		{
 		}
 	};
-
-
 	class BoxColliderComponent final : public Component, public subject
 	{
 	public:
@@ -37,6 +36,7 @@ namespace dae
 
 		void Initialize(int x, int y, int width, int height, bool isStatic = false);
 		void Initialize(int width, int height, bool isStatic = false);
+		void Initialize(bool isStatic = false);
 
 		void Update() override;
 
@@ -49,8 +49,6 @@ namespace dae
 
 		void OnCollisionEnter()
 		{
-			std::cout << "Collision enter" << std::endl;
-
 			if (m_IsTrigger)
 			{
 				NotifyObservers(TriggerEnter, this);
@@ -58,6 +56,17 @@ namespace dae
 			else
 			{
 				NotifyObservers(CollisionEnter, this);
+			}
+		}
+		void OnCollisionExit()
+		{
+			if (m_IsTrigger)
+			{
+				NotifyObservers(TriggerExit, this);
+			}
+			else
+			{
+				NotifyObservers(CollisionExit, this);
 			}
 		}
 
@@ -77,14 +86,17 @@ namespace dae
 
 	private:
 		std::unique_ptr<Rect> m_pColliderRect{ nullptr };
+		glm::vec2 m_PositionOffset{};
 
-		bool m_IsTrigger{ false }; //Trigger just give a signal - Colliders bounce back	
-		bool m_IsSleeping{ false };
+		bool m_IsSleeping{ false };		
+		bool m_IsTrigger{ false };	//Trigger just give a signal - Colliders bounce back	
+		bool m_IsStatic{ false };	//STATIC COLLIDERS DONT CHECK ON OTHER STATIC COLLDIDERS - THEY CANT MOVE
+		
+		bool m_IsOverlapping{ false };	//This frame
+		bool m_WasOverlapping{ false }; //Last frame
 
-		//STATIC COLLIDERS DONT CHECK ON OTHER STATIC COLLDIDERS - THEY CANT MOVE
-		bool m_IsStatic{ false };
+		bool m_IsDirty{ false };
 
-		bool m_IsOverlapping{ false };
 
 		void UpdateTransform();
 	};

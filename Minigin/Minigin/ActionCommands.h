@@ -6,6 +6,7 @@ namespace dae
 {
 	class GameObject;
 	class TransformComponent;
+	class RigidbodyComponent;
 	class MoveCommand final : public Command
 	{
 	public:
@@ -24,7 +25,29 @@ namespace dae
 		const float m_MoveSpeed;
 		glm::vec2 m_AxisValue{ 0.f, 0.f };
 
-		TransformComponent* m_pTransform;
+		TransformComponent* m_pTransform{};
+
+	};
+
+	class GridMoveCommand final : public Command
+	{
+	public:
+		GridMoveCommand(GameObject* pGameObject, float moveSpeed);
+		~GridMoveCommand() = default;
+
+		GridMoveCommand(const GridMoveCommand& other) = delete;
+		GridMoveCommand(GridMoveCommand&& other) = delete;
+		GridMoveCommand& operator=(const GridMoveCommand& other) = delete;
+		GridMoveCommand& operator=(GridMoveCommand&& other) = delete;
+
+		void Execute() override;
+		void SetAxisValue(const glm::vec2& axisValue);
+
+	private:
+		const float m_MoveSpeed;
+		glm::vec2 m_AxisValue{ 0.f, 0.f };
+
+		RigidbodyComponent* m_pRigidBody{};
 
 	};
 

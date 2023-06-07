@@ -47,10 +47,19 @@ bool dae::InputManager::ProcessInput()
 		{
 			//TODO improve this
 			MoveCommand* moveCommand = dynamic_cast<MoveCommand*>(command);
-			if (moveCommand != nullptr)
+			if (moveCommand)
 			{
 				moveCommand->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(true));
 				isActivated = true;
+			}
+			else
+			{
+				GridMoveCommand* gridMovement = dynamic_cast<GridMoveCommand*>(command);
+				if (gridMovement)
+				{
+					gridMovement->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(true));
+					isActivated = true;
+				}
 			}
 		}
 		break;
