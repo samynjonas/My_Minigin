@@ -35,7 +35,9 @@ namespace dae
 		BoxColliderComponent& operator=(const BoxColliderComponent& other) = delete;
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) = delete;
 
-		void Initialize(int x, int y, int width, int height);
+		void Initialize(int x, int y, int width, int height, bool isStatic = false);
+		void Initialize(int width, int height, bool isStatic = false);
+
 		void Update() override;
 
 		Rect* GetRect() const
@@ -60,13 +62,30 @@ namespace dae
 		}
 
 		void SetOverlapping(bool isOverlapping);
+		
+		bool IsSleeping() const
+		{
+			return m_IsSleeping;
+		}
+		bool IsStatic() const
+		{
+			return m_IsStatic;
+		}
+
+		void PutToSleep();
+		void WakeUp();
 
 	private:
 		std::unique_ptr<Rect> m_pColliderRect{ nullptr };
 
-		bool m_IsTrigger{ false };
+		bool m_IsTrigger{ false }; //Trigger just give a signal - Colliders bounce back	
+		bool m_IsSleeping{ false };
+
+		//STATIC COLLIDERS DONT CHECK ON OTHER STATIC COLLDIDERS - THEY CANT MOVE
+		bool m_IsStatic{ false };
+
 		bool m_IsOverlapping{ false };
-	
+
 		void UpdateTransform();
 	};
 }

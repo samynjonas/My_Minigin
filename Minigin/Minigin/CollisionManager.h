@@ -4,6 +4,7 @@
 
 namespace dae
 {
+	//TODO Check if it is a scene
 	class BoxColliderComponent;
 	class CollisionManager final : public Singleton<CollisionManager>
 	{

@@ -26,6 +26,7 @@
 #include "HealthComponent.h"
 #include "ScoreComponent.h"
 #include "GunComponent.h"
+#include "MapGeneratorComponent.h"
 
 #include "servicelocator.h"
 #include "sound_system.h"
@@ -75,6 +76,18 @@ void load()
 	pScoreTXT->Initialize("Remaining lives = 1", font);
 	scoreGO->transform()->SetLocalPosition({ 25, 400 });
 	scene.Add(scoreGO);
+
+	auto map = std::make_shared<dae::GameObject>();
+	{
+		map->Initialize("Map", &scene);
+		scene.Add(map);	
+		
+		map->transform()->SetLocalPosition({50.f, 0.f});
+
+		auto mapComponent = map->AddComponent<dae::MapGeneratorComponent>();
+		mapComponent->Initialize("../Data/Level/LevelLayout0.csv", 8);
+	}
+
 
 	auto tank = std::make_shared<dae::GameObject>();
 	{

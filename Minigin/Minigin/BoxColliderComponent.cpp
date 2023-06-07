@@ -16,14 +16,21 @@ dae::BoxColliderComponent::~BoxColliderComponent()
 	CollisionManager::GetInstance().UnregisterCollider(this);
 }
 
-void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height)
+void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic)
 {
 	m_pColliderRect = std::make_unique<Rect>(x, y, width, height);
 
 	CollisionManager::GetInstance().RegisterCollider(this);
-
-	std::cout << "Registed collider" << std::endl;
+	m_IsStatic = isStatic;
 }
+
+void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic)
+{
+	auto parentPos = GetOwner()->transform()->GetWorldPosition();
+
+	Initialize(static_cast<int>(parentPos.x), static_cast<int>(parentPos.y), width, height, isStatic);
+}
+
 
 bool dae::BoxColliderComponent::IsOverlapping(const Rect* other)
 {
@@ -78,4 +85,14 @@ void dae::BoxColliderComponent::UpdateTransform()
 	m_pColliderRect.get()->_width	= static_cast<int>(GetOwner()->renderer()->GetTextureDimensions().x);
 	m_pColliderRect.get()->_height	= static_cast<int>(GetOwner()->renderer()->GetTextureDimensions().y);
 
+}
+
+void dae::BoxColliderComponent::PutToSleep()
+{
+	m_IsSleeping = true;
+}
+
+void dae::BoxColliderComponent::WakeUp()
+{
+	m_IsSleeping = false;
 }

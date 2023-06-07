@@ -26,9 +26,24 @@ void dae::CollisionManager::Update()
 	{
 		for (auto& collider : m_pColliders)
 		{
+			if (collider->IsSleeping())
+			{
+				continue;
+			}
+
 			for (auto& other : m_pColliders)
 			{
 				if (collider == other)
+				{
+					continue;
+				}
+
+				if (other->IsSleeping())
+				{
+					continue; 
+				}
+
+				if (collider->IsStatic() && other->IsStatic())
 				{
 					continue;
 				}
