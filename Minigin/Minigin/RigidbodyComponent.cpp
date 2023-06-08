@@ -84,6 +84,11 @@ void dae::RigidbodyComponent::Notify(Event currEvent, subject*)
 		m_CollidingVelocity = -m_Velocity;
 		m_Velocity *= -m_PhysicsMaterial.bounciness;
 
+		if (m_PhysicsMaterial.bounciness == 0)
+		{
+			m_ActiveForceMode = ForceMode::None;
+		}
+
 		m_IsColliding = true;
 	}
 	else if (currEvent == CollisionExit)

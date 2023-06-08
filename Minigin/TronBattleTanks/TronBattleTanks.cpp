@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <iostream>
+#include <string>
 
 #include "Minigin.h"
 #include "SceneManager.h"
@@ -103,7 +104,7 @@ void load()
 		auto rb = tank->AddComponent<dae::RigidbodyComponent>();
 		
 		auto collider = tank->AddComponent<dae::BoxColliderComponent>();
-		collider->Initialize(6, 6, 20, 20);
+		collider->Initialize(6, 6, 20, 20, false, {"Player"});
 		collider->AddObserver(rb);
 
 		pHealth->AddObserver(pAchiementObserver.get());
@@ -121,6 +122,18 @@ void load()
 
 		tank->AddComponent<dae::GunComponent>();
 
+	}
+
+	auto gun = std::make_shared<dae::GameObject>();
+	{
+		gun->Initialize("BlueTank_Gun", &scene);
+		scene.Add(gun);
+
+		gun->renderer()->SetTexture("Sprites/BlueTankGun.png");
+		gun->SetParent(tank.get());
+
+		auto tankTextureDim = tank->renderer()->GetTextureDimensions();
+		gun->transform()->SetLocalPosition({ -tankTextureDim.x / 2, -tankTextureDim.y / 2 });
 	}
 
 	auto TitleGo = std::make_shared<GameObject>();

@@ -1,10 +1,12 @@
 #pragma once
 #include "Component.h"
 #include <memory>
-#include "subject.h"
-#include "glm/glm.hpp"
-
 #include <iostream>
+#include <string>
+#include <vector>
+
+#include "glm/glm.hpp"
+#include "subject.h"
 
 namespace dae
 {
@@ -34,9 +36,9 @@ namespace dae
 		BoxColliderComponent& operator=(const BoxColliderComponent& other) = delete;
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) = delete;
 
-		void Initialize(int x, int y, int width, int height, bool isStatic = false);
-		void Initialize(int width, int height, bool isStatic = false);
-		void Initialize(bool isStatic = false);
+		void Initialize(int x, int y, int width, int height, bool isStatic = false, std::vector<std::string> layers = {"Default"});
+		void Initialize(int width, int height, bool isStatic = false, std::vector<std::string> layers = { "Default" });
+		void Initialize(bool isStatic = false, std::vector<std::string> layers = { "Default" });
 
 		void Update() override;
 

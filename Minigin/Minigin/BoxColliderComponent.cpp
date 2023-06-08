@@ -16,26 +16,26 @@ dae::BoxColliderComponent::~BoxColliderComponent()
 	CollisionManager::GetInstance().UnregisterCollider(this);
 }
 
-void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic)
+void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic, std::vector<std::string> layers)
 {
-	auto parentPos = GetOwner()->transform()->GetWorldPosition();
+	auto& parentPos = GetOwner()->transform()->GetWorldPosition();
 	m_PositionOffset = glm::vec2(x, y);
 
 	m_pColliderRect = std::make_unique<Rect>(static_cast<int>(parentPos.x) + x, static_cast<int>(parentPos.y) + y, width, height);
 
-	CollisionManager::GetInstance().RegisterCollider(this);
+	CollisionManager::GetInstance().RegisterCollider(this, layers);
 	m_IsStatic = isStatic;
 }
 
-void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic)
+void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic, std::vector<std::string> layers)
 {
-	Initialize(0, 0, width, height, isStatic);
+	Initialize(0, 0, width, height, isStatic, layers);
 }
 
-void dae::BoxColliderComponent::Initialize(bool isStatic)
+void dae::BoxColliderComponent::Initialize(bool isStatic, std::vector<std::string> layers)
 {
 	auto textureDim = GetOwner()->renderer()->GetTextureDimensions();
-	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic);
+	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic, layers);
 }
 
 

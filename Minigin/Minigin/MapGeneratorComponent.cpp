@@ -6,6 +6,8 @@
 #include "TransformComponent.h"
 #include "BoxColliderComponent.h"
 
+#include <string>
+
 dae::MapGeneratorComponent::MapGeneratorComponent()
 	: Component()
 {
@@ -59,7 +61,7 @@ void dae::MapGeneratorComponent::CreateWall(int row, int coll)
 
 	wall->transform()->SetLocalPosition( { m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize} );
 	auto collider = wall->AddComponent<dae::BoxColliderComponent>();
-	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), true);
+	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), true, {"Player", "Environment"});
 }
 
 void dae::MapGeneratorComponent::CreateFloor(int row, int coll)
