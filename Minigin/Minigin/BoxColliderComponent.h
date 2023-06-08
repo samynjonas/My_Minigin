@@ -42,11 +42,11 @@ namespace dae
 			return _y + _height;
 		}
 
-		int GetHalfWidth() const
+		int GetPosHalfWidth() const
 		{
 			return _x + _width / 2;
 		}
-		int GetHalfHeight() const
+		int GetPosHalfHeight() const
 		{
 			return _y + _height / 2;
 		}

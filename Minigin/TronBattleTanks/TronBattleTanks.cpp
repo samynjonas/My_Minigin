@@ -30,6 +30,7 @@
 #include "MapGeneratorComponent.h"
 #include "RigidbodyComponent.h"
 #include "BoxColliderComponent.h"
+#include "AI_BehaviourComponent.h"
 
 #include "servicelocator.h"
 #include "sound_system.h"
@@ -91,20 +92,32 @@ void load()
 		mapComponent->Initialize("../Data/Level/LevelLayout0.csv", 8);
 	}
 
+	auto TitleGo = std::make_shared<GameObject>();
+	{
+		TitleGo->Initialize("Text_GB", &scene);
 
+		auto textcomp = TitleGo->AddComponent<TextComponent>();
+
+		textcomp->Initialize("Tron battle tanks", font);
+
+		TitleGo->transform()->SetLocalPosition({ 80, 20 });
+		scene.Add(TitleGo);
+	}
+	
+	//Player
 	auto tank = std::make_shared<dae::GameObject>();
 	{
 		tank->Initialize("Tank", &scene);
 		scene.Add(tank);
 		
-		tank->renderer()->SetTexture("Sprites/BlueTank.png");
+		tank->renderer()->SetTexture("Sprites/RedTank.png");
 		tank->transform()->SetLocalPosition({250, 250 });
 		HealthComponent* pHealth = tank->AddComponent<dae::HealthComponent>();
 
 		auto rb = tank->AddComponent<dae::RigidbodyComponent>();
 		
 		auto collider = tank->AddComponent<dae::BoxColliderComponent>();
-		collider->Initialize(6, 6, 20, 20, false, {"Player"});
+		collider->Initialize(6, 6, 20, 20, false, { "Player", "Environment" });
 		collider->AddObserver(rb);
 
 		pHealth->AddObserver(pAchiementObserver.get());
@@ -123,10 +136,10 @@ void load()
 
 	auto gun = std::make_shared<dae::GameObject>();
 	{
-		gun->Initialize("BlueTank_Gun", &scene);
+		gun->Initialize("RedTank_Gun", &scene);
 		scene.Add(gun);
 
-		gun->renderer()->SetTexture("Sprites/BlueTankGun.png");
+		gun->renderer()->SetTexture("Sprites/RedTankGun.png");
 		gun->SetParent(tank.get());
 
 		auto tankTextureDim = tank->renderer()->GetTextureDimensions();
@@ -134,18 +147,6 @@ void load()
 
 		auto gunComponent = gun->AddComponent<dae::GunComponent>();
 		gunComponent->Initialize(150.f, 1.5f);
-	}
-
-	auto TitleGo = std::make_shared<GameObject>();
-	{
-		TitleGo->Initialize("Text_GB", &scene);
-
-		auto textcomp = TitleGo->AddComponent<TextComponent>();
-
-		textcomp->Initialize("Tron battle tanks", font);
-
-		TitleGo->transform()->SetLocalPosition({ 80, 20 });
-		scene.Add(TitleGo);
 	}
 
 	std::vector<unsigned int> ShootInput
@@ -172,6 +173,19 @@ void load()
 	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 	InputManager::GetInstance().BindCommand(RotationInput, InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
 
+
+	//Enemy
+	auto blueTank = std::make_shared<dae::GameObject>();
+	{
+		blueTank->Initialize("BlueTank", &scene);
+		scene.Add(blueTank);
+
+		blueTank->renderer()->SetTexture("Sprites/BlueTank.png");
+		blueTank->transform()->SetLocalPosition({ 500, 250 });
+
+		auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
+		aiBehaviour->Initialize(100);
+	}
 }
 
 

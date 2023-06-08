@@ -39,7 +39,7 @@
     <ClCompile Include="..\Minigin\MapGeneratorComponent.cpp">
       <Filter>Source Files\Component</Filter>
     </ClCompile>
-    <ClCompile Include="AImovementcomponent.cpp">
+    <ClCompile Include="AI_BehaviourComponent.cpp">
       <Filter>Source Files\Component</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClInclude Include="..\Minigin\MapGeneratorComponent.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
-    <ClInclude Include="AImovementcomponent.h">
+    <ClInclude Include="AI_BehaviourComponent.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,7 +19,6 @@ void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std
 	m_pColliders.push_back(collider);
 	m_IsDirty = true;
 }
-
 void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::vector<std::string> layers)
 {
 	//Checking if the layer is valid
@@ -132,6 +131,8 @@ void dae::CollisionManager::Update()
 				}
 			}
 		}
+
+		m_IsDirty = false;
 	}
 }
 
@@ -169,7 +170,7 @@ bool dae::CollisionManager::ContainsLayer(size_t collIndex, std::vector<std::str
 
 	for (size_t i = 0; i < layers.size(); i++)
 	{
-		auto result = std::find(m_ColliderLinkedLayer[collIndex].begin(), m_ColliderLinkedLayer[collIndex].end(), LayerToID(layers[i]));
+		auto result = std::find(m_ColliderLinkedLayer[collIndex].begin(), m_ColliderLinkedLayer[collIndex].end(), LayerToID(layers[i], false));
 		if (result != m_ColliderLinkedLayer[collIndex].end())
 		{
 			return true;
@@ -191,7 +192,7 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		distance = MAX_RAYCAST_DISTANCE;
 	}
 	
-	int collisionDistance{ MAX_RAYCAST_DISTANCE };
+	int collisionDistance{ distance };
 	int closestCollider{ -1 };
 
 	for (size_t index = 0; index < m_pColliders.size(); index++)
@@ -211,7 +212,7 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		case dae::Directions::Left:
 		default:
 		{
-			if (m_pColliders[index]->GetRect()->maxX() > origin.x)
+			if (m_pColliders[index]->GetRect()->_x > origin.x)
 			{
 				continue;
 			}
@@ -220,7 +221,7 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		break;
 		case dae::Directions::Right:
 		{
-			if (m_pColliders[index]->GetRect()->_x < origin.x)
+			if (m_pColliders[index]->GetRect()->maxX() < origin.x)
 			{
 				continue;
 			}
@@ -247,6 +248,9 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 
 		if (isLeftRight)
 		{
+			//std::cout << "raycastorigin: " << origin.y << std::endl;
+			//std::cout << "Tank: " << m_pColliders[index]->GetRect()->maxY() << " : " << m_pColliders[index]->GetRect()->_y << std::endl;
+
 			if (m_pColliders[index]->GetRect()->maxY() < origin.y)
 			{
 				continue;
@@ -257,8 +261,8 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 				continue;
 			}
 
-			int _distance = abs(m_pColliders[index]->GetRect()->GetHalfWidth() - static_cast<int>(origin.x));
-			if (distance < collisionDistance)
+			int _distance = abs(m_pColliders[index]->GetRect()->GetPosHalfWidth() - static_cast<int>(origin.x));
+			if (_distance < collisionDistance)
 			{
 				collisionDistance = _distance;
 				closestCollider = static_cast<int>(index);
@@ -276,8 +280,8 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 				continue;
 			}
 
-			int _distance = abs(m_pColliders[index]->GetRect()->GetHalfHeight() - static_cast<int>(origin.y));
-			if (distance < collisionDistance)
+			int _distance = abs(m_pColliders[index]->GetRect()->GetPosHalfHeight() - static_cast<int>(origin.y));
+			if (_distance < collisionDistance)
 			{
 				collisionDistance = _distance;
 				closestCollider = static_cast<int>(index);
@@ -291,7 +295,7 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		return false;
 	}
 
-	hitinfo.distance = distance;
+	hitinfo.distance = collisionDistance;
 	hitinfo.hitCollider = m_pColliders[closestCollider];
 	return true;
 }
