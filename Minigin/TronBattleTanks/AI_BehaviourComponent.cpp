@@ -34,8 +34,20 @@ void dae::AI_BehaviourComponent::Update()
 	dae::RaycastInfo hit;
 	auto raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
 
-	if(CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Left, hit, 1000, { "Player" }))
+	if(CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Above, hit, 750, { "Player" }))
 	{
-		//std::cout << "Raycast hit: " << hit.distance << std::endl;
+		std::cout << "Raycast hit: " << hit.distance << std::endl;
 	}
+	//if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Right, hit, 1000, { "Player" }))
+	//{
+	//	//std::cout << "Raycast hit: " << hit.distance << std::endl;
+	//}
+	//if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Above, hit, 1000, { "Player" }))
+	//{
+	//	//std::cout << "Raycast hit: " << hit.distance << std::endl;
+	//}
+	//if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Below, hit, 1000, { "Player" }))
+	//{
+	//	//std::cout << "Raycast hit: " << hit.distance << std::endl;
+	//}
 }

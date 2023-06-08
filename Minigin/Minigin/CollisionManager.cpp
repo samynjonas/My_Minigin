@@ -6,23 +6,10 @@
 #include "servicelocator.h"
 #include "Logger.h"
 
-void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::string layer)
+void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::vector<std::string> layers, std::vector<std::string> skipLayer)
 {
-	//Checking if the layer is valid
-	int layerID{ LayerToID(layer, false) };
-	if (layerID == -1)
-	{
-		layerID = AddLayer(layer);
-	}
-
-	m_ColliderLinkedLayer.push_back({ layerID });
-	m_pColliders.push_back(collider);
-	m_IsDirty = true;
-}
-void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::vector<std::string> layers)
-{
-	//Checking if the layer is valid
-	std::vector<int> vexLayerIDs;
+	//Add layer to check
+	std::vector<int> vecLayerIDs;
 	for (auto& layer : layers)
 	{
 		int layerID{ LayerToID(layer, false) };
@@ -30,10 +17,24 @@ void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std
 		{
 			layerID = AddLayer(layer);
 		}
-		vexLayerIDs.push_back(layerID);
+		vecLayerIDs.push_back(layerID);
 	}
+	m_ColliderLinkedLayer.push_back(vecLayerIDs);
 
-	m_ColliderLinkedLayer.push_back(vexLayerIDs);
+	//Add layers to skip
+	std::vector<int> vecSkipLayerIDs;
+	for (auto& layer : skipLayer)
+	{
+		int layerID{ LayerToID(layer, false) };
+		if (layerID == -1)
+		{
+			layerID = AddLayer(layer);
+		}
+		vecSkipLayerIDs.push_back(layerID);
+	}
+	m_ColliderSkipLayer.push_back(vecSkipLayerIDs);
+	
+
 	m_pColliders.push_back(collider);
 	m_IsDirty = true;
 }
@@ -120,10 +121,17 @@ void dae::CollisionManager::Update()
 					continue;
 				}
 
-				if (HasSharedLayer(index, otherIndex) == false)
+				if (HasSharedLayer(index, otherIndex, m_ColliderLinkedLayer) == false)
 				{
 					continue;
 				}
+
+				/*
+				if (ContainsLayer(otherIndex, m_ColliderSkipLayer[index], m_ColliderLinkedLayer))
+				{
+					continue;
+				}
+				*/
 
 				if (m_pColliders[index]->IsOverlapping(m_pColliders[otherIndex]->GetRect()))
 				{
@@ -136,42 +144,64 @@ void dae::CollisionManager::Update()
 	}
 }
 
-bool dae::CollisionManager::HasSharedLayer(size_t collIndex, size_t otherCollIndex) const
+bool dae::CollisionManager::HasSharedLayer(size_t collIndex, size_t otherCollIndex, const std::vector<std::vector<int>>& vecLayers) const
 {
 	if (collIndex < 0 || otherCollIndex < 0)
 	{
 		return false;
 	}
-	if (collIndex >= m_ColliderLinkedLayer.size() || otherCollIndex >= m_ColliderLinkedLayer.size())
+	if (collIndex >= vecLayers.size() || otherCollIndex >= vecLayers.size())
 	{
 		return false;
 	}
 
-	for (size_t i = 0; i < m_ColliderLinkedLayer[collIndex].size(); i++)
+	for (size_t i = 0; i < vecLayers[collIndex].size(); i++)
 	{
-		auto result = std::find(m_ColliderLinkedLayer[otherCollIndex].begin(), m_ColliderLinkedLayer[otherCollIndex].end(), m_ColliderLinkedLayer[collIndex][i]);
-		if (result != m_ColliderLinkedLayer[otherCollIndex].end())
+		auto result = std::find(vecLayers[otherCollIndex].begin(), vecLayers[otherCollIndex].end(), vecLayers[collIndex][i]);
+		if (result != vecLayers[otherCollIndex].end())
 		{
 			return true;
 		}
 	}
 	return false;
 }
-bool dae::CollisionManager::ContainsLayer(size_t collIndex, std::vector<std::string> layers) const
+
+bool dae::CollisionManager::ContainsLayer(size_t collIndex, std::vector<std::string> layers, const std::vector<std::vector<int>>& vecLayers) const
 {
 	if (collIndex < 0)
 	{
 		return false;
 	}
-	if (collIndex >= m_ColliderLinkedLayer.size())
+	if (collIndex >= vecLayers.size())
 	{
 		return false;
 	}
 
 	for (size_t i = 0; i < layers.size(); i++)
 	{
-		auto result = std::find(m_ColliderLinkedLayer[collIndex].begin(), m_ColliderLinkedLayer[collIndex].end(), LayerToID(layers[i], false));
-		if (result != m_ColliderLinkedLayer[collIndex].end())
+		auto result = std::find(vecLayers[collIndex].begin(), vecLayers[collIndex].end(), LayerToID(layers[i], false));
+		if (result != vecLayers[collIndex].end())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool dae::CollisionManager::ContainsLayer(size_t collIndex, std::vector<int> layers, const std::vector<std::vector<int>>& vecLayers) const
+{
+	if (collIndex < 0)
+	{
+		return false;
+	}
+	if (collIndex >= vecLayers.size())
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < layers.size(); i++)
+	{
+		auto result = std::find(vecLayers[collIndex].begin(), vecLayers[collIndex].end(), layers[i]);
+		if (result != vecLayers[collIndex].end())
 		{
 			return true;
 		}
@@ -201,10 +231,10 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		{
 			continue;
 		}
-		if (ContainsLayer(index, layers) == false)
-		{
-			continue;
-		}
+		//if (ContainsLayer(index, layers, m_ColliderLinkedLayer) == false)
+		//{
+		//	continue;
+		//}
 
 		bool isLeftRight{ false };
 		switch (direction)
@@ -285,6 +315,11 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 			{
 				collisionDistance = _distance;
 				closestCollider = static_cast<int>(index);
+
+				if (_distance <= MIN_RAYCAST_DISTANCE)
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -295,6 +330,11 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		return false;
 	}
 
+	if (ContainsLayer(closestCollider, layers, m_ColliderLinkedLayer) == false)
+	{
+		return false;
+	}
+	
 	hitinfo.distance = collisionDistance;
 	hitinfo.hitCollider = m_pColliders[closestCollider];
 	return true;

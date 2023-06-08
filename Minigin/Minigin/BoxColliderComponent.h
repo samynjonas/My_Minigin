@@ -62,9 +62,9 @@ namespace dae
 		BoxColliderComponent& operator=(const BoxColliderComponent& other) = delete;
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) = delete;
 
-		void Initialize(int x, int y, int width, int height, bool isStatic = false, std::vector<std::string> layers = {"Default"});
-		void Initialize(int width, int height, bool isStatic = false, std::vector<std::string> layers = { "Default" });
-		void Initialize(bool isStatic = false, std::vector<std::string> layers = { "Default" });
+		void Initialize(int x, int y, int width, int height, bool isStatic = false, std::vector<std::string> layers = {"Default"}, std::vector<std::string> skipLayer = { "None" });
+		void Initialize(int width, int height, bool isStatic = false, std::vector<std::string> layers = { "Default" }, std::vector<std::string> skipLayer = { "None" });
+		void Initialize(bool isStatic = false, std::vector<std::string> layers = { "Default" }, std::vector<std::string> skipLayer = { "None" });
 
 		void Update() override;
 

@@ -16,26 +16,26 @@ dae::BoxColliderComponent::~BoxColliderComponent()
 	CollisionManager::GetInstance().UnregisterCollider(this);
 }
 
-void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic, std::vector<std::string> layers)
+void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic, std::vector<std::string> layers, std::vector<std::string> skipLayer)
 {
 	auto& parentPos = GetOwner()->transform()->GetWorldPosition();
 	m_PositionOffset = glm::vec2(x, y);
 
 	m_pColliderRect = std::make_unique<Rect>(static_cast<int>(parentPos.x) + x, static_cast<int>(parentPos.y) + y, width, height);
 
-	CollisionManager::GetInstance().RegisterCollider(this, layers);
+	CollisionManager::GetInstance().RegisterCollider(this, layers, skipLayer);
 	m_IsStatic = isStatic;
 }
 
-void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic, std::vector<std::string> layers)
+void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic, std::vector<std::string> layers, std::vector<std::string> skipLayer)
 {
-	Initialize(0, 0, width, height, isStatic, layers);
+	Initialize(0, 0, width, height, isStatic, layers, skipLayer);
 }
 
-void dae::BoxColliderComponent::Initialize(bool isStatic, std::vector<std::string> layers)
+void dae::BoxColliderComponent::Initialize(bool isStatic, std::vector<std::string> layers, std::vector<std::string> skipLayer)
 {
 	auto textureDim = GetOwner()->renderer()->GetTextureDimensions();
-	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic, layers);
+	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic, layers, skipLayer);
 }
 
 
@@ -118,6 +118,7 @@ void dae::BoxColliderComponent::UpdateTransform()
 	m_pColliderRect.get()->_x		= static_cast<int>(GetOwner()->transform()->GetWorldPosition().x + m_PositionOffset.x);
 	m_pColliderRect.get()->_y		= static_cast<int>(GetOwner()->transform()->GetWorldPosition().y + m_PositionOffset.x);
 
+	CollisionManager::GetInstance().SetDirty();
 }
 
 void dae::BoxColliderComponent::PutToSleep()

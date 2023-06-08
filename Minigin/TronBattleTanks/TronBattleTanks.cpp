@@ -181,7 +181,7 @@ void load()
 		scene.Add(blueTank);
 
 		blueTank->renderer()->SetTexture("Sprites/BlueTank.png");
-		blueTank->transform()->SetLocalPosition({ 500, 250 });
+		blueTank->transform()->SetLocalPosition({ 525, 250 });
 
 		auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
 		aiBehaviour->Initialize(100);

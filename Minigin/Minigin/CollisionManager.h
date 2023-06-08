@@ -26,8 +26,7 @@ namespace dae
 	class CollisionManager final : public Singleton<CollisionManager>
 	{
 	public:
-		void RegisterCollider(BoxColliderComponent* collider, std::string layer = "Default");
-		void RegisterCollider(BoxColliderComponent* collider, std::vector<std::string> layers);
+		void RegisterCollider(BoxColliderComponent* collider, std::vector<std::string> layers, std::vector<std::string> skipLayer);
 
 		void UnregisterCollider(BoxColliderComponent* collider);
 
@@ -45,16 +44,23 @@ namespace dae
 		friend class Singleton<CollisionManager>;
 		CollisionManager() = default;
 
-		const int MAX_RAYCAST_DISTANCE{ 1000 };
+		const int MAX_RAYCAST_DISTANCE{ 750 };
+		const int MIN_RAYCAST_DISTANCE{ 10 };
+		
 		bool m_IsDirty{ false }; //Only check for collision of dirty, this will only be done when a new collider is added or movement has happend on at least one collider
 		std::vector<BoxColliderComponent*> m_pColliders;
 		std::vector<std::vector<int>> m_ColliderLinkedLayer;
+		std::vector<std::vector<int>> m_ColliderSkipLayer;
 
-		bool HasSharedLayer(size_t collIndex, size_t otherCollIndex) const;
-		bool ContainsLayer(size_t collIndex, std::vector<std::string> layers) const;
+
+		bool HasSharedLayer(size_t collIndex, size_t otherCollIndex, const std::vector<std::vector<int>>& layers) const;
+		bool ContainsLayer(size_t collIndex, std::vector<std::string> layers, const std::vector<std::vector<int>>& vecLayers) const;
+		bool ContainsLayer(size_t collIndex, std::vector<int> layers, const std::vector<std::vector<int>>& vecLayers) const;
+
+
 
 		//For user interfacing string are easier - for logic int are less expensive
-		std::vector<std::string> m_Layers{ "Default" };
+		std::vector<std::string> m_Layers{ "None", "Default" };
 	};
 }
 
