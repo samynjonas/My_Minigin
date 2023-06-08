@@ -128,42 +128,10 @@ void dae::CollisionManager::Update()
 
 				if (m_pColliders[index]->IsOverlapping(m_pColliders[otherIndex]->GetRect()))
 				{
-					m_pColliders[otherIndex]->SetOverlapping(true);
+					m_pColliders[otherIndex]->SetOverlapping(true, m_pColliders[index]->GetCollisionPoint());
 				}
 			}
 		}
-
-
-		//for (auto& collider : m_pColliders)
-		//{
-		//	if (collider->IsSleeping())
-		//	{
-		//		continue;
-		//	}
-		//
-		//	for (auto& other : m_pColliders)
-		//	{
-		//		if (collider == other)
-		//		{
-		//			continue;
-		//		}
-		//
-		//		if (other->IsSleeping())
-		//		{
-		//			continue; 
-		//		}
-		//
-		//		if (collider->IsStatic() && other->IsStatic())
-		//		{
-		//			continue;
-		//		}
-		//
-		//		if (collider->IsOverlapping(other->GetRect()))
-		//		{
-		//			other->SetOverlapping(true);
-		//		}
-		//	}
-		//}
 	}
 }
 
@@ -188,8 +156,142 @@ bool dae::CollisionManager::HasSharedLayer(size_t collIndex, size_t otherCollInd
 	}
 	return false;
 }
+bool dae::CollisionManager::ContainsLayer(size_t collIndex, std::vector<std::string> layers) const
+{
+	if (collIndex < 0)
+	{
+		return false;
+	}
+	if (collIndex >= m_ColliderLinkedLayer.size())
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < layers.size(); i++)
+	{
+		auto result = std::find(m_ColliderLinkedLayer[collIndex].begin(), m_ColliderLinkedLayer[collIndex].end(), LayerToID(layers[i]));
+		if (result != m_ColliderLinkedLayer[collIndex].end())
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 void dae::CollisionManager::SetDirty()
 {
 	m_IsDirty = true;
+}
+
+bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int distance, std::vector<std::string> layers) const
+{
+	//I lock the raycast to a single dimensions - no diagonal raycasters, sorry
+	if (distance == -1)
+	{
+		distance = MAX_RAYCAST_DISTANCE;
+	}
+	
+	int collisionDistance{ MAX_RAYCAST_DISTANCE };
+	int closestCollider{ -1 };
+
+	for (size_t index = 0; index < m_pColliders.size(); index++)
+	{
+		if (m_pColliders[index]->IsSleeping())
+		{
+			continue;
+		}
+		if (ContainsLayer(index, layers) == false)
+		{
+			continue;
+		}
+
+		bool isLeftRight{ false };
+		switch (direction)
+		{
+		case dae::Directions::Left:
+		default:
+		{
+			if (m_pColliders[index]->GetRect()->maxX() > origin.x)
+			{
+				continue;
+			}
+			isLeftRight = true;
+		}
+		break;
+		case dae::Directions::Right:
+		{
+			if (m_pColliders[index]->GetRect()->_x < origin.x)
+			{
+				continue;
+			}
+			isLeftRight = true;
+		}
+		break;
+		case dae::Directions::Above:
+		{
+			if (m_pColliders[index]->GetRect()->_y > origin.y)
+			{
+				continue;
+			}
+		}
+		break;
+		case dae::Directions::Below:
+		{
+			if (m_pColliders[index]->GetRect()->maxY() < origin.y)
+			{
+				continue;
+			}
+		}
+		break;
+		}
+
+		if (isLeftRight)
+		{
+			if (m_pColliders[index]->GetRect()->maxY() < origin.y)
+			{
+				continue;
+			}
+
+			if (m_pColliders[index]->GetRect()->_y > origin.y)
+			{
+				continue;
+			}
+
+			int _distance = abs(m_pColliders[index]->GetRect()->GetHalfWidth() - static_cast<int>(origin.x));
+			if (distance < collisionDistance)
+			{
+				collisionDistance = _distance;
+				closestCollider = static_cast<int>(index);
+			}
+		}
+		else
+		{
+			if (m_pColliders[index]->GetRect()->maxX() < origin.x)
+			{
+				continue;
+			}
+
+			if (m_pColliders[index]->GetRect()->_x > origin.x)
+			{
+				continue;
+			}
+
+			int _distance = abs(m_pColliders[index]->GetRect()->GetHalfHeight() - static_cast<int>(origin.y));
+			if (distance < collisionDistance)
+			{
+				collisionDistance = _distance;
+				closestCollider = static_cast<int>(index);
+			}
+		}
+	}
+
+
+	if (closestCollider == -1)
+	{
+		return false;
+	}
+
+	hitinfo.distance = distance;
+	hitinfo.hitCollider = m_pColliders[closestCollider];
+	return true;
 }

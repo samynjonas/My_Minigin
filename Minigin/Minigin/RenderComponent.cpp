@@ -31,7 +31,9 @@ void dae::RenderComponent::Render()
 	}
 
 	const auto& pos = GetOwner()->transform()->GetWorldPosition();
-	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
+	const auto& rot = GetOwner()->transform()->GetWorldRotation();
+
+	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y, rot);
 }
 
 void dae::RenderComponent::SetTexture(const std::string& filename)

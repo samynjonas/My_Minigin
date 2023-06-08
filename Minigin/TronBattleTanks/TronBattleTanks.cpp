@@ -119,9 +119,6 @@ void load()
 
 		pScore->AddObserver(pScoreTXT);
 		pScore->AddScore(10);
-
-		tank->AddComponent<dae::GunComponent>();
-
 	}
 
 	auto gun = std::make_shared<dae::GameObject>();
@@ -134,6 +131,9 @@ void load()
 
 		auto tankTextureDim = tank->renderer()->GetTextureDimensions();
 		gun->transform()->SetLocalPosition({ -tankTextureDim.x / 2, -tankTextureDim.y / 2 });
+
+		auto gunComponent = gun->AddComponent<dae::GunComponent>();
+		gunComponent->Initialize(150.f, 1.5f);
 	}
 
 	auto TitleGo = std::make_shared<GameObject>();
@@ -158,10 +158,20 @@ void load()
 		Controller::GamepadInput::LEFT_THUMB
 	};
 
-	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(tank.get()) };
+	std::vector<unsigned int> RotationInput
+	{
+		Controller::GamepadInput::RIGHT_THUMB
+	};
+
 	auto player1_MoveCommand{ std::make_unique<dae::GridMoveCommand>(tank.get(), 50.f) };
+	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(gun.get()) };
+	auto player1_GunRotationCommand{ std::make_unique<dae::RotationCommand>(gun.get(), 50.f) };
+
 	InputManager::GetInstance().BindCommand(ShootInput, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
+
 	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
+	InputManager::GetInstance().BindCommand(RotationInput, InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
+
 }
 
 

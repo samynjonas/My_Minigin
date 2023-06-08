@@ -60,6 +60,15 @@ bool dae::InputManager::ProcessInput()
 					gridMovement->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(true));
 					isActivated = true;
 				}
+				else
+				{
+					RotationCommand* rotation = dynamic_cast<RotationCommand*>(command);
+					if (rotation)
+					{
+						rotation->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(false));
+						isActivated = true;
+					}
+				}
 			}
 		}
 		break;

@@ -15,12 +15,21 @@ namespace dae
 		GunComponent& operator=(const GunComponent& other) = delete;
 		GunComponent& operator=(GunComponent&& other) = delete;
 
+		void Initialize(float shootForce, float cooldown);
 		void Update() override;
 
 		void Fire();
 
 	private:
 		std::shared_ptr<dae::GameObject> Bullet(float x, float y);
+
+		float m_ShootForce{ 150.f };
+		float m_ShootCooldown{ 0.5f };
+
+		float m_ElapsedTime{ 0.f };
+
+		bool m_HasShot{ false };
+
 	};
 }
 

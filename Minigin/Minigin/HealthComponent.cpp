@@ -15,8 +15,13 @@ dae::HealthComponent::~HealthComponent()
 
 }
 
+void dae::HealthComponent::Initialize(int MaxHealt, int MaxLives)
+{
+	SetMaxHealth(MaxHealt);
+	SetMaxLives(MaxLives);
+}
+
 void dae::HealthComponent::Update()
 {
 
 }
-

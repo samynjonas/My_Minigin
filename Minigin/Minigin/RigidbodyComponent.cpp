@@ -3,6 +3,7 @@
 #include "GameObject.h"
 
 #include "TransformComponent.h"
+#include "BoxColliderComponent.h"
 
 #include "MiniginTimer.h"
 
@@ -27,7 +28,7 @@ void dae::RigidbodyComponent::Update()
 		{
 			if (m_ActiveForceMode == ForceMode::Impulse)
 			{
-				//TODO this calculation isnt correct
+				//TODO fix calculation
 
 				//Decrease velocity
 				float sign{ 1 };
@@ -76,17 +77,64 @@ void dae::RigidbodyComponent::SetMass(float mass)
 	m_Mass = mass;
 }
 
-void dae::RigidbodyComponent::Notify(Event currEvent, subject*)
+void dae::RigidbodyComponent::Notify(Event currEvent, subject* pSubject)
 {
 	if (currEvent == CollisionEnter)
 	{
 		//Check type of rigidbody - bounce, stop
-		m_CollidingVelocity = -m_Velocity;
-		m_Velocity *= -m_PhysicsMaterial.bounciness;
-
+		
 		if (m_PhysicsMaterial.bounciness == 0)
 		{
 			m_ActiveForceMode = ForceMode::None;
+			m_CollidingVelocity = -m_Velocity;
+		}
+		
+		BoxColliderComponent* collider = static_cast<BoxColliderComponent*>(pSubject);
+		if (typeid(*collider) == typeid(BoxColliderComponent)) //TODO improve this
+		{
+			//Has bounced against collider
+			glm::vec2 collPos{ collider->GetRect()->_x, collider->GetRect()->_y };
+			glm::vec2 rbPos{ collider->GetCollisionPoint() };
+
+			int checkPosX{};
+			if (rbPos.x < collPos.x + collider->GetRect()->_width / 2)
+			{
+				//Left side
+				checkPosX = static_cast<int>(collPos.x);
+			}
+			else
+			{
+				//Right side
+				checkPosX = collider->GetRect()->maxX();
+			}
+
+			int checkPosY{};
+			if (rbPos.y < collPos.y + collider->GetRect()->_height / 2.f)
+			{
+				//Top side
+				checkPosY = static_cast<int>(collPos.y);
+			}
+			else
+			{
+				//Bottom side
+				checkPosY = collider->GetRect()->maxY();
+			}
+
+			if (abs(rbPos.x - checkPosX) < abs(rbPos.y - checkPosY))
+			{
+				m_Velocity.x *= -m_PhysicsMaterial.bounciness;
+				//m_CollidingVelocity.y = -m_Velocity.y;
+			}
+			else
+			{
+				m_Velocity.y *= -m_PhysicsMaterial.bounciness;
+				//m_CollidingVelocity.x = -m_Velocity.x;
+			}
+		}
+		else
+		{
+			m_Velocity *= -m_PhysicsMaterial.bounciness;
+			m_CollidingVelocity = -m_Velocity;
 		}
 
 		m_IsColliding = true;

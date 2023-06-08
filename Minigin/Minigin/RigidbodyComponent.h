@@ -61,7 +61,6 @@ namespace dae
 		float m_Mass{ 1.f };
 		glm::vec2 m_Velocity{ 0.f, 0.f };
 		glm::vec2 m_CollidingVelocity{ 0.f, 0.f};
-
 	};
 }
 

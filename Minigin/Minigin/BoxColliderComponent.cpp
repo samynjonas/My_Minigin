@@ -66,14 +66,30 @@ bool dae::BoxColliderComponent::IsOverlapping(const Rect* other)
 		return false;
 	}
 
-	SetOverlapping(true);
+	estimateCollisionPoint(other);
+	SetOverlapping(true, m_CollisionPoint);
 
 	return true;
 }
 
-void dae::BoxColliderComponent::SetOverlapping(bool isOverlapping)
+void dae::BoxColliderComponent::estimateCollisionPoint(const Rect* other)
+{
+	int overlapX = std::min(m_pColliderRect.get()->maxX(), other->maxX()) - std::max(m_pColliderRect.get()->minX(), other->minX());
+	int overlapY = std::min(m_pColliderRect.get()->maxY(), other->maxY()) - std::max(m_pColliderRect.get()->minY(), other->minY());
+
+	glm::vec2 collisionPoint{};
+
+	collisionPoint.x = std::max(m_pColliderRect.get()->minX(), other->minX()) + overlapX / 2.0f;
+	collisionPoint.y = std::max(m_pColliderRect.get()->minY(), other->minY()) + overlapY / 2.0f;
+
+	m_CollisionPoint = collisionPoint;
+}
+
+void dae::BoxColliderComponent::SetOverlapping(bool isOverlapping, glm::vec2 collisionPoint)
 {
 	m_IsOverlapping = isOverlapping;
+	m_CollisionPoint = collisionPoint;
+
 	if (m_WasOverlapping != m_IsOverlapping)
 	{
 		m_IsDirty = true;

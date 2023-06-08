@@ -24,6 +24,32 @@ namespace dae
 			, _height{ height }
 		{
 		}
+
+		int minX() const
+		{
+			return _x;
+		}
+		int minY() const
+		{
+			return _y;
+		}
+		int maxX() const
+		{
+			return _x + _width;
+		}
+		int maxY() const
+		{
+			return _y + _height;
+		}
+
+		int GetHalfWidth() const
+		{
+			return _x + _width / 2;
+		}
+		int GetHalfHeight() const
+		{
+			return _y + _height / 2;
+		}
 	};
 	class BoxColliderComponent final : public Component, public subject
 	{
@@ -72,7 +98,7 @@ namespace dae
 			}
 		}
 
-		void SetOverlapping(bool isOverlapping);
+		void SetOverlapping(bool isOverlapping, glm::vec2 collisionPoint = {});
 		
 		bool IsSleeping() const
 		{
@@ -86,9 +112,16 @@ namespace dae
 		void PutToSleep();
 		void WakeUp();
 
+		glm::vec2 GetCollisionPoint() const
+		{
+			return m_CollisionPoint;
+		}
+
 	private:
 		std::unique_ptr<Rect> m_pColliderRect{ nullptr };
 		glm::vec2 m_PositionOffset{};
+
+		glm::vec2 m_CollisionPoint{};
 
 		bool m_IsSleeping{ false };		
 		bool m_IsTrigger{ false };	//Trigger just give a signal - Colliders bounce back	
@@ -100,7 +133,10 @@ namespace dae
 		bool m_IsDirty{ false };
 
 
+
 		void UpdateTransform();
+		void estimateCollisionPoint(const Rect* other);
+
 	};
 }
 

@@ -16,10 +16,6 @@ void dae::ShootCommand::Execute()
 {
 	if (m_pGunComponent != nullptr)
 	{
-		//Playing shoot sound
-		auto& ss = servicelocator<sound_system>::get_serviceLocator();
-		ss.play(0, 100);
-
 		//Firing gun
 		m_pGunComponent->Fire();
 	}

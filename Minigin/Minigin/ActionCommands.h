@@ -51,5 +51,26 @@ namespace dae
 
 	};
 
+	class RotationCommand final : public Command
+	{
+	public:
+		RotationCommand(GameObject* pGameObject, float rotationSpeed);
+		~RotationCommand() = default;
+
+		RotationCommand(const RotationCommand& other) = delete;
+		RotationCommand(RotationCommand&& other) = delete;
+		RotationCommand& operator=(const RotationCommand& other) = delete;
+		RotationCommand& operator=(RotationCommand&& other) = delete;
+
+		void Execute() override;
+		void SetAxisValue(const glm::vec2& axisValue);
+
+	private:
+		const float m_RotationSpeed;
+		glm::vec2 m_AxisValue{ 0.f, 0.f };
+
+		TransformComponent* m_pTransform{};
+	};
+
 }
 

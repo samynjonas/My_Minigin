@@ -9,10 +9,8 @@ namespace dae
 		PlayerDied,
 		ScoreUpdated,
 		CollisionEnter,
-		CollisionStay,
 		CollisionExit,
 		TriggerEnter,
-		TriggerStay,
 		TriggerExit
 	};
 

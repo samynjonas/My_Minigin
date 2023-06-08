@@ -15,6 +15,7 @@ namespace dae
 		HealthComponent& operator=(const HealthComponent& other) = delete;
 		HealthComponent& operator=(HealthComponent&& other) = delete;
 
+		void Initialize(int MaxHealt, int MaxLives);
 		void Update() override;
 
 		void SetMaxHealth(int amount, bool setHealth = true)
@@ -110,11 +111,11 @@ namespace dae
 		}
 
 	private:
-		int m_Health;
-		int m_MaxHealth;
+		int m_Health{ 1 };
+		int m_MaxHealth{ 1 };
 
-		int m_Lives;
-		int m_MaxLives;
+		int m_Lives{ 1 };
+		int m_MaxLives{ 1 };
 
 	};
 }
