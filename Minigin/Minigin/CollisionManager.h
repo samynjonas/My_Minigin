@@ -49,18 +49,17 @@ namespace dae
 		
 		bool m_IsDirty{ false }; //Only check for collision of dirty, this will only be done when a new collider is added or movement has happend on at least one collider
 		std::vector<BoxColliderComponent*> m_pColliders;
-		std::vector<std::vector<int>> m_ColliderLinkedLayer;
-		std::vector<std::vector<int>> m_ColliderSkipLayer;
 
 
 		bool HasSharedLayer(size_t collIndex, size_t otherCollIndex, const std::vector<std::vector<int>>& layers) const;
 		bool ContainsLayer(size_t collIndex, std::vector<std::string> layers, const std::vector<std::vector<int>>& vecLayers) const;
 		bool ContainsLayer(size_t collIndex, std::vector<int> layers, const std::vector<std::vector<int>>& vecLayers) const;
 
-
-
-		//For user interfacing string are easier - for logic int are less expensive
+		//For user interfacing strings are easier - for logic int are less expensive
 		std::vector<std::string> m_Layers{ "None", "Default" };
+		std::vector<std::vector<int>> m_ColliderLinkedLayer;
+		std::vector<std::vector<int>> m_ColliderSkipLayer;
+	
 	};
 }
 

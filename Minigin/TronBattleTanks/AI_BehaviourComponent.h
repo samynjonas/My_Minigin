@@ -3,6 +3,7 @@
 
 namespace dae
 {
+	class RigidbodyComponent;
 	class AI_BehaviourComponent final : public Component
 	{
 	public:
@@ -18,9 +19,11 @@ namespace dae
 		void Update() override;
 
 	private:
+		void ChangeDirection();
+
 		float m_MoveSpeed{};
 
-
+		RigidbodyComponent* m_pRigidbody{ nullptr };
 	};
 }
 

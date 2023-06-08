@@ -183,8 +183,10 @@ void load()
 		blueTank->renderer()->SetTexture("Sprites/BlueTank.png");
 		blueTank->transform()->SetLocalPosition({ 525, 250 });
 
+		blueTank->AddComponent<RigidbodyComponent>();
+
 		auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
-		aiBehaviour->Initialize(100);
+		aiBehaviour->Initialize(30.f);
 	}
 }
 
