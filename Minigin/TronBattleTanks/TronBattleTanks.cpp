@@ -173,7 +173,6 @@ void load()
 	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 	InputManager::GetInstance().BindCommand(RotationInput, InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
 
-
 	//Enemy
 	auto blueTank = std::make_shared<dae::GameObject>();
 	{

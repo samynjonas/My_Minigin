@@ -44,7 +44,7 @@ namespace dae
 
 		void CreateWall(int row, int coll);
 		void CreateFloor(int row, int coll);
-
+		void CreateBlueTank(int row, int coll);
 	};
 }
 

@@ -5,6 +5,8 @@
 #include "RenderComponent.h"
 #include "TransformComponent.h"
 #include "BoxColliderComponent.h"
+#include "RigidbodyComponent.h"
+#include "../TronBattleTanks/AI_BehaviourComponent.h" //TODO what is going on here
 
 #include <string>
 
@@ -42,6 +44,9 @@ void dae::MapGeneratorComponent::Initialize(const std::string& jsonMapFile, cons
 			case MapPiece::Floor:
 				CreateFloor(row, coll);
 				break;
+			case MapPiece::BlueTankSpawner:
+				CreateBlueTank(row, coll);
+				break;
 			default:
 				break;
 			}
@@ -64,14 +69,36 @@ void dae::MapGeneratorComponent::CreateWall(int row, int coll)
 	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), true, { "Walls", "Environment" });
 }
 
-void dae::MapGeneratorComponent::CreateFloor(int row, int coll)
+void dae::MapGeneratorComponent::CreateFloor(int , int )
 {
-	auto floor = std::make_shared<dae::GameObject>();
-	m_pScene->Add(floor);
+	//auto floor = std::make_shared<dae::GameObject>();
+	//m_pScene->Add(floor);
+	//
+	//floor->Initialize("Floor", m_pScene);
+	//floor->renderer()->SetTexture("Sprites/FloorPiece.png");
+	//floor->SetParent(GetOwner());
+	//
+	//floor->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
+}
 
-	floor->Initialize("Floor", m_pScene);
-	floor->renderer()->SetTexture("Sprites/FloorPiece.png");
-	floor->SetParent(GetOwner());
+void dae::MapGeneratorComponent::CreateBlueTank(int row, int coll)
+{
+	auto blueTank = std::make_shared<dae::GameObject>();
+	m_pScene->Add(blueTank);
 	
-	floor->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
+	blueTank->Initialize("BlueTank", m_pScene);
+
+	blueTank->renderer()->SetTexture("Sprites/BlueTank.png");
+	blueTank->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
+
+	auto rb = blueTank->AddComponent<RigidbodyComponent>();
+
+	auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
+	aiBehaviour->Initialize(30.f);
+
+	auto collider = blueTank->AddComponent<BoxColliderComponent>();
+	collider->Initialize(6, 6, 20, 20, false, { "Enemy", "Environment" });
+	collider->AddObserver(aiBehaviour);
+	collider->AddObserver(rb);
+
 }
