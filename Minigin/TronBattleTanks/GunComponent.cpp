@@ -95,7 +95,7 @@ std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
 	rb->PhysicsMaterial().bounciness = 1;
 
 	auto collider = pBullet->AddComponent<BoxColliderComponent>();
-	collider->Initialize(false, { "Environment", "Enemy" }, { "Player" });
+	collider->Initialize(false, "Friendly", { "Walls", "Enemy" });
 	collider->AddObserver(rb);
 
 	pBullet->AddComponent<HealthComponent>();

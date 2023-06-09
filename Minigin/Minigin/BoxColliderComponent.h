@@ -62,9 +62,9 @@ namespace dae
 		BoxColliderComponent& operator=(const BoxColliderComponent& other) = delete;
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) = delete;
 
-		void Initialize(int x, int y, int width, int height, bool isStatic = false, std::vector<std::string> layers = {"Default"}, std::vector<std::string> skipLayer = { "None" });
-		void Initialize(int width, int height, bool isStatic = false, std::vector<std::string> layers = { "Default" }, std::vector<std::string> skipLayer = { "None" });
-		void Initialize(bool isStatic = false, std::vector<std::string> layers = { "Default" }, std::vector<std::string> skipLayer = { "None" });
+		void Initialize(int x, int y, int width, int height, bool isStatic = false, std::string Layer = "Default", std::vector<std::string> collideLayers = {"Default"}, std::vector<std::string> skipLayers = {"None"});
+		void Initialize(int width, int height, bool isStatic = false, std::string Layer = "Default", std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = { "None" });
+		void Initialize(bool isStatic = false, std::string Layer = "Default", std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = { "None" });
 
 		void Update() override;
 
@@ -131,6 +131,8 @@ namespace dae
 		bool m_WasOverlapping{ false }; //Last frame
 
 		bool m_IsDirty{ false };
+
+		std::string m_Layer{};
 
 		//TODO give a collider a single layer, you can specify against which layers you want it to collide
 

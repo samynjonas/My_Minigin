@@ -117,7 +117,7 @@ void load()
 		auto rb = tank->AddComponent<dae::RigidbodyComponent>();
 		
 		auto collider = tank->AddComponent<dae::BoxColliderComponent>();
-		collider->Initialize(6, 6, 20, 20, false, { "Player", "Environment" });
+		collider->Initialize(6, 6, 20, 20, false, "Player", { "Walls" });
 		collider->AddObserver(rb);
 
 		pHealth->AddObserver(pAchiementObserver.get());
@@ -172,26 +172,6 @@ void load()
 
 	InputManager::GetInstance().BindCommand(MoveInput, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 	InputManager::GetInstance().BindCommand(RotationInput, InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
-
-	//Enemy
-	auto blueTank = std::make_shared<dae::GameObject>();
-	{
-		blueTank->Initialize("BlueTank", &scene);
-		scene.Add(blueTank);
-
-		blueTank->renderer()->SetTexture("Sprites/BlueTank.png");
-		blueTank->transform()->SetLocalPosition({ 525, 255 });
-		
-		auto rb = blueTank->AddComponent<RigidbodyComponent>();
-		
-		auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
-		aiBehaviour->Initialize(30.f);
-
-		auto collider = blueTank->AddComponent<BoxColliderComponent>();
-		collider->Initialize(6, 6, 20, 20, false, { "Enemy", "Environment" });
-		collider->AddObserver(aiBehaviour);
-		collider->AddObserver(rb);
-	}
 }
 
 

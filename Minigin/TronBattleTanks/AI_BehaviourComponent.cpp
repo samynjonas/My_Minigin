@@ -39,7 +39,7 @@ void dae::AI_BehaviourComponent::Update()
 
 	//TODO Improve so it wont check all the colliders multiple timer
 	//TODO when a tank sees a player move towards them, only when he doesnt see him anymore go random again
-	if(CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Left, m_Hits[0], 750, 10, {"Player"}))
+	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Left, m_Hits[0], 750, 10, { "Player" }))
 	{
 		std::cout << "Fire" << std::endl;
 	}

@@ -66,7 +66,7 @@ void dae::MapGeneratorComponent::CreateWall(int row, int coll)
 
 	wall->transform()->SetLocalPosition( { m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize} );
 	auto collider = wall->AddComponent<dae::BoxColliderComponent>();
-	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), true, { "Walls", "Environment" });
+	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), true, "Walls");
 }
 
 void dae::MapGeneratorComponent::CreateFloor(int , int )
@@ -97,7 +97,7 @@ void dae::MapGeneratorComponent::CreateBlueTank(int row, int coll)
 	aiBehaviour->Initialize(30.f);
 
 	auto collider = blueTank->AddComponent<BoxColliderComponent>();
-	collider->Initialize(6, 6, 20, 20, false, { "Enemy", "Environment" });
+	collider->Initialize(6, 6, 20, 20, false, "Enemy", { "Walls" });
 	collider->AddObserver(aiBehaviour);
 	collider->AddObserver(rb);
 

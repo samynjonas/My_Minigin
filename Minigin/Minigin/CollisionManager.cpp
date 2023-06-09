@@ -6,34 +6,44 @@
 #include "servicelocator.h"
 #include "Logger.h"
 
-void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::vector<std::string> layers, std::vector<std::string> skipLayer)
+void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayers)
 {
-	//Add layer to check
-	std::vector<int> vecLayerIDs;
-	for (auto& layer : layers)
+	//Colliders layer
 	{
 		int layerID{ LayerToID(layer, false) };
 		if (layerID == -1)
 		{
 			layerID = AddLayer(layer);
+		}
+
+		m_ColliderLayer.push_back(layerID);
+	}
+
+	//Add layers that it collides with
+	std::vector<int> vecLayerIDs;
+	for (auto& _layer : collideLayers)
+	{
+		int layerID{ LayerToID(_layer, false) };
+		if (layerID == -1)
+		{
+			layerID = AddLayer(_layer);
 		}
 		vecLayerIDs.push_back(layerID);
 	}
 	m_ColliderLinkedLayer.push_back(vecLayerIDs);
 
-	//Add layers to skip
+	//Add layers that it doesnt collide with
 	std::vector<int> vecSkipLayerIDs;
-	for (auto& layer : skipLayer)
+	for (auto& _layer : skipLayers)
 	{
-		int layerID{ LayerToID(layer, false) };
+		int layerID{ LayerToID(_layer, false) };
 		if (layerID == -1)
 		{
-			layerID = AddLayer(layer);
+			layerID = AddLayer(_layer);
 		}
 		vecSkipLayerIDs.push_back(layerID);
 	}
-	m_ColliderSkipLayer.push_back(vecSkipLayerIDs);
-	
+	m_ColliderSkipLayer.push_back(vecSkipLayerIDs);	
 
 	m_pColliders.push_back(collider);
 	m_IsDirty = true;
@@ -70,7 +80,7 @@ std::string dae::CollisionManager::IntToLayer(int layerID, bool returnValid) con
 	}
 	return m_Layers[layerID];
 }
-int dae::CollisionManager::LayerToID(std::string& layerName, bool returnValid) const
+int dae::CollisionManager::LayerToID(const std::string& layerName, bool returnValid) const
 {
 	for (int index = 0; index < m_Layers.size(); index++)
 	{
@@ -121,17 +131,10 @@ void dae::CollisionManager::Update()
 					continue;
 				}
 
-				if (HasSharedLayer(index, otherIndex, m_ColliderLinkedLayer) == false)
+				if (ContainsLayer(m_ColliderLayer[otherIndex], index, m_ColliderLinkedLayer) == false)
 				{
 					continue;
 				}
-
-				/*
-				if (ContainsLayer(otherIndex, m_ColliderSkipLayer[index], m_ColliderLinkedLayer))
-				{
-					continue;
-				}
-				*/
 
 				if (m_pColliders[index]->IsOverlapping(m_pColliders[otherIndex]->GetRect()))
 				{
@@ -208,15 +211,48 @@ bool dae::CollisionManager::ContainsLayer(size_t collIndex, std::vector<int> lay
 	}
 	return false;
 }
+bool dae::CollisionManager::ContainsLayer(int colliderLayer, size_t otherIndex, const std::vector<std::vector<int>>& vecLayers) const
+{
+	if (vecLayers.empty())
+	{
+		return false;
+	}
+
+	if (otherIndex >= vecLayers.size() || otherIndex < 0)
+	{
+		return false;
+	}
+
+	for (const auto& otherlayer : vecLayers[otherIndex])
+	{
+		if (otherlayer == colliderLayer)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+bool dae::CollisionManager::ContainsLayer(int colliderLayer, const std::vector<std::string> layers) const
+{
+	for (const auto& layer : layers)
+	{
+		if (colliderLayer == LayerToID(layer))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 void dae::CollisionManager::SetDirty()
 {
 	m_IsDirty = true;
 }
 
-bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int maxDistance, int minDistance, std::vector<std::string> layers) const
+bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int maxDistance, int minDistance, std::vector<std::string> layers, std::vector<std::string> skipLayers) const
 {
-	//I lock the raycast to a single dimensions - no diagonal raycasters, sorry
+	//Locked the raycast to a single dimensions - no diagonal raycasters, sorry
 	if (maxDistance == -1)
 	{
 		maxDistance = MAX_RAYCAST_DISTANCE;
@@ -313,6 +349,12 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 				closestCollider = static_cast<int>(index);
 			}
 		}
+
+		//TODO improve to reimplement
+		if (ContainsLayer(m_ColliderLayer[index], skipLayers))
+		{
+			continue;
+		}
 	}
 
 
@@ -328,8 +370,8 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 	{
 		return false;
 	}
-	
-	if (ContainsLayer(closestCollider, layers, m_ColliderLinkedLayer) == false)
+
+	if (ContainsLayer(m_ColliderLayer[closestCollider], layers) == false)
 	{
 		return false;
 	}

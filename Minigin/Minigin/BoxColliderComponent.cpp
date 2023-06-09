@@ -16,26 +16,28 @@ dae::BoxColliderComponent::~BoxColliderComponent()
 	CollisionManager::GetInstance().UnregisterCollider(this);
 }
 
-void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic, std::vector<std::string> layers, std::vector<std::string> skipLayer)
+void dae::BoxColliderComponent::Initialize(int x, int y, int width, int height, bool isStatic, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayer)
 {
 	auto& parentPos = GetOwner()->transform()->GetWorldPosition();
 	m_PositionOffset = glm::vec2(x, y);
 
 	m_pColliderRect = std::make_unique<Rect>(static_cast<int>(parentPos.x) + x, static_cast<int>(parentPos.y) + y, width, height);
 
-	CollisionManager::GetInstance().RegisterCollider(this, layers, skipLayer);
+	m_Layer = layer;
+
+	CollisionManager::GetInstance().RegisterCollider(this, layer, collideLayers, skipLayer);
 	m_IsStatic = isStatic;
 }
 
-void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic, std::vector<std::string> layers, std::vector<std::string> skipLayer)
+void dae::BoxColliderComponent::Initialize(int width, int height, bool isStatic, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayer)
 {
-	Initialize(0, 0, width, height, isStatic, layers, skipLayer);
+	Initialize(0, 0, width, height, isStatic, layer, collideLayers, skipLayer);
 }
 
-void dae::BoxColliderComponent::Initialize(bool isStatic, std::vector<std::string> layers, std::vector<std::string> skipLayer)
+void dae::BoxColliderComponent::Initialize(bool isStatic, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayer)
 {
 	auto textureDim = GetOwner()->renderer()->GetTextureDimensions();
-	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic, layers, skipLayer);
+	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isStatic, layer, collideLayers, skipLayer);
 }
 
 
