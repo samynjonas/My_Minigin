@@ -214,15 +214,15 @@ void dae::CollisionManager::SetDirty()
 	m_IsDirty = true;
 }
 
-bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int distance, std::vector<std::string> layers) const
+bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int maxDistance, int minDistance, std::vector<std::string> layers) const
 {
 	//I lock the raycast to a single dimensions - no diagonal raycasters, sorry
-	if (distance == -1)
+	if (maxDistance == -1)
 	{
-		distance = MAX_RAYCAST_DISTANCE;
+		maxDistance = MAX_RAYCAST_DISTANCE;
 	}
 	
-	int collisionDistance{ distance };
+	int collisionDistance{ maxDistance };
 	int closestCollider{ -1 };
 
 	for (size_t index = 0; index < m_pColliders.size(); index++)
@@ -231,10 +231,6 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		{
 			continue;
 		}
-		//if (ContainsLayer(index, layers, m_ColliderLinkedLayer) == false)
-		//{
-		//	continue;
-		//}
 
 		bool isLeftRight{ false };
 		switch (direction)
@@ -315,11 +311,6 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 			{
 				collisionDistance = _distance;
 				closestCollider = static_cast<int>(index);
-
-				if (_distance <= MIN_RAYCAST_DISTANCE)
-				{
-					break;
-				}
 			}
 		}
 	}
@@ -330,12 +321,18 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 		return false;
 	}
 
+	hitinfo.distance = collisionDistance;
+	hitinfo.hitCollider = m_pColliders[closestCollider];
+
+	if (collisionDistance < minDistance)
+	{
+		return false;
+	}
+	
 	if (ContainsLayer(closestCollider, layers, m_ColliderLinkedLayer) == false)
 	{
 		return false;
 	}
 	
-	hitinfo.distance = collisionDistance;
-	hitinfo.hitCollider = m_pColliders[closestCollider];
 	return true;
 }

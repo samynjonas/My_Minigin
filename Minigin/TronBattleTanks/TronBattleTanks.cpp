@@ -181,12 +181,17 @@ void load()
 		scene.Add(blueTank);
 
 		blueTank->renderer()->SetTexture("Sprites/BlueTank.png");
-		blueTank->transform()->SetLocalPosition({ 525, 250 });
-
-		blueTank->AddComponent<RigidbodyComponent>();
-
+		blueTank->transform()->SetLocalPosition({ 525, 255 });
+		
+		auto rb = blueTank->AddComponent<RigidbodyComponent>();
+		
 		auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
 		aiBehaviour->Initialize(30.f);
+
+		auto collider = blueTank->AddComponent<BoxColliderComponent>();
+		collider->Initialize(6, 6, 20, 20, false, { "Enemy", "Environment" });
+		collider->AddObserver(aiBehaviour);
+		collider->AddObserver(rb);
 	}
 }
 

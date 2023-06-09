@@ -35,6 +35,15 @@ void GameObject::Update()
 	}
 }
 
+void GameObject::LateUpdate()
+{
+	for (const auto& pComponent : m_vecComponents)
+	{
+		pComponent->LateUpdate();
+	}
+}
+
+
 void GameObject::Render() const
 {
 	if (m_pRenderComponent)

@@ -11,15 +11,23 @@ dae::MoveCommand::MoveCommand(GameObject* pGameObject, float moveSpeed)
 	: Command(pGameObject)
 	, m_MoveSpeed{ moveSpeed }
 {
-	m_pTransform = pGameObject->transform();
+
 }
 void dae::MoveCommand::Execute()
 {
-	glm::vec2 moveVector{ m_AxisValue * m_MoveSpeed * MiniginTimer::GetInstance().GetDeltaTime() };
-	if (m_pTransform)
+	if (m_pRigidBody == nullptr)
 	{
-		m_pTransform->Translate(moveVector);
+		m_pRigidBody = GetGameObject()->GetComponent<RigidbodyComponent>();
+		if (m_pRigidBody == nullptr)
+		{
+			return;
+		}
 	}
+
+	glm::vec2 moveVector{ m_AxisValue * m_MoveSpeed * MiniginTimer::GetInstance().GetDeltaTime() };
+	//std::cout << "moveVector: " << moveVector.x << " : " << moveVector.y << std::endl;
+
+	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Impulse);
 }
 void dae::MoveCommand::SetAxisValue(const glm::vec2& axisValue)
 {

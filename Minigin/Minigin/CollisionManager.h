@@ -38,7 +38,7 @@ namespace dae
 		std::string IntToLayer(int layerID, bool returnValid = true) const;
 		int LayerToID(std::string& layerName, bool returnValid = true) const;
 
-		bool Raycast(glm::vec2 origin, Directions direction, RaycastInfo& hitinfo, int distance = -1, std::vector<std::string> layers = { "Default" }) const;
+		bool Raycast(glm::vec2 origin, Directions direction, RaycastInfo& hitinfo, int maxDistance = -1, int minDistance = -1, std::vector<std::string> layers = { "Default" }) const;
 
 	private:
 		friend class Singleton<CollisionManager>;

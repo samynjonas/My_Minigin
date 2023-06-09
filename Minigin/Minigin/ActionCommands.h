@@ -25,7 +25,7 @@ namespace dae
 		const float m_MoveSpeed;
 		glm::vec2 m_AxisValue{ 0.f, 0.f };
 
-		TransformComponent* m_pTransform{};
+		RigidbodyComponent* m_pRigidBody{};
 
 	};
 

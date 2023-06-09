@@ -15,6 +15,7 @@ namespace dae
 		Component& operator=(Component&& other) = delete;
 
 		virtual void Update() = 0;
+		virtual void LateUpdate() {};
 		void SetOwner(GameObject* pOwner);
 
 	protected:

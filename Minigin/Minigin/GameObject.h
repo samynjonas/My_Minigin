@@ -15,6 +15,8 @@ namespace dae
 	{
 	public:
 		virtual void Update();
+		virtual void LateUpdate();
+
 		virtual void Render() const;
 
 		void Initialize(const std::string& name, Scene* pScene);

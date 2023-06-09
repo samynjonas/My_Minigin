@@ -47,6 +47,13 @@ namespace dae
 
 		void Notify(Event currEvent, subject* actor) override;
 
+		//TODO optimize
+		glm::vec2 GetDirection() const
+		{
+			const float vectorLength = static_cast<float>(m_Velocity.length());
+			return m_Velocity / vectorLength;
+		}
+
 	private:
 		bool m_UseGravity{ false };
 		bool m_IsColliding{ false };

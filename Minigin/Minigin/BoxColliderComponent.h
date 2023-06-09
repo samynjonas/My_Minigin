@@ -132,7 +132,7 @@ namespace dae
 
 		bool m_IsDirty{ false };
 
-
+		//TODO give a collider a single layer, you can specify against which layers you want it to collide
 
 		void UpdateTransform();
 		void estimateCollisionPoint(const Rect* other);

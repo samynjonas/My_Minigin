@@ -59,10 +59,10 @@ void dae::RigidbodyComponent::Update()
 
 void dae::RigidbodyComponent::ApplyForce(const glm::vec2& vector, ForceMode mode)
 {
-	if (m_IsColliding)
-	{
-		return;
-	}
+	//if (m_IsColliding)
+	//{
+	//	return;
+	//}
 
 	m_ActiveForceMode = mode;
 	m_Velocity = vector;
