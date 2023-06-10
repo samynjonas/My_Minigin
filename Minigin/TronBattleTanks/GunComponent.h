@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace dae
 {
@@ -15,7 +17,7 @@ namespace dae
 		GunComponent& operator=(const GunComponent& other) = delete;
 		GunComponent& operator=(GunComponent&& other) = delete;
 
-		void Initialize(float shootForce, float cooldown);
+		void Initialize(const std::string shooterlayer, const std::vector<std::string> hitLayer, float shootForce = 150.f, float cooldown = 0.5f);
 		void Update() override;
 
 		void Fire();
@@ -29,6 +31,9 @@ namespace dae
 		float m_ElapsedTime{ 0.f };
 
 		bool m_HasShot{ false };
+
+		std::string m_ShooterLayer{};
+		std::vector<std::string> m_HitLayers{};
 
 	};
 }

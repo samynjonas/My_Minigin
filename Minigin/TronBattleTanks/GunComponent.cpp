@@ -25,10 +25,13 @@ dae::GunComponent::~GunComponent()
 
 }
 
-void dae::GunComponent::Initialize(float shootForce = 150.f, float cooldown = 0.5f)
+void dae::GunComponent::Initialize(const std::string shooterlayer, const std::vector<std::string> hitLayer, float shootForce, float cooldown)
 {
 	m_ShootForce = shootForce;
 	m_ShootCooldown = cooldown;
+
+	m_ShooterLayer = shooterlayer;
+	m_HitLayers = hitLayer;
 }
 
 void dae::GunComponent::Update()
@@ -98,12 +101,12 @@ std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
 	health->Initialize(5, 1);
 
 	auto collider = pBullet->AddComponent<BoxColliderComponent>();
-	collider->Initialize(false, false, "Friendly", { "Walls"});
+	collider->Initialize(false, false, m_ShooterLayer, { "Walls"});
 	collider->AddObserver(rb, { CollisionEnter, CollisionExit });
 	collider->AddObserver(health, { CollisionEnter });
 
 	auto trigger = pBullet->AddComponent<BoxColliderComponent>();
-	trigger->Initialize(true, false, "Friendly", { "Enemy" });
+	trigger->Initialize(true, false, m_ShooterLayer, m_HitLayers);
 	trigger->AddObserver(health, { TriggerEnter });
 
 	return pBullet;

@@ -116,7 +116,7 @@ void dae::MapGeneratorComponent::CreateBlueTank(int row, int coll)
 	aiBehaviour->Initialize(30.f);
 
 	auto gunCompoennt = blueTank->AddComponent<GunComponent>();
-	gunCompoennt->Initialize(150, 2.5f);
+	gunCompoennt->Initialize("Enemy", { "Player" }, 150, 2.5f);
 
 	auto health = blueTank->AddComponent<HealthComponent>();
 	health->Initialize(1, 3);
@@ -160,7 +160,7 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	gun->transform()->SetLocalPosition({ -tankTextureDim.x / 2, -tankTextureDim.y / 2 });
 
 	auto gunComponent = gun->AddComponent<dae::GunComponent>();
-	gunComponent->Initialize(150.f, 1.5f);
+	gunComponent->Initialize("Player", { "Enemy" }, 150.f, 1.5f);
 
 	//TODO change depending on player count
 	std::vector<unsigned int> ShootInput

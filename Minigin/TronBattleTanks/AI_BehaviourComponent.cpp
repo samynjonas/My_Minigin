@@ -123,10 +123,8 @@ void dae::AI_BehaviourComponent::ChangeDirection()
 	m_pRigidbody->ApplyForce(direction * m_MoveSpeed, RigidbodyComponent::ForceMode::Force);
 
 }
-void dae::AI_BehaviourComponent::AimAndShoot(const glm::vec2& /*direction*/)
+void dae::AI_BehaviourComponent::AimAndShoot(const glm::vec2& direction)
 {
-	std::cout << "SHOOT" << std::endl;
-
 	if (m_pGunComponent == nullptr)
 	{
 		m_pGunComponent = GetOwner()->GetComponent<GunComponent>();
@@ -135,6 +133,32 @@ void dae::AI_BehaviourComponent::AimAndShoot(const glm::vec2& /*direction*/)
 			return;
 		}
 	}
+
+	float angle{};
+	if (direction.x == 0)
+	{
+		if (direction.y > 0)
+		{
+			angle = 90.f;
+		}
+		else
+		{
+			angle = -90.f;
+		}
+	}
+	else if (direction.y == 0)
+	{
+		if (direction.x > 0)
+		{
+			angle = 0.f;
+		}
+		else
+		{
+			angle = 180.f;
+		}
+	}
+
+	//TODO Rotate the gun towers the player
 
 	m_pGunComponent->Fire();
 }
