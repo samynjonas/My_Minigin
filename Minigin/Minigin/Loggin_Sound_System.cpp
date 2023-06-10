@@ -9,22 +9,18 @@ dae::Loggin_Sound_System::Loggin_Sound_System(std::unique_ptr<sound_system> ss)
 
 }
 
-void dae::Loggin_Sound_System::play(const int id, const float& volume)
+void dae::Loggin_Sound_System::play(const std::string& soundName)
 {
-	std::string logText = "Playing: " + id;
-
-	servicelocator<dae::Logger>::get_serviceLocator().Log(logText);
+	servicelocator<dae::Logger>::get_serviceLocator().Log({ "Playing: " + soundName });
 
 	//std::cout << "playing " << id << " on " << volume << "%" << std::endl;
-	m_SoundSystem->play(id, volume);
+	m_SoundSystem->play(soundName);
 }
 
-void dae::Loggin_Sound_System::AddSound(const int id, const std::string& file_path)
+void dae::Loggin_Sound_System::AddSound(const std::string& name, int volume, const std::string& file_path)
 {
-	std::string logText = "Add: " + file_path;
+	servicelocator<dae::Logger>::get_serviceLocator().Log({ "Added: " + name + " to play at volume " + std::to_string(volume) });
 
-	servicelocator<dae::Logger>::get_serviceLocator().Log(logText);
-
-	m_SoundSystem->AddSound(id, file_path);
+	m_SoundSystem->AddSound(name, volume, file_path);
 
 }

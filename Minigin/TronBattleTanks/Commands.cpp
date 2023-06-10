@@ -30,5 +30,5 @@ dae::TestCommand_playSound::TestCommand_playSound(GameObject* pGameObject)
 void dae::TestCommand_playSound::Execute()
 {
 	auto& ss = servicelocator<sound_system>::get_serviceLocator();
-	ss.play(0, 100);
+	ss.play("Shoot");
 }

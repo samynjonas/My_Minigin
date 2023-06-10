@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 namespace dae
 {
 	template <typename T>
@@ -10,16 +12,16 @@ namespace dae
 			return *instance_;
 		}
 
-		static void register_service_locator(T* ss)
+		static void register_service_locator(std::unique_ptr<T> ss)
 		{
-			instance_ = ss;
+			instance_ = std::move(ss);
 		}
 
 	private:
-		static T* instance_;
+		static std::unique_ptr<T> instance_;
 	};
 
 	template <typename T>
-	T* servicelocator<T>::instance_ = nullptr;
+	std::unique_ptr<T> servicelocator<T>::instance_ = nullptr;
 }
 

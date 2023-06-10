@@ -12,11 +12,18 @@ namespace dae
 	public:
 		Scene& CreateScene(const std::string& name);
 
+		void LoadScene(const std::string& name);
+		int StringToID(const std::string& name, bool returnValid = true) const;
+
 		void Update();
 		void Render();
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
+
 		std::vector<std::shared_ptr<Scene>> m_scenes;
+		std::vector<std::string> m_SceneIDs;
+
+		Scene* m_pActiveScene{ nullptr };
 	};
 }

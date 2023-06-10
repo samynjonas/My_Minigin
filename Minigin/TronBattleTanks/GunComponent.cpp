@@ -63,7 +63,7 @@ void dae::GunComponent::Fire()
 
 	//Playing shoot sound
 	auto& ss = servicelocator<sound_system>::get_serviceLocator();
-	ss.play(0, 100);
+	ss.play("Shoot");
 
 	m_HasShot = true;
 }

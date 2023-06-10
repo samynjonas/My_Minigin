@@ -235,6 +235,7 @@ xcopy $(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\*.dll $(OutputPath
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentRegister.h" />
     <ClInclude Include="Console_Logger.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="CSVParser.h" />
@@ -310,6 +311,7 @@ xcopy $(SolutionDir)3rdParty\SDL2_mixer\lib\$(PlatformTarget)\*.dll $(OutputPath
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ComponentRegister.cpp" />
     <ClCompile Include="Console_Logger.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="CSVParser.cpp" />

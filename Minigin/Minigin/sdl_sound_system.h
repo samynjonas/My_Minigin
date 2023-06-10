@@ -2,8 +2,7 @@
 #include "sound_system.h"
 #include <iostream>
 #include <vector>
-
-#include <map>
+#include <string>
 
 struct Mix_Chunk;
 
@@ -14,9 +13,8 @@ namespace dae
 	public:
 		sdl_sound_system();
 		~sdl_sound_system();
-		void play(const int id, const float& volume) override;
-		void AddSound(const int id, const std::string& file_path) override;
-
+		void play(const std::string& soundName) override;
+		void AddSound(const std::string& name, int volume, const std::string& file_path) override;
 
 	private:
 		class SDL_SOUND_SYSTEM_IMPL;

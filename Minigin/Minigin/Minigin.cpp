@@ -84,11 +84,11 @@ void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
-	auto& renderer = Renderer::GetInstance();
-	auto& sceneManager = SceneManager::GetInstance();
-	auto& input = InputManager::GetInstance();
-	auto& time = MiniginTimer::GetInstance();
-	auto& collisionManager = CollisionManager::GetInstance();
+	auto& renderer			= Renderer::GetInstance();
+	auto& sceneManager		= SceneManager::GetInstance();
+	auto& input				= InputManager::GetInstance();
+	auto& time				= MiniginTimer::GetInstance();
+	auto& collisionManager	= CollisionManager::GetInstance();
 
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	bool doContinue = true;

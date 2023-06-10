@@ -28,7 +28,7 @@ namespace dae
 
 		float m_ElapsedSec{};
 		
-		const float ORIGINAL_MOVE_TILL_CHANGE{ 1.5f };
+		const float ORIGINAL_MOVE_TILL_CHANGE{ 5.f };
 		float move_till_change{ ORIGINAL_MOVE_TILL_CHANGE };
 
 		RigidbodyComponent* m_pRigidbody{ nullptr };

@@ -8,10 +8,8 @@ namespace dae
 	{
 	public:
 		Loggin_Sound_System(std::unique_ptr<sound_system> ss);
-		void play(const int id, const float& volume) override;
-		void AddSound(const int id, const std::string& file_path) override;
-
-
+		void play(const std::string& soundName) override;
+		void AddSound(const std::string& name, int volume, const std::string& file_path) override;
 	private:
 		std::unique_ptr<sound_system> m_SoundSystem;
 

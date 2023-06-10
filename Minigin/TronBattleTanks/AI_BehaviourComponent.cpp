@@ -91,19 +91,19 @@ void dae::AI_BehaviourComponent::ChangeDirection()
 
 	std::vector<glm::vec2> directionOptions;
 	//Check for available directions
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2, raycastOrigin.y }, Directions::Above, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{
-		directionOptions.push_back({ 0, -1 });
-	}
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2 }, Directions::Right, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{
-		directionOptions.push_back({ 1, 0 });
-	}
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x , raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Left,  hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{
-		directionOptions.push_back({ -1, 0 });
-	}
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y }, Directions::Below, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().x / 2.f }, Directions::Above, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	{																													
+		directionOptions.push_back({ 0, -1 });																			
+	}																													
+	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Right, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	{																													
+		directionOptions.push_back({ 1, 0 });																			
+	}																													
+	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Left,  hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	{																													
+		directionOptions.push_back({ -1, 0 });																			
+	}																													
+	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Below, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
 	{
 		directionOptions.push_back({ 0, 1 });
 	}

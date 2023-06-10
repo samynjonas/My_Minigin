@@ -5,7 +5,10 @@ using namespace dae;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) {}
+Scene::Scene(const std::string& name) : m_name(name) 
+{
+	
+}
 
 Scene::~Scene() = default;
 
@@ -48,5 +51,15 @@ void Scene::Render() const
 	{
 		object->LateRender();
 	}
+}
+
+void Scene::LoadScene()
+{
+
+}
+
+void Scene::UnloadScene()
+{
+
 }
 
