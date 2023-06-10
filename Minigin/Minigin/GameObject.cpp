@@ -52,6 +52,14 @@ void GameObject::Render() const
 	}
 }
 
+void GameObject::LateRender() const
+{
+	if (m_pRenderComponent)
+	{
+		m_pRenderComponent->GUIRender();
+	}
+}
+
 void GameObject::SetParent(GameObject* pParent)
 {	
 	if (pParent == m_pParent)

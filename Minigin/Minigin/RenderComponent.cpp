@@ -25,6 +25,29 @@ void dae::RenderComponent::Update()
 
 void dae::RenderComponent::Render()
 {
+	if (m_RenderOrder != RenderOrder::normal)
+	{
+		return;
+	}
+
+	if (!m_pTexture)
+	{
+		return;
+	}
+
+	const auto& pos = GetOwner()->transform()->GetWorldPosition();
+	const auto& rot = GetOwner()->transform()->GetWorldRotation();
+
+	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y, rot);
+}
+
+void dae::RenderComponent::GUIRender()
+{
+	if (m_RenderOrder != RenderOrder::gui)
+	{
+		return;
+	}
+
 	if (!m_pTexture)
 	{
 		return;

@@ -43,5 +43,10 @@ void Scene::Render() const
 	{
 		object->Render();
 	}
+
+	for (const auto& object : m_objects)
+	{
+		object->LateRender();
+	}
 }
 

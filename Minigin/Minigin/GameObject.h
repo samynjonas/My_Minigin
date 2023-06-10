@@ -18,6 +18,7 @@ namespace dae
 		virtual void LateUpdate();
 
 		virtual void Render() const;
+		virtual void LateRender() const;
 
 		void Initialize(const std::string& name, Scene* pScene);
 

@@ -64,6 +64,7 @@ void load()
 	{
 		background->Initialize("background_GB", &scene);
 		background->renderer()->SetTexture("background.tga");
+		background->renderer()->SetRenderOrder(dae::RenderComponent::RenderOrder::gui);
 		scene.Add(background);
 	}
 
