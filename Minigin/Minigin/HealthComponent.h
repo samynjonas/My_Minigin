@@ -1,10 +1,11 @@
 #pragma once
 #include "Component.h"
 #include "subject.h"
+#include "Observer.h"
 
 namespace dae
 {
-	class HealthComponent final : public Component, public subject
+	class HealthComponent final : public Component, public subject, public Observer
 	{
 	public:
 		HealthComponent();
@@ -16,7 +17,7 @@ namespace dae
 		HealthComponent& operator=(HealthComponent&& other) = delete;
 
 		void Initialize(int MaxHealt, int MaxLives);
-		void Update() override;
+		void Update() override {};
 
 		void SetMaxHealth(int amount, bool setHealth = true)
 		{
@@ -46,8 +47,8 @@ namespace dae
 			{
 				m_Health = 0;
 
-				NotifyObservers(PlayerDied, this);
-				
+				NotifyObservers(LiveLost, this);
+
 				TakeLive(1);				
 			}
 			else if (m_Health > m_MaxHealth)
@@ -97,18 +98,9 @@ namespace dae
 		{
 			return m_Lives;
 		}
-		void TakeLive(int amount)
-		{
-			m_Lives -= amount;
-			if (m_Lives < 0)
-			{
-				m_Lives = 0;
-			}
-			else if (m_Lives > m_MaxLives)
-			{
-				m_Lives = m_MaxLives;
-			}
-		}
+		void TakeLive(int amount);
+
+		void Notify(Event currEvent, subject* actor);
 
 	private:
 		int m_Health{ 1 };

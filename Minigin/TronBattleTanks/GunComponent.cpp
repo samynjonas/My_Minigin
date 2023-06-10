@@ -93,12 +93,18 @@ std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
 
 	rb->ApplyForce(normalizedDirection, RigidbodyComponent::ForceMode::Force);
 	rb->PhysicsMaterial().bounciness = 1;
+	
+	auto health = pBullet->AddComponent<HealthComponent>();
+	health->Initialize(5, 1);
 
 	auto collider = pBullet->AddComponent<BoxColliderComponent>();
-	collider->Initialize(false, "Friendly", { "Walls", "Enemy" });
-	collider->AddObserver(rb);
+	collider->Initialize(false, false, "Friendly", { "Walls"});
+	collider->AddObserver(rb, { CollisionEnter, CollisionExit });
+	collider->AddObserver(health, { CollisionEnter });
 
-	pBullet->AddComponent<HealthComponent>();
+	auto trigger = pBullet->AddComponent<BoxColliderComponent>();
+	trigger->Initialize(true, false, "Friendly", { "Enemy" });
+	trigger->AddObserver(health, { TriggerEnter });
 
 	return pBullet;
 }

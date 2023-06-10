@@ -98,10 +98,21 @@ namespace dae
 			return m_pChildren;
 		}
 
+		void MarkForDead()
+		{
+			m_IsMarkedForDead = true;
+		}
+		bool IsMarkedForDead() const
+		{
+			return m_IsMarkedForDead;
+		}
+
 	private:
 		std::string m_Name{};
 
 		Scene* m_pScene{};
+
+		bool m_IsMarkedForDead{ false };
 
 		//Components
 		std::vector<std::unique_ptr<Component>> m_vecComponents;

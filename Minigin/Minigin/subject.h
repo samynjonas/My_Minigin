@@ -4,26 +4,29 @@
 
 namespace dae
 {
+	struct ObserverData
+	{
+		Observer* pObserver;
+		std::vector<Event> vecEvents; //List of events to observe
+	};
+
 	class subject
 	{
 	public:
-		void AddObserver(Observer* observer)
+		void AddObserver(Observer* observer, std::vector<Event> events)
 		{
-			m_Observers.push_back(observer);
+			m_Observers.push_back({ observer, events });
 		}
-
 
 		void RemoveObserver(Observer* observer)
 		{
-			for (auto it = m_Observers.begin(); it != m_Observers.end(); ++it)
+			for (size_t index = 0; index < m_Observers.size(); index++)
 			{
-				if (*it == observer)
+				if (m_Observers[index].pObserver == observer)
 				{
-					m_Observers.erase(it);
-					return;
+					m_Observers.erase(m_Observers.begin() + index);
 				}
 			}
-
 		}
 
 	protected:
@@ -31,13 +34,19 @@ namespace dae
 		{
 			for (auto observer : m_Observers)
 			{
-				observer->Notify(currEvent, pSubject);
+				for (const auto& _event : observer.vecEvents)
+				{
+					if (_event == currEvent)
+					{
+						observer.pObserver->Notify(currEvent, pSubject);
+						continue;
+					}
+				}
 			}
 		}
 
-
 	private:
-		std::vector<Observer*> m_Observers;
+		std::vector<ObserverData> m_Observers;
 
 	};
 }

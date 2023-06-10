@@ -56,6 +56,8 @@ void dae::CollisionManager::UnregisterCollider(BoxColliderComponent* collider)
 		if (m_pColliders[index] == collider)
 		{
 			m_pColliders.erase(m_pColliders.begin() + index);
+			m_ColliderLayer.erase(m_ColliderLayer.begin() + index);
+			m_ColliderSkipLayer.erase(m_ColliderSkipLayer.begin() + index);
 			m_ColliderLinkedLayer.erase(m_ColliderLinkedLayer.begin() + index);
 		}
 	}

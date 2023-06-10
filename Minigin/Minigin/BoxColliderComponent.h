@@ -62,9 +62,9 @@ namespace dae
 		BoxColliderComponent& operator=(const BoxColliderComponent& other) = delete;
 		BoxColliderComponent& operator=(BoxColliderComponent&& other) = delete;
 
-		void Initialize(int x, int y, int width, int height, bool isStatic = false, std::string Layer = "Default", std::vector<std::string> collideLayers = {"Default"}, std::vector<std::string> skipLayers = {"None"});
-		void Initialize(int width, int height, bool isStatic = false, std::string Layer = "Default", std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = { "None" });
-		void Initialize(bool isStatic = false, std::string Layer = "Default", std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = { "None" });
+		void Initialize(int x, int y, int width, int height, bool isTrigger, bool isStatic, std::string Layer, std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = {"None"});
+		void Initialize(int width, int height, bool isTrigger, bool isStatic, std::string Layer, std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = { "None" });
+		void Initialize(bool isTrigger, bool isStatic, std::string Layer, std::vector<std::string> collideLayers = { "Default" }, std::vector<std::string> skipLayers = { "None" });
 
 		void Update() override;
 
@@ -77,25 +77,21 @@ namespace dae
 
 		void OnCollisionEnter()
 		{
-			if (m_IsTrigger)
-			{
-				NotifyObservers(TriggerEnter, this);
-			}
-			else
-			{
-				NotifyObservers(CollisionEnter, this);
-			}
+			NotifyObservers(CollisionEnter, this);
 		}
 		void OnCollisionExit()
 		{
-			if (m_IsTrigger)
-			{
-				NotifyObservers(TriggerExit, this);
-			}
-			else
-			{
-				NotifyObservers(CollisionExit, this);
-			}
+			NotifyObservers(CollisionExit, this);
+
+		}
+
+		void OnTriggerEnter()
+		{
+			NotifyObservers(TriggerEnter, this);
+		}
+		void OnTriggerExit()
+		{
+			NotifyObservers(TriggerExit, this);
 		}
 
 		void SetOverlapping(bool isOverlapping, glm::vec2 collisionPoint = {});

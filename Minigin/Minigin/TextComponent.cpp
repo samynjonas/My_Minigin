@@ -67,7 +67,7 @@ void dae::TextComponent::Update()
 
 void dae::TextComponent::Notify(Event currEvent, subject* pSubject)
 {
-	if (currEvent == PlayerDied)
+	if (currEvent == ObjectDied)
 	{
 		HealthComponent* health = static_cast<HealthComponent*>(pSubject); //TODO improve this
 		if (typeid(*health) == typeid(HealthComponent))

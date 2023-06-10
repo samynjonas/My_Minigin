@@ -5,7 +5,7 @@
 
 void dae::Achievements::Notify(Event event, subject*)
 {
-	if (event == PlayerDied)
+	if (event == ObjectDied)
 	{
 		std::cout << "player has died\n";
 	}

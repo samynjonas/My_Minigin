@@ -4,12 +4,16 @@ namespace dae
 {
 	class subject;
 
-	enum Event
+	enum Event //TODO improve event system
 	{
-		PlayerDied,
+		LiveLost,
+		ObjectDied,
+
 		ScoreUpdated,
+
 		CollisionEnter,
 		CollisionExit,
+
 		TriggerEnter,
 		TriggerExit
 	};

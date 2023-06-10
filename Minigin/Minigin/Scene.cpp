@@ -31,12 +31,31 @@ void Scene::Update()
 {
 	for(auto& object : m_objects)
 	{
-		object->Update();
+		if (object == nullptr)
+		{
+			Remove(object);
+			continue;
+		}	
+
+		if (object)
+		{
+			//Check if object is marked for dead
+			if (object->IsMarkedForDead())
+			{
+				Remove(object);
+				continue;
+			}
+
+			object->Update();
+		}
 	}
 
 	for (auto& object : m_objects)
 	{
-		object->LateUpdate();
+		if (object)
+		{
+			object->LateUpdate();
+		}
 	}
 }
 
@@ -44,12 +63,18 @@ void Scene::Render() const
 {
 	for (const auto& object : m_objects)
 	{
-		object->Render();
+		if (object)
+		{
+			object->Render();
+		}
 	}
 
 	for (const auto& object : m_objects)
 	{
-		object->LateRender();
+		if (object)
+		{
+			object->LateRender();
+		}
 	}
 }
 

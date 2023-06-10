@@ -11,6 +11,7 @@
 #include "TransformComponent.h"
 #include "BoxColliderComponent.h"
 #include "RigidbodyComponent.h"
+#include "HealthComponent.h"
 
 //TODO what is going on here
 #include "../TronBattleTanks/AI_BehaviourComponent.h"
@@ -59,6 +60,9 @@ void dae::MapGeneratorComponent::Initialize(const std::string& jsonMapFile, cons
 			case MapPiece::BlueTankSpawner:
 				CreateBlueTank(row, coll);
 				break;
+			case MapPiece::RecognizerSpawner:
+				CreateRecognizer(row, coll);
+				break;
 			case MapPiece::PlayerSpawner:
 				CreatePlayer(row, coll);
 				break;
@@ -81,7 +85,7 @@ void dae::MapGeneratorComponent::CreateWall(int row, int coll)
 
 	wall->transform()->SetLocalPosition( { m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize} );
 	auto collider = wall->AddComponent<dae::BoxColliderComponent>();
-	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), true, "Walls");
+	collider->Initialize(static_cast<int>(m_BlockSize), static_cast<int>(m_BlockSize), false, true, "Walls");
 }
 
 void dae::MapGeneratorComponent::CreateFloor(int , int )
@@ -111,10 +115,20 @@ void dae::MapGeneratorComponent::CreateBlueTank(int row, int coll)
 	auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
 	aiBehaviour->Initialize(30.f);
 
+	auto gunCompoennt = blueTank->AddComponent<GunComponent>();
+	gunCompoennt->Initialize(150, 2.5f);
+
+	auto health = blueTank->AddComponent<HealthComponent>();
+	health->Initialize(1, 3);
+
 	auto collider = blueTank->AddComponent<BoxColliderComponent>();
-	collider->Initialize(6, 6, 20, 20, false, "Enemy", { "Walls" });
-	collider->AddObserver(aiBehaviour);
-	collider->AddObserver(rb);
+	collider->Initialize(6, 6, 20, 20, false, false, "Enemy", { "Walls" });
+	collider->AddObserver(aiBehaviour, { CollisionExit });
+	collider->AddObserver(rb, { CollisionEnter, CollisionExit });
+
+	auto trigger = blueTank->AddComponent<BoxColliderComponent>();
+	trigger->Initialize(true, false, "Enemy", { "Friendly" });
+	trigger->AddObserver(health, { TriggerEnter });
 
 }
 
@@ -130,8 +144,8 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	auto rb = tank->AddComponent<dae::RigidbodyComponent>();
 
 	auto collider = tank->AddComponent<dae::BoxColliderComponent>();
-	collider->Initialize(6, 6, 20, 20, false, "Player", { "Walls" });
-	collider->AddObserver(rb);
+	collider->Initialize(6, 6, 20, 20, false, false, "Player", { "Walls" });
+	collider->AddObserver(rb, { CollisionEnter, CollisionExit });
 
 
 	auto gun = std::make_shared<dae::GameObject>();
@@ -184,4 +198,25 @@ void dae::MapGeneratorComponent::CreateTeleporter(int row, int coll)
 	teleporter->SetParent(GetOwner());
 	
 	teleporter->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
+}
+
+void dae::MapGeneratorComponent::CreateRecognizer(int row, int coll)
+{
+	auto blueTank = std::make_shared<dae::GameObject>();
+	m_pScene->Add(blueTank);
+
+	blueTank->Initialize("Recognizer", m_pScene);
+
+	blueTank->renderer()->SetTexture("Sprites/Recognizer.png");
+	blueTank->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
+
+	auto rb = blueTank->AddComponent<RigidbodyComponent>();
+
+	auto aiBehaviour = blueTank->AddComponent<AI_BehaviourComponent>();
+	aiBehaviour->Initialize(50.f);
+
+	auto collider = blueTank->AddComponent<BoxColliderComponent>();
+	collider->Initialize(6, 6, 20, 20, false, false, "Enemy", { "Walls" });
+	collider->AddObserver(aiBehaviour, { CollisionEnter, CollisionExit });
+	collider->AddObserver(rb, { CollisionEnter, CollisionExit });
 }

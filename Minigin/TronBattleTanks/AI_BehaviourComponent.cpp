@@ -33,27 +33,26 @@ void dae::AI_BehaviourComponent::Initialize(const float& moveSpeed)
 
 void dae::AI_BehaviourComponent::Update()
 {
-	std::vector<dae::RaycastInfo> m_Hits{ {}, {}, {}, {} };
-	std::vector<glm::vec2> directions{ { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
-	auto raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
+	dae::RaycastInfo hit{};
+	const auto& raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
 
 	//TODO Improve so it wont check all the colliders multiple timer
 	//TODO when a tank sees a player move towards them, only when he doesnt see him anymore go random again
-	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Left, m_Hits[0], 750, 10, { "Player" }))
+	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Left, hit, 750, 10, { "Player" }))
 	{
-		std::cout << "Fire" << std::endl;
+		AimAndShoot({ -1, 0 });
 	}
-	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Right, m_Hits[1], 750, 10, { "Player" }))
+	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Right, hit, 750, 10, { "Player" }))
 	{
-		std::cout << "Fire" << std::endl;
+		AimAndShoot({ -1, 0 });
 	}
-	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Above, m_Hits[2], 750, 10, { "Player" }))
+	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Above, hit, 750, 10, { "Player" }))
 	{
-		std::cout << "Fire" << std::endl;
+		AimAndShoot({ -1, 0 });
 	}
-	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Below, m_Hits[3], 750, 10, { "Player" }))
+	if (CollisionManager::GetInstance().Raycast(raycastOrigin + GetOwner()->renderer()->GetTextureDimensions() / 2.f, Directions::Below, hit, 750, 10, { "Player" }))
 	{
-		std::cout << "Fire" << std::endl;
+		AimAndShoot({ -1, 0 });
 	}
 
 	m_ElapsedSec += MiniginTimer::GetInstance().GetDeltaTime();
@@ -87,7 +86,7 @@ void dae::AI_BehaviourComponent::ChangeDirection()
 	}
 
 	dae::RaycastInfo hit;
-	auto raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
+	const auto& raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
 
 	std::vector<glm::vec2> directionOptions;
 	//Check for available directions
@@ -118,4 +117,17 @@ void dae::AI_BehaviourComponent::ChangeDirection()
 
 	m_pRigidbody->ApplyForce(direction * m_MoveSpeed, RigidbodyComponent::ForceMode::Force);
 
+}
+void dae::AI_BehaviourComponent::AimAndShoot(const glm::vec2& /*direction*/)
+{
+	if (m_pGunComponent == nullptr)
+	{
+		m_pGunComponent = GetOwner()->GetComponent<GunComponent>();
+		if (m_pGunComponent == nullptr)
+		{
+			return;
+		}
+	}
+
+	m_pGunComponent->Fire();
 }

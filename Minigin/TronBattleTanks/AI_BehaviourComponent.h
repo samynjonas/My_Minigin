@@ -1,10 +1,12 @@
 #pragma once
 #include "Component.h"
 #include "Observer.h"
+#include "glm/glm.hpp"
 
 namespace dae
 {
 	class RigidbodyComponent;
+	class GunComponent;
 	class AI_BehaviourComponent final : public Component, public Observer
 	{
 	public:
@@ -18,10 +20,12 @@ namespace dae
 
 		void Initialize(const float& moveSpeed);
 		void Update() override;
+		
 		void Notify(Event currEvent, subject* actor);
 
 	private:
 		void ChangeDirection();
+		void AimAndShoot(const glm::vec2& direction);
 
 		float m_MoveSpeed{};
 		const int MAX_DISTANCE{ 100 };
@@ -32,6 +36,8 @@ namespace dae
 		float move_till_change{ ORIGINAL_MOVE_TILL_CHANGE };
 
 		RigidbodyComponent* m_pRigidbody{ nullptr };
+		GunComponent* m_pGunComponent{ nullptr };
+
 	};
 }
 

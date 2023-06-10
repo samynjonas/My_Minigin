@@ -44,7 +44,6 @@ using namespace dae;
 
 void load()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
 
 #if _DEBUG
 	servicelocator<Logger>::register_service_locator(std::make_unique<Console_Logger>());
@@ -57,51 +56,33 @@ void load()
 
 	servicelocator<sound_system>::get_serviceLocator().AddSound("Shoot", 64, "../Data/Sounds/Shoot.wav");
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	std::unique_ptr<Achievements> pAchiementObserver = std::make_unique<Achievements>();
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
-	auto background = std::make_shared<dae::GameObject>();
-	{
-		background->Initialize("background_GB", &scene);
-		background->renderer()->SetTexture("background.tga");
-		scene.Add(background);
-	}
-
+	auto& scene = dae::SceneManager::GetInstance().CreateScene("Map1");
+	
 	auto remainingLivesGO = std::make_shared<dae::GameObject>();
-	remainingLivesGO->Initialize("RemainingLives", &scene);
-	TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
-	pRemainingLives->Initialize("Remaining lives = 1", font);
-	remainingLivesGO->transform()->SetLocalPosition({ 25, 350 });
 	scene.Add(remainingLivesGO);
+	remainingLivesGO->Initialize("Lives", &scene);
+	TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+	pRemainingLives->Initialize("Lives: 3", font);
+	remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
 
 	auto scoreGO = std::make_shared<dae::GameObject>();
-	scoreGO->Initialize("RemainingLives", &scene);
+	scoreGO->Initialize("Score", &scene);
 	TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
-	pScoreTXT->Initialize("Remaining lives = 1", font);
-	scoreGO->transform()->SetLocalPosition({ 25, 400 });
+	pScoreTXT->Initialize("Score: 0", font);
+	scoreGO->transform()->SetLocalPosition({ 5, 400 });
 	scene.Add(scoreGO);
 
-	auto map = std::make_shared<dae::GameObject>();
+	auto map_1 = std::make_shared<dae::GameObject>();
 	{
-		map->Initialize("Map", &scene);
-		scene.Add(map);	
+		map_1->Initialize("Map_1", &scene);
+		scene.Add(map_1);
 		
-		map->transform()->SetLocalPosition({50.f, 0.f});
+		map_1->transform()->SetLocalPosition({50.f, 0.f});
 
-		auto mapComponent = map->AddComponent<dae::MapGeneratorComponent>();
+		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
 		mapComponent->Initialize("../Data/Level/LevelLayout1.csv", 16);
-	}
-
-	auto TitleGo = std::make_shared<GameObject>();
-	{
-		TitleGo->Initialize("Text_GB", &scene);
-
-		auto textcomp = TitleGo->AddComponent<TextComponent>();
-
-		textcomp->Initialize("Tron battle tanks", font);
-
-		TitleGo->transform()->SetLocalPosition({ 80, 20 });
-		scene.Add(TitleGo);
 	}
 }
 
