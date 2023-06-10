@@ -252,7 +252,7 @@ void dae::CollisionManager::SetDirty()
 	m_IsDirty = true;
 }
 
-bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int maxDistance, int minDistance, std::vector<std::string> layers, std::vector<std::string> skipLayers) const
+bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction, dae::RaycastInfo& hitinfo, int maxDistance, int minDistance, std::vector<std::string> layers, std::vector<std::string>) const
 {
 	//Locked the raycast to a single dimensions - no diagonal raycasters, sorry
 	if (maxDistance == -1)
@@ -326,7 +326,7 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 			}
 
 			int _distance = abs(m_pColliders[index]->GetRect()->GetPosHalfWidth() - static_cast<int>(origin.x));
-			if (_distance < collisionDistance)
+			if (_distance < collisionDistance && _distance > minDistance)
 			{
 				collisionDistance = _distance;
 				closestCollider = static_cast<int>(index);
@@ -345,17 +345,11 @@ bool dae::CollisionManager::Raycast(glm::vec2 origin, dae::Directions direction,
 			}
 
 			int _distance = abs(m_pColliders[index]->GetRect()->GetPosHalfHeight() - static_cast<int>(origin.y));
-			if (_distance < collisionDistance)
+			if (_distance < collisionDistance && _distance > minDistance)
 			{
 				collisionDistance = _distance;
 				closestCollider = static_cast<int>(index);
 			}
-		}
-
-		//TODO improve to reimplement
-		if (ContainsLayer(m_ColliderLayer[index], skipLayers))
-		{
-			continue;
 		}
 	}
 
