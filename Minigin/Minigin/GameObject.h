@@ -72,7 +72,6 @@ namespace dae
 			return nullptr;
 		}
 
-
 		template <class T>
 		T* AddComponent()
 		{
@@ -93,12 +92,15 @@ namespace dae
 		void RemoveComponent()
 		{
 			static_assert(std::is_base_of<Component, T>(), "Needs to be component");
-			const T* pComponent{ GetComponent<T>() };
 
-			// If this component exists, destroy it
-			if (pComponent)
+			for (auto itr{m_vecComponents.begin()}; itr < m_vecComponents.end(); ++itr)
 			{
-				// Mark the component as dead
+				T* component{ dynamic_cast<T*>((*itr).get()) };
+				if (component != nullptr)
+				{
+					m_vecComponents.erase(itr);
+					return;
+				}
 			}
 		}
 

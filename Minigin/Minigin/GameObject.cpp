@@ -35,9 +35,23 @@ void GameObject::Initialize(const std::string& name, Scene* pScene)
 
 void GameObject::Update()
 {
+	if (m_IsMarkedForDead)
+	{
+		return;
+	}
+
+
 	for (const auto& pComponent : m_vecComponents)
 	{
-		pComponent->Update();		
+		if (m_IsMarkedForDead)
+		{
+			return;
+		}
+
+		if (pComponent)
+		{
+			pComponent->Update();
+		}
 	}
 }
 
@@ -45,7 +59,15 @@ void GameObject::LateUpdate()
 {
 	for (const auto& pComponent : m_vecComponents)
 	{
-		pComponent->LateUpdate();
+		if (m_IsMarkedForDead)
+		{
+			return;
+		}
+
+		if (pComponent)
+		{
+			pComponent->LateUpdate();
+		}
 	}
 }
 

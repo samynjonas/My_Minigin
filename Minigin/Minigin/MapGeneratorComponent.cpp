@@ -4,9 +4,9 @@
 #include "Controller.h"
 #include "InputManager.h"
 #include "ActionCommands.h"
+#include "ResourceManager.h"
 
 #include "Scene.h"
-#include "../TronBattleTanks/Gamestatemachine.h"
 
 #include "RenderComponent.h"
 #include "TransformComponent.h"
@@ -14,13 +14,13 @@
 #include "RigidbodyComponent.h"
 #include "HealthComponent.h"
 #include "ScoreComponent.h"
+#include "TextComponent.h"
 
-//TODO what is going on here
+#include "../TronBattleTanks/Gamestatemachine.h"
 #include "../TronBattleTanks/CounterComponent.h"
 #include "../TronBattleTanks/AI_BehaviourComponent.h"
 #include "../TronBattleTanks/GunComponent.h"
 #include "../TronBattleTanks/TeleportComponent.h"
-
 #include "../TronBattleTanks/Commands.h"
 
 
@@ -270,12 +270,46 @@ void dae::MapGeneratorComponent::LoadMap()
 	auto enemyCounter = GetOwner()->AddComponent<CounterComponent>();
 	enemyCounter->Initialize( static_cast<int>(m_VecEnemies.size()));
 
+	auto globalscore = GetOwner()->GetComponent<ScoreComponent>();
+	if (globalscore == nullptr)
+	{
+		globalscore = GetOwner()->AddComponent<ScoreComponent>();
+	}
+
+	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+
+	auto scoreText = std::make_shared<dae::GameObject>();
+	{
+		m_pScene->Add(scoreText);
+		scoreText->Initialize("Score", m_pScene);
+
+		TextComponent* pScoreTXT = scoreText->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		globalscore->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreText->transform()->SetLocalPosition({ 5, 400 });
+	}
+
+	auto playerLives = std::make_shared<dae::GameObject>();
+	TextComponent* pRemainingLives{ nullptr };
+	{
+		m_pScene->Add(playerLives);
+		playerLives->Initialize("Lives", m_pScene);
+
+		pRemainingLives = playerLives->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		playerLives->transform()->SetLocalPosition({ 5, 380 });
+	}
+
+
 	for (auto& enemy : m_VecEnemies)
 	{
 		auto health = enemy->GetComponent<HealthComponent>();
 		if (health)
 		{
 			health->AddObserver(enemyCounter, { ObjectDied });
+			health->AddObserver(globalscore, { ObjectDied });
 		}
 	}
 	enemyCounter->AddObserver(&Gamestatemachine::GetInstance(), { CounterFinished });
@@ -286,6 +320,7 @@ void dae::MapGeneratorComponent::LoadMap()
 		if (health)
 		{
 			health->AddObserver(&Gamestatemachine::GetInstance(), { ObjectDied, LiveLost });
+			health->AddObserver(pRemainingLives, { LiveLost });
 		}
 	}
 
@@ -303,6 +338,8 @@ void dae::MapGeneratorComponent::UnloadMap()
 
 	m_VecPlayers.clear();
 	m_VecEnemies.clear();
+
+
 }
 
 void dae::MapGeneratorComponent::Notify(Event currEvent, subject*)

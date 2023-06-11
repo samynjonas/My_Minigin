@@ -1,5 +1,4 @@
 #include "TextComponent.h"
-#include <SDL_ttf.h>
 #include <stdexcept>
 #include "Font.h"
 
@@ -30,10 +29,12 @@ void dae::TextComponent::SetFont(std::shared_ptr<Font> font)
 	m_NeedsUpdate = true;
 }
 
-void dae::TextComponent::Initialize(const std::string& text, std::shared_ptr<Font> font)
+void dae::TextComponent::Initialize(const std::string& text, std::shared_ptr<Font> font, SDL_Color fontColor)
 {
 	SetText(text);
 	SetFont(font);
+
+	m_TextColor = fontColor;
 }
 
 void dae::TextComponent::SetText(const std::string& text)
@@ -46,7 +47,7 @@ void dae::TextComponent::Update()
 {
 	if (m_NeedsUpdate)
 	{
-		const SDL_Color color = { 255,255,255 }; // only white text is supported now
+		const SDL_Color color = m_TextColor;
 		const auto surf = TTF_RenderText_Blended(m_Font->GetFont(), m_Text.c_str(), color);
 		if (surf == nullptr)
 		{
@@ -67,12 +68,12 @@ void dae::TextComponent::Update()
 
 void dae::TextComponent::Notify(Event currEvent, subject* pSubject)
 {
-	if (currEvent == ObjectDied)
+	if (currEvent == LiveLost)
 	{
 		HealthComponent* health = static_cast<HealthComponent*>(pSubject); //TODO improve this
 		if (typeid(*health) == typeid(HealthComponent))
 		{
-			const std::string text = "Levens: ";
+			const std::string text = "Lives: ";
 
 			SetText(text + std::to_string(health->GetLives()));
 		}
@@ -82,7 +83,7 @@ void dae::TextComponent::Notify(Event currEvent, subject* pSubject)
 		ScoreComponent* score = static_cast<ScoreComponent*>(pSubject); //TODO improve this
 		if (typeid(*score) == typeid(ScoreComponent))
 		{
-			const std::string text = "Punten: ";
+			const std::string text = "Score: ";
 
 			SetText(text + std::to_string(score->GetScore()));
 		}

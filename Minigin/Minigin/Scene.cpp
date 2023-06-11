@@ -27,7 +27,7 @@ void Scene::Remove(std::shared_ptr<GameObject> object)
 	}
 
 	InputManager::GetInstance().UnbindCommands();
-	CollisionManager::GetInstance().CheckForDeadColliders();
+	//CollisionManager::GetInstance().CheckForDeadColliders();
 
 	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
 }

@@ -3,6 +3,8 @@
 #include <string>
 #include <memory>
 
+#include <SDL_ttf.h>
+
 #include "Observer.h"
 
 namespace dae
@@ -23,13 +25,14 @@ namespace dae
 
 		void SetText(const std::string& text);
 		void SetFont(std::shared_ptr<Font> font);
-		void Initialize(const std::string& text, std::shared_ptr<Font> font);
+		void Initialize(const std::string& text, std::shared_ptr<Font> font, SDL_Color fontColor = { 255, 255, 255 });
 
-		virtual void Notify(Event currEvent, subject* actor) override; //TODO make subject better, not hardcoding the type
+		virtual void Notify(Event currEvent, subject* actor) override;
 
 	private:
 		std::string m_Text{};
 		std::shared_ptr<Font> m_Font{ nullptr };
+		SDL_Color m_TextColor{};
 
 		bool m_NeedsUpdate;
 	};

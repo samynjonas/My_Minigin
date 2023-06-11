@@ -47,12 +47,13 @@ void dae::HealthComponent::TakeLive(int amount)
 		std::cout << GetOwner()->GetName() << " m_Lives - 1 = " << m_Lives << std::endl;
 	}
 
+	NotifyObservers(LiveLost, this);
 	if (m_Lives < 0)
 	{
 		m_Lives = 0;
 		NotifyObservers(ObjectDied, this);
 
-		GetOwner()->MarkForDead();
+		//GetOwner()->MarkForDead();
 
 	}
 	else if (m_Lives > m_MaxLives)

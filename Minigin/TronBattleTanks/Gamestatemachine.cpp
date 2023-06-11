@@ -13,7 +13,7 @@ void dae::Gamestatemachine::Update()
 
 void dae::Gamestatemachine::Start()
 {
-	m_State = std::make_unique<HighscoreMenuState>();
+	m_State = std::make_unique<Singleplayer_MAP1>();
 	
 	m_State->Enter();
 }
