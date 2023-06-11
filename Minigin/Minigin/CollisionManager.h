@@ -29,6 +29,7 @@ namespace dae
 		void RegisterCollider(BoxColliderComponent* collider, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayers);
 
 		void UnregisterCollider(BoxColliderComponent* collider);
+		void CheckForDeadColliders();
 
 		void Update();
 		void SetDirty();

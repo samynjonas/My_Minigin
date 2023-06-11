@@ -41,6 +41,12 @@ void dae::HealthComponent::Notify(Event currEvent, subject*)
 void dae::HealthComponent::TakeLive(int amount)
 {
 	m_Lives -= amount;
+
+	if (GetOwner()->GetName() == "Player")
+	{
+		std::cout << GetOwner()->GetName() << " m_Lives - 1 = " << m_Lives << std::endl;
+	}
+
 	if (m_Lives < 0)
 	{
 		m_Lives = 0;

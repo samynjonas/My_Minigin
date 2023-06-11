@@ -54,6 +54,8 @@ namespace dae
 		void BindCommand(const unsigned int& button, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex);
 		void BindCommand(SDL_Scancode keyboardButton, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex);
 
+		void UnbindCommands();
+
 	private:
 		std::vector<std::unique_ptr<dae::Controller>> m_pControllers{};
 		

@@ -1,5 +1,7 @@
 #include "Scene.h"
 #include "GameObject.h"
+#include "InputManager.h"
+#include "CollisionManager.h"
 
 using namespace dae;
 
@@ -19,11 +21,31 @@ void Scene::Add(std::shared_ptr<GameObject> object)
 
 void Scene::Remove(std::shared_ptr<GameObject> object)
 {
+	if (object != nullptr)
+	{
+		object->MarkForDead();
+	}
+
+	InputManager::GetInstance().UnbindCommands();
+	CollisionManager::GetInstance().CheckForDeadColliders();
+
 	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
 }
 
 void Scene::RemoveAll()
 {
+	for (auto& object : m_objects)
+	{
+		if (object == nullptr)
+		{
+			continue;
+		}
+		object->MarkForDead();
+	}
+
+	InputManager::GetInstance().UnbindCommands();
+	CollisionManager::GetInstance().CheckForDeadColliders();
+
 	m_objects.clear();
 }
 

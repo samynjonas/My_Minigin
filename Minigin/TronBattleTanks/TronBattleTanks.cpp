@@ -39,6 +39,8 @@
 #include "sdl_sound_system.h"
 #include "Loggin_Sound_System.h"
 
+#include "ScoreSaver.h"
+
 #include "Logger.h"
 #include "Console_Logger.h"
 
@@ -109,11 +111,8 @@ void load()
 			ChangeGamemodeText->transform()->SetLocalPosition({ 150.f, 300.f });
 		}
 
-		auto loadGameController{	std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
 		auto loadGameKeyboard{		std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
-
-		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameController), 0);
-		InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
+		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
 
 	}	
 
@@ -216,14 +215,24 @@ void load()
 		sceneLevel3.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
 	
-	//auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("HighScoreMenu");
-	//{
-	//	//Read highscores out of json
-	//	//
-	//}
+	auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("HighScoreMenu");
+	{
+		auto StartGameText = std::make_shared<dae::GameObject>();
+		{
+			HighScoreScene.Add(StartGameText);
+
+			StartGameText->Initialize("HighscoreText", &HighScoreScene);
+			auto textComp = StartGameText->AddComponent<TextComponent>();
+			textComp->Initialize("Highscores", font);
+			StartGameText->transform()->SetLocalPosition({ 150.f, 100.f });
+		}
+	}
+
+	ScoreSaver jsonScoreSaver{ "../Data/Highscores.json" };
+	//jsonScoreSaver.AddScore(100, "FirstScore");
+	//jsonScoreSaver.GetHighScores();
 
 	Gamestatemachine::GetInstance().Start();
-
 }
 
 

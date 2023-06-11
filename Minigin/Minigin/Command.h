@@ -16,7 +16,7 @@ namespace dae
 
 		virtual ~Command() = default;
 		virtual void Execute() = 0;
-	protected:
+		
 		GameObject* GetGameObject() const
 		{
 			return m_pGameObject;

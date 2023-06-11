@@ -126,6 +126,11 @@ namespace dae
 			return m_IsMarkedForDead;
 		}
 
+		std::string GetName() const
+		{
+			return m_Name;
+		}
+
 	private:
 		std::string m_Name{};
 

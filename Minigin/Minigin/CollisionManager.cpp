@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "BoxColliderComponent.h"
+#include "GameObject.h"
 
 #include "servicelocator.h"
 #include "Logger.h"
@@ -62,6 +63,21 @@ void dae::CollisionManager::UnregisterCollider(BoxColliderComponent* collider)
 		}
 	}
 	m_IsDirty = true;
+}
+void dae::CollisionManager::CheckForDeadColliders()
+{
+	for (size_t index = 0; index < m_pColliders.size(); index++)
+	{
+		if (m_pColliders[index]->GetOwner()->IsMarkedForDead())
+		{
+			m_pColliders.erase(m_pColliders.begin() + index);
+			m_ColliderLayer.erase(m_ColliderLayer.begin() + index);
+			m_ColliderSkipLayer.erase(m_ColliderSkipLayer.begin() + index);
+			m_ColliderLinkedLayer.erase(m_ColliderLinkedLayer.begin() + index);
+			
+			m_IsDirty = true;
+		}
+	}
 }
 
 int dae::CollisionManager::AddLayer(const std::string& newLayer)

@@ -5,6 +5,8 @@
 #include "InputManager.h"
 #include <backends/imgui_impl_sdl.h>
 
+#include "GameObject.h"
+
 #include <iostream>
 
 bool dae::InputManager::ProcessInput()
@@ -158,5 +160,26 @@ void dae::InputManager::HandleControllerID(int playerIndex)
 
 		//Add new controller to vector
 		m_pControllers.push_back(std::make_unique<Controller>(static_cast<int>(m_pControllers.size())));
+	}
+}
+
+void dae::InputManager::UnbindCommands()
+{
+	for (size_t index = 0; index < m_ControllerCommands.size(); index++)
+	{
+		if (m_ControllerCommands[index]->GetGameObject()->IsMarkedForDead())
+		{
+			m_ControllerCommands.erase(m_ControllerCommands.begin() + index);
+			m_ControllerInputInfo.erase(m_ControllerInputInfo.begin() + index);
+		}
+	}
+
+	for (size_t index = 0; index < m_KeyboardCommands.size(); index++)
+	{
+		if (m_KeyboardCommands[index]->GetGameObject()->IsMarkedForDead())
+		{
+			m_KeyboardCommands.erase(m_KeyboardCommands.begin() + index);
+			m_KeyboardInputInfo.erase(m_KeyboardInputInfo.begin() + index);
+		}
 	}
 }

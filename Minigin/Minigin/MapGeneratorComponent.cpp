@@ -139,6 +139,10 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 
 	tank->renderer()->SetTexture("Sprites/RedTank.png");
 	tank->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
+
+	auto health = tank->AddComponent<dae::HealthComponent>();
+	health->Initialize(1, 3);
+
 	auto rb = tank->AddComponent<dae::RigidbodyComponent>();
 
 	auto collider = tank->AddComponent<dae::BoxColliderComponent>();
@@ -162,6 +166,11 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	auto trigger = tank->AddComponent<dae::BoxColliderComponent>();
 	trigger->Initialize(true, false, "PlayerTrigger", { "Teleporter" });
 	trigger->AddObserver(teleporter, { TriggerEnter });
+
+	auto trigger_2 = tank->AddComponent<dae::BoxColliderComponent>();
+	trigger_2->Initialize(true, false, "Player", { "Enemy" });
+	trigger_2->AddObserver(health, { TriggerEnter });
+
 
 	auto gunComponent = gun->AddComponent<dae::GunComponent>();
 	gunComponent->Initialize("Player", { "Enemy" }, 150.f, 1.5f);
