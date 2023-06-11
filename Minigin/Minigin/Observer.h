@@ -6,6 +6,9 @@ namespace dae
 
 	enum Event //TODO improve event system
 	{
+		LevelLoad,
+		LevelUnload,
+
 		LiveLost,
 		ObjectDied,
 
@@ -15,7 +18,9 @@ namespace dae
 		CollisionExit,
 
 		TriggerEnter,
-		TriggerExit
+		TriggerExit,
+
+		Teleport
 	};
 
 

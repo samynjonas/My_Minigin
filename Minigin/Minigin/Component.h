@@ -18,12 +18,10 @@ namespace dae
 		virtual void LateUpdate() {};
 		void SetOwner(GameObject* pOwner);
 
-	protected:
 		GameObject* GetOwner() const
 		{
 			return m_pOwner;
 		}
-
 
 	private:
 		GameObject* m_pOwner{ nullptr };

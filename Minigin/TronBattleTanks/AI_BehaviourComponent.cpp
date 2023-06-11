@@ -33,6 +33,24 @@ void dae::AI_BehaviourComponent::Initialize(const float& moveSpeed)
 
 void dae::AI_BehaviourComponent::Update()
 {
+	if (m_pGunComponent == nullptr)
+	{
+		m_pGunComponent = GetOwner()->GetComponent<GunComponent>();
+		if (m_pGunComponent == nullptr)
+		{
+			m_pGunComponent = GetOwner()->GetComponentInChildren<GunComponent>();
+			if (m_pGunComponent == nullptr)
+			{
+				return;
+			}
+		}
+	}
+
+	if (m_pGunComponent->IsInCooldown())
+	{
+		return;
+	}
+
 	dae::RaycastInfo hit{};
 	const auto& raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
 	glm::vec2 halfTexture = GetOwner()->renderer()->GetTextureDimensions() / 2.f;
@@ -47,17 +65,17 @@ void dae::AI_BehaviourComponent::Update()
 
 	if (CollisionManager::GetInstance().Raycast(raycastOrigin + halfTexture, Directions::Right, hit, 750, static_cast<int>(halfTexture.x), { "Player" }))
 	{
-		AimAndShoot({ -1, 0 });
+		AimAndShoot({ 1, 0 });
 	}
 
 	if (CollisionManager::GetInstance().Raycast(raycastOrigin + halfTexture, Directions::Above, hit, 750, static_cast<int>(halfTexture.y), { "Player" }))
 	{
-		AimAndShoot({ -1, 0 });
+		AimAndShoot({ 0, -1 });
 	}
 
 	if (CollisionManager::GetInstance().Raycast(raycastOrigin + halfTexture, Directions::Below, hit, 750, static_cast<int>(halfTexture.y), { "Player" }))
 	{
-		AimAndShoot({ -1, 0 });
+		AimAndShoot({ 0, 1 });
 	}
 
 	m_ElapsedSec += MiniginTimer::GetInstance().GetDeltaTime();
@@ -67,7 +85,6 @@ void dae::AI_BehaviourComponent::Update()
 		move_till_change += ORIGINAL_MOVE_TILL_CHANGE;
 		ChangeDirection();
 	}
-
 }
 
 void dae::AI_BehaviourComponent::Notify(Event currEvent, subject* /*actor*/)
@@ -125,15 +142,6 @@ void dae::AI_BehaviourComponent::ChangeDirection()
 }
 void dae::AI_BehaviourComponent::AimAndShoot(const glm::vec2& direction)
 {
-	if (m_pGunComponent == nullptr)
-	{
-		m_pGunComponent = GetOwner()->GetComponent<GunComponent>();
-		if (m_pGunComponent == nullptr)
-		{
-			return;
-		}
-	}
-
 	float angle{};
 	if (direction.x == 0)
 	{
@@ -157,8 +165,6 @@ void dae::AI_BehaviourComponent::AimAndShoot(const glm::vec2& direction)
 			angle = 180.f;
 		}
 	}
-
-	//TODO Rotate the gun towers the player
-
+	GetOwner()->transform()->SetLocalRotation(angle);
 	m_pGunComponent->Fire();
 }

@@ -21,6 +21,10 @@ namespace dae
 		void Update() override;
 
 		void Fire();
+		bool IsInCooldown() const
+		{
+			return m_HasShot;
+		}
 
 	private:
 		std::shared_ptr<dae::GameObject> Bullet(float x, float y);

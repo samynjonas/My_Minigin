@@ -55,6 +55,25 @@ namespace dae
 		}
 
 		template <class T>
+		T* GetComponentInChildren() const
+		{
+			static_assert(std::is_base_of<Component, T>(), "Needs to be component");
+
+			for (const auto& child : m_pChildren)
+			{
+				for (const auto& pComponent : child->m_vecComponents)
+				{
+					T* derivedComponent{ dynamic_cast<T*>(pComponent.get()) };
+
+					if (derivedComponent) return derivedComponent;
+				}
+			}			
+
+			return nullptr;
+		}
+
+
+		template <class T>
 		T* AddComponent()
 		{
 			static_assert(std::is_base_of<Component, T>(), "Needs to be component");

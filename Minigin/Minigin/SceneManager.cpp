@@ -14,6 +14,14 @@ void dae::SceneManager::Update()
 	{
 		m_pActiveScene->Update();
 	}
+	else
+	{
+		if (m_SceneIDs.empty())
+		{
+			return;
+		}
+		LoadScene(m_SceneIDs[0]);
+	}
 }
 
 void dae::SceneManager::Render()
@@ -35,13 +43,6 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 	
 	m_scenes.push_back(scene);
 	m_SceneIDs.push_back(name);
-
-	if (m_scenes.size() == 1)
-	{
-		//Is first scene
-		m_pActiveScene = scene.get();
-		m_pActiveScene->LoadScene();
-	}
 
 	return *scene;
 }

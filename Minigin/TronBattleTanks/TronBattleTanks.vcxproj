@@ -167,6 +167,7 @@
     <ClCompile Include="AI_BehaviourComponent.cpp" />
     <ClCompile Include="Commands.cpp" />
     <ClCompile Include="GunComponent.cpp" />
+    <ClCompile Include="TeleportComponent.cpp" />
     <ClCompile Include="TronBattleTanks.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="AI_BehaviourComponent.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="GunComponent.h" />
+    <ClInclude Include="TeleportComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -58,32 +58,172 @@ void load()
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
-	auto& scene = dae::SceneManager::GetInstance().CreateScene("Map1");
-	
-	auto remainingLivesGO = std::make_shared<dae::GameObject>();
-	scene.Add(remainingLivesGO);
-	remainingLivesGO->Initialize("Lives", &scene);
-	TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
-	pRemainingLives->Initialize("Lives: 3", font);
-	remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
-
-	auto scoreGO = std::make_shared<dae::GameObject>();
-	scoreGO->Initialize("Score", &scene);
-	TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
-	pScoreTXT->Initialize("Score: 0", font);
-	scoreGO->transform()->SetLocalPosition({ 5, 400 });
-	scene.Add(scoreGO);
-
-	auto map_1 = std::make_shared<dae::GameObject>();
+	auto& sceneLevel1 = dae::SceneManager::GetInstance().CreateScene("SceneMap1");
 	{
-		map_1->Initialize("Map_1", &scene);
-		scene.Add(map_1);
-		
-		map_1->transform()->SetLocalPosition({50.f, 0.f});
+		auto remainingLivesGO = std::make_shared<dae::GameObject>();
+		sceneLevel1.Add(remainingLivesGO);
+		remainingLivesGO->Initialize("Lives", &sceneLevel1);
+		TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
+
+		auto scoreGO = std::make_shared<dae::GameObject>();
+		scoreGO->Initialize("Score", &sceneLevel1);
+		TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		auto score = scoreGO->AddComponent<ScoreComponent>();
+		score->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreGO->transform()->SetLocalPosition({ 5, 400 });
+		sceneLevel1.Add(scoreGO);
+
+		//Spawn everything in the map
+		auto map_1 = std::make_shared<dae::GameObject>();
+		map_1->Initialize("Map_1", &sceneLevel1);
+		sceneLevel1.Add(map_1);
+
+		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
 
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
 		mapComponent->Initialize("../Data/Level/LevelLayout1.csv", 16);
+
+		//Attaching score to children -- add more score depending on player count
+		for (const auto& child : map_1.get()->GetChildren())
+		{
+			auto health = child->GetComponent<HealthComponent>();
+			if (health != nullptr)
+			{
+				health->AddObserver(score, { ObjectDied });
+			}
+		}
+
+		//Attaching lives to players -- TODO add move depending on player count
+		for (const auto& player : mapComponent->GetPlayers())
+		{
+			auto health = player->GetComponent<HealthComponent>();
+			if (health == nullptr)
+			{
+				continue;
+			}
+
+			health->AddObserver(pRemainingLives, { ObjectDied });
+		}
+
+		sceneLevel1.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
+
+	auto& sceneLevel2 = dae::SceneManager::GetInstance().CreateScene("SceneMap2");
+	{
+		auto remainingLivesGO = std::make_shared<dae::GameObject>();
+		sceneLevel2.Add(remainingLivesGO);
+		remainingLivesGO->Initialize("Lives", &sceneLevel2);
+		TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
+
+		auto scoreGO = std::make_shared<dae::GameObject>();
+		scoreGO->Initialize("Score", &sceneLevel2);
+		TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		auto score = scoreGO->AddComponent<ScoreComponent>();
+		score->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreGO->transform()->SetLocalPosition({ 5, 400 });
+		sceneLevel2.Add(scoreGO);
+
+		//Spawn everything in the map
+		auto map_1 = std::make_shared<dae::GameObject>();
+		map_1->Initialize("Map_2", &sceneLevel2);
+		sceneLevel2.Add(map_1);
+
+		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
+
+		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
+		mapComponent->Initialize("../Data/Level/LevelLayout2.csv", 16);
+
+		//Attaching score to children -- add more score depending on player count
+		for (const auto& child : map_1.get()->GetChildren())
+		{
+			auto health = child->GetComponent<HealthComponent>();
+			if (health != nullptr)
+			{
+				health->AddObserver(score, { ObjectDied });
+			}
+		}
+
+		//Attaching lives to players -- TODO add move depending on player count
+		for (const auto& player : mapComponent->GetPlayers())
+		{
+			auto health = player->GetComponent<HealthComponent>();
+			if (health == nullptr)
+			{
+				continue;
+			}
+
+			health->AddObserver(pRemainingLives, { ObjectDied });
+		}
+
+		sceneLevel2.AddObserver(mapComponent, { LevelLoad, LevelUnload });
+	}
+
+	auto& sceneLevel3 = dae::SceneManager::GetInstance().CreateScene("SceneMap3");
+	{
+		auto remainingLivesGO = std::make_shared<dae::GameObject>();
+		sceneLevel3.Add(remainingLivesGO);
+		remainingLivesGO->Initialize("Lives", &sceneLevel3);
+		TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
+
+		auto scoreGO = std::make_shared<dae::GameObject>();
+		scoreGO->Initialize("Score", &sceneLevel3);
+		TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		auto score = scoreGO->AddComponent<ScoreComponent>();
+		score->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreGO->transform()->SetLocalPosition({ 5, 400 });
+		sceneLevel3.Add(scoreGO);
+
+		//Spawn everything in the map
+		auto map_1 = std::make_shared<dae::GameObject>();
+		map_1->Initialize("Map_3", &sceneLevel3);
+		sceneLevel3.Add(map_1);
+
+		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
+
+		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
+		mapComponent->Initialize("../Data/Level/LevelLayout3.csv", 16);
+
+		//Attaching score to children -- add more score depending on player count
+		for (const auto& child : map_1.get()->GetChildren())
+		{
+			auto health = child->GetComponent<HealthComponent>();
+			if (health != nullptr)
+			{
+				health->AddObserver(score, { ObjectDied });
+			}
+		}
+
+		//Attaching lives to players -- TODO add move depending on player count
+		for (const auto& player : mapComponent->GetPlayers())
+		{
+			auto health = player->GetComponent<HealthComponent>();
+			if (health == nullptr)
+			{
+				continue;
+			}
+
+			health->AddObserver(pRemainingLives, { ObjectDied });
+		}
+
+		sceneLevel3.AddObserver(mapComponent, { LevelLoad, LevelUnload });
+	}
+	
+	
 }
 
 

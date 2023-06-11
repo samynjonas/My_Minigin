@@ -1,10 +1,11 @@
 #pragma once
 #include "SceneManager.h"
+#include "subject.h"
 
 namespace dae
 {
 	class GameObject;
-	class Scene final
+	class Scene final : public subject
 	{
 		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:

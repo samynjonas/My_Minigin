@@ -14,7 +14,13 @@
 
 using namespace dae;
 
-dae::GameObject::~GameObject() = default;
+dae::GameObject::~GameObject()
+{
+	for (auto& child : m_pChildren)
+	{
+		child->MarkForDead();
+	}
+}
 
 void GameObject::Initialize(const std::string& name, Scene* pScene)
 {

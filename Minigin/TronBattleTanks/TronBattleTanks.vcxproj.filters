@@ -42,6 +42,9 @@
     <ClCompile Include="AI_BehaviourComponent.cpp">
       <Filter>Source Files\Component</Filter>
     </ClCompile>
+    <ClCompile Include="TeleportComponent.cpp">
+      <Filter>Source Files\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Commands.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files\Component</Filter>
     </ClInclude>
     <ClInclude Include="AI_BehaviourComponent.h">
+      <Filter>Header Files\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TeleportComponent.h">
       <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>

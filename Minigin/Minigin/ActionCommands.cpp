@@ -50,6 +50,10 @@ void dae::GridMoveCommand::Execute()
 	if (m_pRigidBody == nullptr)
 	{
 		m_pRigidBody = GetGameObject()->GetComponent<RigidbodyComponent>();
+		if (m_pRigidBody == nullptr)
+		{
+			return;
+		}
 	}
 
 	glm::vec2 moveVector{ m_MoveSpeed, m_MoveSpeed };
@@ -71,10 +75,7 @@ void dae::GridMoveCommand::Execute()
 		moveVector.y = 0;
 	}
 
-	if (m_pRigidBody)
-	{
-		m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Force);
-	}
+	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Force);
 }
 void dae::GridMoveCommand::SetAxisValue(const glm::vec2& axisValue)
 {
@@ -100,12 +101,10 @@ void dae::RotationCommand::Execute()
 	}
 
 	float angle{ 0.f };
-
 	if (m_AxisValue.x == 0 && m_AxisValue.y == 0)
 	{
 		return;
 	}
-
 	if (m_AxisValue.x == 0)
 	{
 		if (m_AxisValue.y > 0)

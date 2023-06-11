@@ -80,11 +80,11 @@ void Scene::Render() const
 
 void Scene::LoadScene()
 {
-
+	NotifyObservers(LevelLoad, this);
 }
 
 void Scene::UnloadScene()
 {
-
+	NotifyObservers(LevelUnload, this);
 }
 
