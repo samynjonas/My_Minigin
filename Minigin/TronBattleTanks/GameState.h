@@ -91,10 +91,24 @@ namespace dae
 	};
 
 
-	class CoopState final : public GameState
+	class CoopState : public GameState
 	{
 	public:
-		~CoopState() = default;
+		virtual ~CoopState() = default;
+
+		virtual void Enter() override;
+		virtual void Exit() override;
+
+		virtual std::unique_ptr<GameState> GameStateNotify(Event currEvent) override;
+
+	private:
+
+	};
+
+	class CoopState_MAP1 final : public CoopState
+	{
+	public:
+		~CoopState_MAP1() = default;
 
 		void Enter() override;
 		void Exit() override;
@@ -104,6 +118,35 @@ namespace dae
 	private:
 
 	};
+
+	class CoopState_MAP2 final : public CoopState
+	{
+	public:
+		~CoopState_MAP2() = default;
+
+		void Enter() override;
+		void Exit() override;
+
+		std::unique_ptr<GameState> GameStateNotify(Event currEvent) override;
+
+	private:
+
+	};
+
+	class CoopState_MAP3 final : public CoopState
+	{
+	public:
+		~CoopState_MAP3() = default;
+
+		void Enter() override;
+		void Exit() override;
+
+		std::unique_ptr<GameState> GameStateNotify(Event currEvent) override;
+
+	private:
+
+	};
+
 
 	class VersusState final : public GameState
 	{

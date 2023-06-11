@@ -33,6 +33,7 @@
 #include "RigidbodyComponent.h"
 #include "BoxColliderComponent.h"
 #include "AI_BehaviourComponent.h"
+#include "LeaderbordComponent.h"
 
 #include "servicelocator.h"
 #include "sound_system.h"
@@ -114,7 +115,7 @@ void load()
 		auto loadGameKeyboard{		std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
 		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
 
-	}	
+	}
 
 	auto& sceneLevel1 = dae::SceneManager::GetInstance().CreateScene("SceneMap1");
 	{
@@ -214,23 +215,117 @@ void load()
 
 		sceneLevel3.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
-	
-	auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("HighScoreMenu");
-	{
-		auto StartGameText = std::make_shared<dae::GameObject>();
-		{
-			HighScoreScene.Add(StartGameText);
 
-			StartGameText->Initialize("HighscoreText", &HighScoreScene);
-			auto textComp = StartGameText->AddComponent<TextComponent>();
-			textComp->Initialize("Highscores", font);
-			StartGameText->transform()->SetLocalPosition({ 150.f, 100.f });
-		}
+	auto& sceneLevel1_coop = dae::SceneManager::GetInstance().CreateScene("SceneMap1_Coop");
+	{
+		auto remainingLivesGO = std::make_shared<dae::GameObject>();
+		sceneLevel1_coop.Add(remainingLivesGO);
+		remainingLivesGO->Initialize("Lives", &sceneLevel1_coop);
+		TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
+
+		auto scoreGO = std::make_shared<dae::GameObject>();
+		scoreGO->Initialize("Score", &sceneLevel1_coop);
+		TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		auto score = scoreGO->AddComponent<ScoreComponent>();
+		score->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreGO->transform()->SetLocalPosition({ 5, 400 });
+		sceneLevel1_coop.Add(scoreGO);
+
+		//Spawn everything in the map
+		auto map_1 = std::make_shared<dae::GameObject>();
+		map_1->Initialize("Map_1", &sceneLevel1_coop);
+		sceneLevel1_coop.Add(map_1);
+
+		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
+
+		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
+		mapComponent->Initialize("../Data/Level/LevelLayout1.csv", 16, 2);
+
+		sceneLevel1_coop.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
 
-	ScoreSaver jsonScoreSaver{ "../Data/Highscores.json" };
-	//jsonScoreSaver.AddScore(100, "FirstScore");
-	//jsonScoreSaver.GetHighScores();
+	auto& sceneLevel2_coop = dae::SceneManager::GetInstance().CreateScene("SceneMap2_Coop");
+	{
+		auto remainingLivesGO = std::make_shared<dae::GameObject>();
+		sceneLevel2_coop.Add(remainingLivesGO);
+		remainingLivesGO->Initialize("Lives", &sceneLevel2_coop);
+		TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
+
+		auto scoreGO = std::make_shared<dae::GameObject>();
+		scoreGO->Initialize("Score", &sceneLevel2_coop);
+		TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		auto score = scoreGO->AddComponent<ScoreComponent>();
+		score->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreGO->transform()->SetLocalPosition({ 5, 400 });
+		sceneLevel2_coop.Add(scoreGO);
+
+		//Spawn everything in the map
+		auto map_1 = std::make_shared<dae::GameObject>();
+		map_1->Initialize("Map_2", &sceneLevel2_coop);
+		sceneLevel2_coop.Add(map_1);
+
+		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
+
+		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
+		mapComponent->Initialize("../Data/Level/LevelLayout2.csv", 16, 2);
+
+		sceneLevel2_coop.AddObserver(mapComponent, { LevelLoad, LevelUnload });
+	}
+
+	auto& sceneLevel3_coop = dae::SceneManager::GetInstance().CreateScene("SceneMap3_Coop");
+	{
+		auto remainingLivesGO = std::make_shared<dae::GameObject>();
+		sceneLevel3_coop.Add(remainingLivesGO);
+		remainingLivesGO->Initialize("Lives", &sceneLevel3_coop);
+		TextComponent* pRemainingLives = remainingLivesGO->AddComponent<dae::TextComponent>();
+		pRemainingLives->Initialize("Lives: 3", font);
+		remainingLivesGO->transform()->SetLocalPosition({ 5, 380 });
+
+		auto scoreGO = std::make_shared<dae::GameObject>();
+		scoreGO->Initialize("Score", &sceneLevel3_coop);
+		TextComponent* pScoreTXT = scoreGO->AddComponent<dae::TextComponent>();
+		pScoreTXT->Initialize("Score: 0", font);
+
+		auto score = scoreGO->AddComponent<ScoreComponent>();
+		score->AddObserver(pScoreTXT, { ScoreUpdated });
+
+		scoreGO->transform()->SetLocalPosition({ 5, 400 });
+		sceneLevel3_coop.Add(scoreGO);
+
+		//Spawn everything in the map
+		auto map_1 = std::make_shared<dae::GameObject>();
+		map_1->Initialize("Map_3", &sceneLevel3_coop);
+		sceneLevel3_coop.Add(map_1);
+
+		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
+
+		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
+		mapComponent->Initialize("../Data/Level/LevelLayout3.csv", 16, 2);
+
+		sceneLevel3_coop.AddObserver(mapComponent, { LevelLoad, LevelUnload });
+	}
+
+	auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("HighScoreMenu");
+	{
+		auto leaderBord = std::make_shared<dae::GameObject>();
+		{
+			HighScoreScene.Add(leaderBord);
+
+			leaderBord->Initialize("leaderBord", &HighScoreScene);
+			auto leaderbordComp = leaderBord->AddComponent<LeaderbordComponent>();
+			leaderbordComp->DisplayLeaderbord();
+		}
+	}
 
 	Gamestatemachine::GetInstance().Start();
 }

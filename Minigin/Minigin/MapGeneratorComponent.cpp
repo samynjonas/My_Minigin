@@ -135,7 +135,6 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 
 	tank->Initialize("Player", m_pScene);
 	tank->SetParent(GetOwner());
-	m_VecPlayers.push_back(tank.get());
 
 	tank->renderer()->SetTexture("Sprites/RedTank.png");
 	tank->transform()->SetLocalPosition({ m_ParentPos.x + coll * m_BlockSize, m_ParentPos.y + row * m_BlockSize });
@@ -176,14 +175,15 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	gunComponent->Initialize("Player", { "Enemy" }, 150.f, 1.5f);
 
 	auto player1_MoveCommand{ std::make_unique<dae::GridMoveCommand>(tank.get(), 50.f) };
-	InputManager::GetInstance().BindCommand(Controller::GamepadInput::LEFT_THUMB, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::LEFT_THUMB, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), static_cast<int>(m_VecPlayers.size()));
 	
 	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(gun.get())	};
-	InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), static_cast<int>(m_VecPlayers.size()));
 
 	auto player1_GunRotationCommand{ std::make_unique<dae::RotationCommand>(gun.get(), 50.f) };
-	InputManager::GetInstance().BindCommand(Controller::GamepadInput::RIGHT_THUMB,	InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::RIGHT_THUMB,	InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), static_cast<int>(m_VecPlayers.size()));
 
+	m_VecPlayers.push_back(tank.get());
 }
 
 void dae::MapGeneratorComponent::CreateTeleporter(int row, int coll)
@@ -295,10 +295,14 @@ void dae::MapGeneratorComponent::UnloadMap()
 {
 	for (auto& child : GetOwner()->GetChildren())
 	{
-		child->MarkForDead();
+		if (child)
+		{
+			child->MarkForDead();
+		}
 	}
 
 	m_VecPlayers.clear();
+	m_VecEnemies.clear();
 }
 
 void dae::MapGeneratorComponent::Notify(Event currEvent, subject*)

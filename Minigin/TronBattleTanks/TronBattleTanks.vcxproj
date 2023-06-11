@@ -170,6 +170,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Gamestatemachine.cpp" />
     <ClCompile Include="GunComponent.cpp" />
+    <ClCompile Include="LeaderbordComponent.cpp" />
     <ClCompile Include="ScoreSaver.cpp" />
     <ClCompile Include="TeleportComponent.cpp" />
     <ClCompile Include="TronBattleTanks.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Gamestatemachine.h" />
     <ClInclude Include="GunComponent.h" />
+    <ClInclude Include="LeaderbordComponent.h" />
     <ClInclude Include="ScoreSaver.h" />
     <ClInclude Include="TeleportComponent.h" />
   </ItemGroup>

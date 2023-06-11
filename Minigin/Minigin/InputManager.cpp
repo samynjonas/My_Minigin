@@ -27,7 +27,7 @@ bool dae::InputManager::ProcessInput()
 				{
 					if (e.key.keysym.scancode == m_KeyboardInputInfo[index].button)
 					{
-						Command* command = m_ControllerCommands[index].get();
+						Command* command = m_KeyboardCommands[index].get();
 						if (command == nullptr)
 						{
 							continue;
@@ -45,7 +45,7 @@ bool dae::InputManager::ProcessInput()
 				{
 					if (e.key.keysym.scancode == m_KeyboardInputInfo[index].button)
 					{
-						Command* command = m_ControllerCommands[index].get();
+						Command* command = m_KeyboardCommands[index].get();
 						if (command == nullptr)
 						{
 							continue;

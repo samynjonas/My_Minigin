@@ -13,8 +13,21 @@ void dae::MainMenuState::Exit()
 
 }
 
-std::unique_ptr<dae::GameState> dae::MainMenuState::GameStateNotify(Event)
+std::unique_ptr<dae::GameState> dae::MainMenuState::GameStateNotify(Event currEvent)
 {
+	if (currEvent == SinglePlayer)
+	{
+		return std::make_unique<Singleplayer_MAP1>();
+	}
+	else if (currEvent == Coop)
+	{
+		return std::make_unique<CoopState_MAP1>();
+	}
+	else if (currEvent == Versus)
+	{
+		return std::make_unique<VersusState>();
+	}
+
 	return nullptr;
 }
 
@@ -191,6 +204,111 @@ std::unique_ptr<dae::GameState> dae::CoopState::GameStateNotify(Event currEvent)
 		//If all enemies died
 		//Load next map
 
+	}
+	return nullptr;
+}
+
+// --------------------------- COOP - MAP_1 --------------------------------------
+
+void dae::CoopState_MAP1::Enter()
+{
+	SceneManager::GetInstance().LoadScene("SceneMap1_Coop");
+}
+
+void dae::CoopState_MAP1::Exit()
+{
+
+}
+
+std::unique_ptr<dae::GameState> dae::CoopState_MAP1::GameStateNotify(Event currEvent)
+{
+	if (currEvent == LiveLost)
+	{
+		//If player lost live
+		//Reload current level
+		SceneManager::GetInstance().LoadScene(SceneManager::GetInstance().GetActiveSceneName());
+	}
+	else if (currEvent == ObjectDied)
+	{
+		//If player lost all lives
+		//Change state to highscore state
+		return std::make_unique<HighscoreMenuState>();
+	}
+	else if (currEvent == CounterFinished)
+	{
+		//If all enemies died
+		//Load next map
+		return std::make_unique<CoopState_MAP2>();
+	}
+	return nullptr;
+}
+
+// --------------------------- COOP - MAP_2 --------------------------------------
+
+void dae::CoopState_MAP2::Enter()
+{
+	SceneManager::GetInstance().LoadScene("SceneMap2_Coop");
+}
+
+void dae::CoopState_MAP2::Exit()
+{
+
+}
+
+std::unique_ptr<dae::GameState> dae::CoopState_MAP2::GameStateNotify(Event currEvent)
+{
+	if (currEvent == LiveLost)
+	{
+		//If player lost live
+		//Reload current level
+		SceneManager::GetInstance().LoadScene(SceneManager::GetInstance().GetActiveSceneName());
+	}
+	else if (currEvent == ObjectDied)
+	{
+		//If player lost all lives
+		//Change state to highscore state
+		return std::make_unique<HighscoreMenuState>();
+	}
+	else if (currEvent == CounterFinished)
+	{
+		//If all enemies died
+		//Load next map
+		return std::make_unique<CoopState_MAP3>();
+	}
+	return nullptr;
+}
+
+// --------------------------- COOP - MAP_3 --------------------------------------
+
+void dae::CoopState_MAP3::Enter()
+{
+	SceneManager::GetInstance().LoadScene("SceneMap3_Coop");
+}
+
+void dae::CoopState_MAP3::Exit()
+{
+
+}
+
+std::unique_ptr<dae::GameState> dae::CoopState_MAP3::GameStateNotify(Event currEvent)
+{
+	if (currEvent == LiveLost)
+	{
+		//If player lost live
+		//Reload current level
+		SceneManager::GetInstance().LoadScene(SceneManager::GetInstance().GetActiveSceneName());
+	}
+	else if (currEvent == ObjectDied)
+	{
+		//If player lost all lives
+		//Change state to highscore state
+		return std::make_unique<HighscoreMenuState>();
+	}
+	else if (currEvent == CounterFinished)
+	{
+		//If all enemies died
+		//Load next map
+		return std::make_unique<CoopState_MAP1>();
 	}
 	return nullptr;
 }

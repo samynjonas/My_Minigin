@@ -69,6 +69,9 @@
     <ClCompile Include="ScoreSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LeaderbordComponent.cpp">
+      <Filter>Source Files\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Commands.h">
@@ -97,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="ScoreSaver.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LeaderbordComponent.h">
+      <Filter>Header Files\Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

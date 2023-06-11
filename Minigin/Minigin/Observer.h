@@ -21,7 +21,11 @@ namespace dae
 		TriggerEnter,
 		TriggerExit,
 
-		Teleport
+		Teleport,
+	
+		SinglePlayer,
+		Coop,
+		Versus
 	};
 
 
