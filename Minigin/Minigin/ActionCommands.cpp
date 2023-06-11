@@ -1,14 +1,18 @@
 #include "ActionCommands.h"
-#include <iostream>
 
 #include "GameObject.h"
+
 #include "TransformComponent.h"
 #include "RigidbodyComponent.h"
+
 #include "MiniginTimer.h"
+#include "SceneManager.h"
+
+#include <iostream>
 #include <math.h>
 
 dae::MoveCommand::MoveCommand(GameObject* pGameObject, float moveSpeed)
-	: Command(pGameObject)
+	: AnalogCommand(pGameObject)
 	, m_MoveSpeed{ moveSpeed }
 {
 
@@ -29,14 +33,10 @@ void dae::MoveCommand::Execute()
 
 	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Impulse);
 }
-void dae::MoveCommand::SetAxisValue(const glm::vec2& axisValue)
-{
-	m_AxisValue = axisValue;
-}
 
 
 dae::GridMoveCommand::GridMoveCommand(GameObject* pGameObject, float moveSpeed)
-	: Command(pGameObject)
+	: AnalogCommand(pGameObject)
 	, m_MoveSpeed{ moveSpeed }
 {
 
@@ -77,14 +77,9 @@ void dae::GridMoveCommand::Execute()
 
 	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Force);
 }
-void dae::GridMoveCommand::SetAxisValue(const glm::vec2& axisValue)
-{
-	m_AxisValue = axisValue;
-}
-
 
 dae::RotationCommand::RotationCommand(GameObject* pGameObject, float rotationSpeed)
-	: Command(pGameObject)
+	: AnalogCommand(pGameObject)
 	, m_RotationSpeed{ rotationSpeed }
 {
 	m_pTransform = pGameObject->transform();
@@ -139,7 +134,74 @@ void dae::RotationCommand::Execute()
 	}
 	m_pTransform->SetLocalRotation(angle);
 }
-void dae::RotationCommand::SetAxisValue(const glm::vec2& axisValue)
+
+dae::LoadSceneCommand::LoadSceneCommand(GameObject* pGameObject, const std::string sceneName)
+	: Command(pGameObject)
+	, m_SceneName{ sceneName }
 {
-	m_AxisValue = axisValue;
+
+}
+
+void dae::LoadSceneCommand::Execute()
+{
+	SceneManager::GetInstance().LoadScene(m_SceneName);
+}
+
+
+dae::LoadNextSceneCommand::LoadNextSceneCommand(GameObject* pGameObject)
+	: Command(pGameObject)
+{
+
+}
+
+void dae::LoadNextSceneCommand::Execute()
+{
+	SceneManager& sceneManager = SceneManager::GetInstance();
+	if (sceneManager.GetSceneNames().empty())
+	{
+		return;
+	}
+	
+	int currentSceneId = sceneManager.StringToID(sceneManager.GetActiveSceneName(), false);
+	if (currentSceneId == -1)
+	{
+		return;
+	}
+
+	++currentSceneId;
+	if (currentSceneId >= sceneManager.GetSceneNames().size())
+	{
+		currentSceneId = 0;
+	}
+
+	SceneManager::GetInstance().LoadScene(sceneManager.GetSceneNames()[currentSceneId]);
+}
+
+dae::LoadPreviousSceneCommand::LoadPreviousSceneCommand(GameObject* pGameObject)
+	: Command(pGameObject)
+{
+
+}
+
+void dae::LoadPreviousSceneCommand::Execute()
+{
+	SceneManager& sceneManager = SceneManager::GetInstance();
+	if (sceneManager.GetSceneNames().empty())
+	{
+		return;
+	}
+
+	int currentSceneId = sceneManager.StringToID(sceneManager.GetActiveSceneName(), false);
+	if (currentSceneId == -1)
+	{
+		return;
+	}
+
+	--currentSceneId;
+	if (currentSceneId < 0)
+	{
+		currentSceneId = static_cast<int>(sceneManager.GetSceneNames().size()) - 1;
+	}
+
+	SceneManager::GetInstance().LoadScene(sceneManager.GetSceneNames()[currentSceneId]);
 }

@@ -19,6 +19,15 @@ namespace dae
 		void LoadScene();
 		void UnloadScene();
 
+		std::string GetSceneName() const
+		{
+			return m_name;
+		}
+		const std::vector<std::shared_ptr<GameObject>>& GetGameObject() const
+		{
+			return m_objects;
+		}
+
 		~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;

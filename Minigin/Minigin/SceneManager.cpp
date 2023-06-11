@@ -5,11 +5,6 @@
 
 void dae::SceneManager::Update()
 {
-	//for(auto& scene : m_scenes)
-	//{
-	//	scene->Update();
-	//}
-
 	if (m_pActiveScene)
 	{
 		m_pActiveScene->Update();
@@ -26,11 +21,6 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::Render()
 {
-	//for (const auto& scene : m_scenes)
-	//{
-	//	scene->Render();
-	//}
-
 	if (m_pActiveScene)
 	{
 		m_pActiveScene->Render();
@@ -47,13 +37,13 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 	return *scene;
 }
 
-void dae::SceneManager::LoadScene(const std::string& name)
+dae::Scene* dae::SceneManager::LoadScene(const std::string& name)
 {
 	int sceneID = StringToID(name);
 
 	if (sceneID < 0 || sceneID >= m_SceneIDs.size())
 	{
-		return;
+		return nullptr;
 	}
 
 	servicelocator<Logger>::get_serviceLocator().LogWarning({ "Loading scene: " + std::to_string(sceneID) });
@@ -65,6 +55,7 @@ void dae::SceneManager::LoadScene(const std::string& name)
 	m_pActiveScene = m_scenes[sceneID].get();
 	
 	m_pActiveScene->LoadScene();
+	return m_pActiveScene;
 }
 
 int dae::SceneManager::StringToID(const std::string& name, bool returnValid) const
@@ -83,4 +74,13 @@ int dae::SceneManager::StringToID(const std::string& name, bool returnValid) con
 		return 0;
 	}
 	return -1;
+}
+
+std::string dae::SceneManager::GetActiveSceneName() const
+{
+	if (m_pActiveScene == nullptr)
+	{
+		return "";
+	}
+	return m_pActiveScene->GetSceneName();
 }

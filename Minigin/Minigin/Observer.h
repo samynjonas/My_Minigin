@@ -13,6 +13,7 @@ namespace dae
 		ObjectDied,
 
 		ScoreUpdated,
+		CounterFinished,
 
 		CollisionEnter,
 		CollisionExit,

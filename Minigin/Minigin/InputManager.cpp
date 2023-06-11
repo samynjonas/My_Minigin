@@ -25,7 +25,12 @@ bool dae::InputManager::ProcessInput()
 				{
 					if (e.key.keysym.scancode == m_KeyboardInputInfo[index].button)
 					{
-						m_KeyboardCommands[index].get()->Execute();
+						Command* command = m_ControllerCommands[index].get();
+						if (command == nullptr)
+						{
+							continue;
+						}
+						command->Execute();
 					}
 				}
 			}
@@ -38,7 +43,12 @@ bool dae::InputManager::ProcessInput()
 				{
 					if (e.key.keysym.scancode == m_KeyboardInputInfo[index].button)
 					{
-						m_KeyboardCommands[index].get()->Execute();
+						Command* command = m_ControllerCommands[index].get();
+						if (command == nullptr)
+						{
+							continue;
+						}
+						command->Execute();
 					}
 				}
 			}
@@ -55,6 +65,12 @@ bool dae::InputManager::ProcessInput()
 	for (size_t index = 0; index < m_ControllerInputInfo.size(); index++)
 	{
 		Command* command = m_ControllerCommands[index].get();
+		if (command == nullptr)
+		{
+			//Take command out of vector
+			continue;
+		}
+
 		switch (m_ControllerInputInfo[index].type)
 		{
 		case InputType::OnButtonDown:
@@ -68,31 +84,25 @@ bool dae::InputManager::ProcessInput()
 			break;
 		case InputType::OnAnalog:
 		{
-			//TODO improve this
-			MoveCommand* moveCommand = dynamic_cast<MoveCommand*>(command);
-			if (moveCommand)
+			if (m_ControllerInputInfo[index].button == Controller::GamepadInput::LEFT_THUMB)
 			{
-				moveCommand->SetAxisValue(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(true));
-				isActivated = true;
+				AnalogCommand* analogCommand = dynamic_cast<AnalogCommand*>(command);
+				if (analogCommand)
+				{
+					analogCommand->SetAxix(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(true));
+					isActivated = true;
+				}
 			}
 			else
 			{
-				GridMoveCommand* gridMovement = dynamic_cast<GridMoveCommand*>(command);
-				if (gridMovement)
+				AnalogCommand* analogCommand = dynamic_cast<AnalogCommand*>(command);
+				if (analogCommand)
 				{
-					gridMovement->SetAxisValue(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(true));
+					analogCommand->SetAxix(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(false));
 					isActivated = true;
 				}
-				else
-				{
-					RotationCommand* rotation = dynamic_cast<RotationCommand*>(command);
-					if (rotation)
-					{
-						rotation->SetAxisValue(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(false));
-						isActivated = true;
-					}
-				}
 			}
+
 		}
 		break;
 		default:

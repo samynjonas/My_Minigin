@@ -166,6 +166,9 @@
     <ClCompile Include="..\Minigin\MapGeneratorComponent.cpp" />
     <ClCompile Include="AI_BehaviourComponent.cpp" />
     <ClCompile Include="Commands.cpp" />
+    <ClCompile Include="CounterComponent.cpp" />
+    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Gamestatemachine.cpp" />
     <ClCompile Include="GunComponent.cpp" />
     <ClCompile Include="TeleportComponent.cpp" />
     <ClCompile Include="TronBattleTanks.cpp" />
@@ -174,6 +177,9 @@
     <ClInclude Include="..\Minigin\MapGeneratorComponent.h" />
     <ClInclude Include="AI_BehaviourComponent.h" />
     <ClInclude Include="Commands.h" />
+    <ClInclude Include="CounterComponent.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="Gamestatemachine.h" />
     <ClInclude Include="GunComponent.h" />
     <ClInclude Include="TeleportComponent.h" />
   </ItemGroup>

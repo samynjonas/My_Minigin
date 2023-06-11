@@ -6,6 +6,7 @@
 #include "ActionCommands.h"
 
 #include "Scene.h"
+#include "../TronBattleTanks/Gamestatemachine.h"
 
 #include "RenderComponent.h"
 #include "TransformComponent.h"
@@ -15,6 +16,7 @@
 #include "ScoreComponent.h"
 
 //TODO what is going on here
+#include "../TronBattleTanks/CounterComponent.h"
 #include "../TronBattleTanks/AI_BehaviourComponent.h"
 #include "../TronBattleTanks/GunComponent.h"
 #include "../TronBattleTanks/TeleportComponent.h"
@@ -30,8 +32,9 @@ dae::MapGeneratorComponent::MapGeneratorComponent()
 
 }
 
-void dae::MapGeneratorComponent::Initialize(const std::string& jsonMapFile, const float& block_size)
+void dae::MapGeneratorComponent::Initialize(const std::string& jsonMapFile, const float& block_size, const int playercount)
 {
+	MAX_PLAYERS = playercount;
 	m_BlockSize = block_size;
 	m_JsonMapFile = jsonMapFile;
 
@@ -115,10 +118,18 @@ void dae::MapGeneratorComponent::CreateBlueTank(int row, int coll)
 
 	auto gunComponent = blueTank->AddComponent<dae::GunComponent>();
 	gunComponent->Initialize("Enemy", { "Player" }, 150, 2.5f);
+
+	m_VecEnemies.push_back(blueTank.get());
 }
 
 void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 {
+	if (m_VecPlayers.size() >= MAX_PLAYERS)
+	{
+		CreateFloor(row, coll);
+		return;
+	}
+
 	auto tank = std::make_shared<dae::GameObject>();
 	m_pScene->Add(tank);
 
@@ -202,6 +213,8 @@ void dae::MapGeneratorComponent::CreateRecognizer(int row, int coll)
 	collider->Initialize(6, 6, 20, 20, false, false, "Enemy", { "Walls" });
 	collider->AddObserver(aiBehaviour, { CollisionEnter, CollisionExit });
 	collider->AddObserver(rb, { CollisionEnter, CollisionExit });
+
+	m_VecEnemies.push_back(recognizer.get());
 }
 
 void dae::MapGeneratorComponent::LoadMap()
@@ -244,6 +257,29 @@ void dae::MapGeneratorComponent::LoadMap()
 			}
 		}
 	}
+
+	auto enemyCounter = GetOwner()->AddComponent<CounterComponent>();
+	enemyCounter->Initialize( static_cast<int>(m_VecEnemies.size()));
+
+	for (auto& enemy : m_VecEnemies)
+	{
+		auto health = enemy->GetComponent<HealthComponent>();
+		if (health)
+		{
+			health->AddObserver(enemyCounter, { ObjectDied });
+		}
+	}
+	enemyCounter->AddObserver(&Gamestatemachine::GetInstance(), { CounterFinished });
+
+	for (auto& player : m_VecPlayers)
+	{
+		auto health = player->GetComponent<HealthComponent>();
+		if (health)
+		{
+			health->AddObserver(&Gamestatemachine::GetInstance(), { ObjectDied, LiveLost });
+		}
+	}
+
 }
 
 void dae::MapGeneratorComponent::UnloadMap()

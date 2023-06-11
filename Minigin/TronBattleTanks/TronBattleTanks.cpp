@@ -8,11 +8,12 @@
 #include <iostream>
 #include <string>
 
+#include "sdl.h"
 #include "Minigin.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "Scene.h"
-#include "sdl.h"
+#include "Gamestatemachine.h"
 
 #include "GameObject.h"
 #include "Controller.h"
@@ -59,6 +60,18 @@ void load()
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
 
+	//Scene controller can be used to go to next or previous scene
+	auto sceneController = std::make_shared<dae::GameObject>();
+	{
+		sceneController->Initialize("Scene controller", nullptr);
+
+		auto nextScene{ std::make_unique<dae::LoadNextSceneCommand>(sceneController.get()) };
+		InputManager::GetInstance().BindCommand(SDL_SCANCODE_F4, InputManager::InputType::OnButtonUp, std::move(nextScene), 0);
+
+		auto prevScene{ std::make_unique<dae::LoadPreviousSceneCommand>(sceneController.get()) };
+		InputManager::GetInstance().BindCommand(SDL_SCANCODE_F3, InputManager::InputType::OnButtonUp, std::move(prevScene), 0);
+	}
+
 	auto& MainMenuScene = dae::SceneManager::GetInstance().CreateScene("MainMenu");
 	{
 		//Show start game
@@ -66,13 +79,42 @@ void load()
 		//Ask for controls
 		//Quit game
 
-		auto testgb = std::make_shared<dae::GameObject>();
-		MainMenuScene.Add(testgb);
+		auto StartGameText = std::make_shared<dae::GameObject>();
+		{
+			MainMenuScene.Add(StartGameText);
 
-		testgb->Initialize("Test", &MainMenuScene);
+			StartGameText->Initialize("StartGameText", &MainMenuScene);
+			auto textComp = StartGameText->AddComponent<TextComponent>();
+			textComp->Initialize("A/SPACE to start", font);
+			StartGameText->transform()->SetLocalPosition({150.f, 100.f});
+		}
 
-		auto randomCommand{ std::make_unique<dae::TestCommand_playSound>(testgb.get()) };
-		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(randomCommand), 0);
+		auto QuitGameText = std::make_shared<dae::GameObject>();
+		{
+			MainMenuScene.Add(QuitGameText);
+
+			QuitGameText->Initialize("QuitGameText", &MainMenuScene);
+			auto textComp = QuitGameText->AddComponent<TextComponent>();
+			textComp->Initialize("B/ESC to quit", font);
+			QuitGameText->transform()->SetLocalPosition({ 150.f, 200.f });
+		}
+
+		auto ChangeGamemodeText = std::make_shared<dae::GameObject>();
+		{
+			MainMenuScene.Add(ChangeGamemodeText);
+
+			ChangeGamemodeText->Initialize("StartGameText", &MainMenuScene);
+			auto textComp = ChangeGamemodeText->AddComponent<TextComponent>();
+			textComp->Initialize("T/Tab to Change", font);
+			ChangeGamemodeText->transform()->SetLocalPosition({ 150.f, 300.f });
+		}
+
+		auto loadGameController{	std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
+		auto loadGameKeyboard{		std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
+
+		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameController), 0);
+		InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
+
 	}	
 
 	auto& sceneLevel1 = dae::SceneManager::GetInstance().CreateScene("SceneMap1");
@@ -104,28 +146,6 @@ void load()
 
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
 		mapComponent->Initialize("../Data/Level/LevelLayout1.csv", 16);
-
-		//Attaching score to children -- add more score depending on player count
-		for (const auto& child : map_1.get()->GetChildren())
-		{
-			auto health = child->GetComponent<HealthComponent>();
-			if (health != nullptr)
-			{
-				health->AddObserver(score, { ObjectDied });
-			}
-		}
-
-		//Attaching lives to players -- TODO add move depending on player count
-		for (const auto& player : mapComponent->GetPlayers())
-		{
-			auto health = player->GetComponent<HealthComponent>();
-			if (health == nullptr)
-			{
-				continue;
-			}
-
-			health->AddObserver(pRemainingLives, { ObjectDied });
-		}
 
 		sceneLevel1.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
@@ -160,28 +180,6 @@ void load()
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
 		mapComponent->Initialize("../Data/Level/LevelLayout2.csv", 16);
 
-		//Attaching score to children -- add more score depending on player count
-		for (const auto& child : map_1.get()->GetChildren())
-		{
-			auto health = child->GetComponent<HealthComponent>();
-			if (health != nullptr)
-			{
-				health->AddObserver(score, { ObjectDied });
-			}
-		}
-
-		//Attaching lives to players -- TODO add move depending on player count
-		for (const auto& player : mapComponent->GetPlayers())
-		{
-			auto health = player->GetComponent<HealthComponent>();
-			if (health == nullptr)
-			{
-				continue;
-			}
-
-			health->AddObserver(pRemainingLives, { ObjectDied });
-		}
-
 		sceneLevel2.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
 
@@ -215,40 +213,16 @@ void load()
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
 		mapComponent->Initialize("../Data/Level/LevelLayout3.csv", 16);
 
-		//Attaching score to children -- add more score depending on player count
-		for (const auto& child : map_1.get()->GetChildren())
-		{
-			auto health = child->GetComponent<HealthComponent>();
-			if (health != nullptr)
-			{
-				health->AddObserver(score, { ObjectDied });
-			}
-		}
-
-		//Attaching lives to players -- TODO add move depending on player count
-		for (const auto& player : mapComponent->GetPlayers())
-		{
-			auto health = player->GetComponent<HealthComponent>();
-			if (health == nullptr)
-			{
-				continue;
-			}
-
-			health->AddObserver(pRemainingLives, { ObjectDied });
-		}
-
 		sceneLevel3.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
 	
-	//auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("Highscene");
+	//auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("HighScoreMenu");
 	//{
 	//	//Read highscores out of json
 	//	//
 	//}
 
-
-
-
+	Gamestatemachine::GetInstance().Start();
 
 }
 

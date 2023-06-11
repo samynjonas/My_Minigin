@@ -33,12 +33,16 @@ namespace dae
 		MapGeneratorComponent& operator=(const MapGeneratorComponent& other) = delete;
 		MapGeneratorComponent& operator=(MapGeneratorComponent&& other) = delete;
 
-		void Initialize(const std::string& jsonMapFile, const float& block_size);
+		void Initialize(const std::string& jsonMapFile, const float& block_size, const int playercount = 1);
 		void Update() override {}
 
 		std::vector<GameObject*> GetPlayers() const
 		{
 			return m_VecPlayers;
+		}
+		std::vector<GameObject*> GetEnemies() const
+		{
+			return m_VecEnemies;
 		}
 		
 		void Notify(Event currEvent, subject* actor) override;
@@ -47,6 +51,8 @@ namespace dae
 
 	private:
 		const CSVParser m_CSVParser{};
+		
+		int MAX_PLAYERS{ 1 };
 
 		std::string m_JsonMapFile;
 
@@ -58,6 +64,8 @@ namespace dae
 		int m_Height{};
 
 		std::vector<GameObject*> m_VecPlayers;
+		std::vector<GameObject*> m_VecEnemies;
+
 
 		void CreateWall(int row, int coll);
 		void CreateFloor(int row, int coll);
