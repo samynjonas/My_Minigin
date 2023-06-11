@@ -155,30 +155,14 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	auto gunComponent = gun->AddComponent<dae::GunComponent>();
 	gunComponent->Initialize("Player", { "Enemy" }, 150.f, 1.5f);
 
-	//TODO change depending on player count
-	std::vector<unsigned int> ShootInput
-	{
-		Controller::GamepadInput::A
-	};
-
-	std::vector<unsigned int> MoveInput
-	{
-		Controller::GamepadInput::LEFT_THUMB
-	};
-
-	std::vector<unsigned int> RotationInput
-	{
-		Controller::GamepadInput::RIGHT_THUMB
-	};
-
 	auto player1_MoveCommand{ std::make_unique<dae::GridMoveCommand>(tank.get(), 50.f) };
-	InputManager::GetInstance().BindCommand(MoveInput,		InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::LEFT_THUMB, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), 0);
 	
 	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(gun.get())	};
-	InputManager::GetInstance().BindCommand(ShootInput,		InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), 0);
 
 	auto player1_GunRotationCommand{ std::make_unique<dae::RotationCommand>(gun.get(), 50.f) };
-	InputManager::GetInstance().BindCommand(RotationInput,	InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::RIGHT_THUMB,	InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), 0);
 
 }
 

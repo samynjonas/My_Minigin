@@ -12,6 +12,7 @@
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "Scene.h"
+#include "sdl.h"
 
 #include "GameObject.h"
 #include "Controller.h"
@@ -57,6 +58,22 @@ void load()
 	servicelocator<sound_system>::get_serviceLocator().AddSound("Shoot", 64, "../Data/Sounds/Shoot.wav");
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 20);
+
+	auto& MainMenuScene = dae::SceneManager::GetInstance().CreateScene("MainMenu");
+	{
+		//Show start game
+		// Select gamemode
+		//Ask for controls
+		//Quit game
+
+		auto testgb = std::make_shared<dae::GameObject>();
+		MainMenuScene.Add(testgb);
+
+		testgb->Initialize("Test", &MainMenuScene);
+
+		auto randomCommand{ std::make_unique<dae::TestCommand_playSound>(testgb.get()) };
+		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(randomCommand), 0);
+	}	
 
 	auto& sceneLevel1 = dae::SceneManager::GetInstance().CreateScene("SceneMap1");
 	{
@@ -223,7 +240,16 @@ void load()
 		sceneLevel3.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
 	
-	
+	//auto& HighScoreScene = dae::SceneManager::GetInstance().CreateScene("Highscene");
+	//{
+	//	//Read highscores out of json
+	//	//
+	//}
+
+
+
+
+
 }
 
 

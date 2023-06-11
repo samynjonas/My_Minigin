@@ -10,15 +10,38 @@
 bool dae::InputManager::ProcessInput()
 {
 	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
-		if (e.type == SDL_QUIT) {
+	while (SDL_PollEvent(&e)) 
+	{
+		if (e.type == SDL_QUIT) 
+		{
 			return false;
 		}
-		if (e.type == SDL_KEYDOWN) {
 
+		if (e.type == SDL_KEYDOWN) 
+		{
+			for (size_t index = 0; index < m_KeyboardInputInfo.size(); index++)
+			{
+				if (m_KeyboardInputInfo[index].type == InputType::OnButtonDown)
+				{
+					if (e.key.keysym.scancode == m_KeyboardInputInfo[index].button)
+					{
+						m_KeyboardCommands[index].get()->Execute();
+					}
+				}
+			}
 		}
-		if (e.type == SDL_MOUSEBUTTONDOWN) {
-
+		if (e.type == SDL_KEYUP) 
+		{
+			for (size_t index = 0; index < m_KeyboardInputInfo.size(); index++)
+			{
+				if (m_KeyboardInputInfo[index].type == InputType::OnButtonUp)
+				{
+					if (e.key.keysym.scancode == m_KeyboardInputInfo[index].button)
+					{
+						m_KeyboardCommands[index].get()->Execute();
+					}
+				}
+			}
 		}
 	}
 
@@ -29,19 +52,19 @@ bool dae::InputManager::ProcessInput()
 
 	bool isActivated{ false };
 
-	for (size_t index = 0; index < m_InputInfo.size(); index++)
+	for (size_t index = 0; index < m_ControllerInputInfo.size(); index++)
 	{
 		Command* command = m_ControllerCommands[index].get();
-		switch (m_InputInfo[index].type)
+		switch (m_ControllerInputInfo[index].type)
 		{
 		case InputType::OnButtonDown:
-			isActivated = m_pControllers[m_InputInfo[index].playerIndex]->IsDown(m_InputInfo[index].buttons[0]);
+			isActivated = m_pControllers[m_ControllerInputInfo[index].playerIndex]->IsDown(m_ControllerInputInfo[index].button);
 			break;
 		case InputType::OnButtonUp:
-			isActivated = m_pControllers[m_InputInfo[index].playerIndex]->isUp(m_InputInfo[index].buttons[0]);
+			isActivated = m_pControllers[m_ControllerInputInfo[index].playerIndex]->isUp(m_ControllerInputInfo[index].button);
 			break;
 		case InputType::OnButtonPress:
-			isActivated = m_pControllers[m_InputInfo[index].playerIndex]->isPressed(m_InputInfo[index].buttons[0]);
+			isActivated = m_pControllers[m_ControllerInputInfo[index].playerIndex]->isPressed(m_ControllerInputInfo[index].button);
 			break;
 		case InputType::OnAnalog:
 		{
@@ -49,7 +72,7 @@ bool dae::InputManager::ProcessInput()
 			MoveCommand* moveCommand = dynamic_cast<MoveCommand*>(command);
 			if (moveCommand)
 			{
-				moveCommand->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(true));
+				moveCommand->SetAxisValue(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(true));
 				isActivated = true;
 			}
 			else
@@ -57,7 +80,7 @@ bool dae::InputManager::ProcessInput()
 				GridMoveCommand* gridMovement = dynamic_cast<GridMoveCommand*>(command);
 				if (gridMovement)
 				{
-					gridMovement->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(true));
+					gridMovement->SetAxisValue(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(true));
 					isActivated = true;
 				}
 				else
@@ -65,7 +88,7 @@ bool dae::InputManager::ProcessInput()
 					RotationCommand* rotation = dynamic_cast<RotationCommand*>(command);
 					if (rotation)
 					{
-						rotation->SetAxisValue(m_pControllers[m_InputInfo[index].playerIndex]->GetAxis(false));
+						rotation->SetAxisValue(m_pControllers[m_ControllerInputInfo[index].playerIndex]->GetAxis(false));
 						isActivated = true;
 					}
 				}
@@ -85,25 +108,36 @@ bool dae::InputManager::ProcessInput()
 }
 
 
-void dae::InputManager::BindCommand(const std::vector<unsigned int>& buttons, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
+void dae::InputManager::BindCommand(const unsigned int& button, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
 {
-	if (buttons.empty()) //If there are no keys given
-	{
-		return;
-	}
-
 	if (playerIndex >= static_cast<int>(m_pControllers.size()))
 	{
 		HandleControllerID(playerIndex);
 	}
 
-	inputInfo info{};
-	info.buttons = buttons;
+	GamepadinputInfo info{};
+	info.button			= button;
+	info.type			= inputType;
+	info.playerIndex	= playerIndex;
+
+	m_ControllerInputInfo.push_back(info);
+	m_ControllerCommands.push_back(std::move(pCommand));
+}
+
+void dae::InputManager::BindCommand(SDL_Scancode keyboardButton, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
+{
+	if (playerIndex >= static_cast<int>(m_pControllers.size()))
+	{
+		HandleControllerID(playerIndex);
+	}
+
+	KeyboardInputInfo info{};
+	info.button = keyboardButton;
 	info.type = inputType;
 	info.playerIndex = playerIndex;
 
-	m_InputInfo.push_back(info);
-	m_ControllerCommands.push_back(std::move(pCommand));
+	m_KeyboardInputInfo.push_back(info);
+	m_KeyboardCommands.push_back(std::move(pCommand));
 }
 
 void dae::InputManager::HandleControllerID(int playerIndex)
