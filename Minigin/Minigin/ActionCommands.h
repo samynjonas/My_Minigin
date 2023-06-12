@@ -110,5 +110,60 @@ namespace dae
 		void Execute() override;
 	};
 
+	class MoveInDirection final : public Command
+	{
+	public:
+		MoveInDirection(GameObject* pGameObject, float moveSpeed, glm::vec2 direction);
+		~MoveInDirection() = default;
+
+		MoveInDirection(const MoveInDirection& other) = delete;
+		MoveInDirection(MoveInDirection&& other) = delete;
+		MoveInDirection& operator=(const MoveInDirection& other) = delete;
+		MoveInDirection& operator=(MoveInDirection&& other) = delete;
+
+		void Execute() override;
+
+	private:
+		const glm::vec2 m_Direction;
+		const float m_MoveSpeed;
+		
+		RigidbodyComponent* m_pRigidBody{ nullptr };
+
+
+	};
+
+	class MuteCommand final : public Command
+	{
+	public:
+		MuteCommand(GameObject* pGameObject);
+		~MuteCommand() = default;
+
+		MuteCommand(const MuteCommand& other) = delete;
+		MuteCommand(MuteCommand&& other) = delete;
+		MuteCommand& operator=(const MuteCommand& other) = delete;
+		MuteCommand& operator=(MuteCommand&& other) = delete;
+
+		void Execute() override;
+	};
+
+	class RotateDegreesCommand final : public Command
+	{
+	public:
+		RotateDegreesCommand(GameObject* pGameObject, float Degrees);
+		~RotateDegreesCommand() = default;
+
+		RotateDegreesCommand(const RotateDegreesCommand& other) = delete;
+		RotateDegreesCommand(RotateDegreesCommand&& other) = delete;
+		RotateDegreesCommand& operator=(const RotateDegreesCommand& other) = delete;
+		RotateDegreesCommand& operator=(RotateDegreesCommand&& other) = delete;
+
+		void Execute() override;
+
+	private:
+		const float m_DegreesStep;
+
+		TransformComponent* m_pTransform{ nullptr };
+	};
+
 }
 

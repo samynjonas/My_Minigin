@@ -26,8 +26,8 @@ void Scene::Remove(std::shared_ptr<GameObject> object)
 		object->MarkForDead();
 	}
 
-	InputManager::GetInstance().UnbindCommands();
-	//CollisionManager::GetInstance().CheckForDeadColliders();
+	//InputManager::GetInstance().UnbindCommands();
+	CollisionManager::GetInstance().CheckForDeadColliders();
 
 	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
 }
@@ -43,8 +43,8 @@ void Scene::RemoveAll()
 		object->MarkForDead();
 	}
 
-	InputManager::GetInstance().UnbindCommands();
-	CollisionManager::GetInstance().CheckForDeadColliders();
+	//InputManager::GetInstance().UnbindCommands();
+	//CollisionManager::GetInstance().CheckForDeadColliders();
 
 	m_objects.clear();
 }

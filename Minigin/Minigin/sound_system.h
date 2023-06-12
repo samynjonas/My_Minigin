@@ -9,7 +9,8 @@ namespace dae
 		virtual ~sound_system() = default;
 		virtual void play(const std::string& soundName) = 0;
 		virtual void AddSound(const std::string& name, int volume, const std::string& file_path) = 0;
-
+		virtual void Mute(bool state) = 0;
+		virtual bool GetMute() const = 0;
 	};
 
 	class NULL_sound_system final : public sound_system
@@ -18,7 +19,8 @@ namespace dae
 		~NULL_sound_system() = default;
 		void play(const std::string& /*soundName*/) override {};
 		void AddSound(const std::string& /*name*/, int /*volume*/, const std::string& /*file_path*/) override {};
-
+		void Mute(bool) override {};
+		bool GetMute() const override { return false; }
 	};
 }
 

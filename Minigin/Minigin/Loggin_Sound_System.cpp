@@ -24,3 +24,19 @@ void dae::Loggin_Sound_System::AddSound(const std::string& name, int volume, con
 	m_SoundSystem->AddSound(name, volume, file_path);
 
 }
+
+void dae::Loggin_Sound_System::Mute(bool state)
+{
+	servicelocator<dae::Logger>::get_serviceLocator().Log({ "Set music to mute = " + std::to_string(state) });
+	m_SoundSystem->Mute(state);
+}
+
+
+bool dae::Loggin_Sound_System::GetMute() const
+{
+	bool muteStatus = m_SoundSystem->GetMute();
+
+	servicelocator<dae::Logger>::get_serviceLocator().Log({ "Is sound currently muted = " + std::to_string(muteStatus) });
+
+	return muteStatus;
+}

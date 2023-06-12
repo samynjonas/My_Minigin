@@ -136,7 +136,7 @@ void dae::InputManager::BindCommand(const unsigned int& button, InputType inputT
 	m_ControllerCommands.push_back(std::move(pCommand));
 }
 
-void dae::InputManager::BindCommand(SDL_Scancode keyboardButton, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
+void dae::InputManager::BindKeyboardCommand(SDL_Scancode key, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
 {
 	if (playerIndex >= static_cast<int>(m_pControllers.size()))
 	{
@@ -144,7 +144,7 @@ void dae::InputManager::BindCommand(SDL_Scancode keyboardButton, InputType input
 	}
 
 	KeyboardInputInfo info{};
-	info.button = keyboardButton;
+	info.button = key;
 	info.type = inputType;
 	info.playerIndex = playerIndex;
 

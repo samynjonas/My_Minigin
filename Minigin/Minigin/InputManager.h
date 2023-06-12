@@ -25,7 +25,6 @@ namespace dae
 
 		struct GamepadinputInfo
 		{
-		public:
 			bool operator<(const GamepadinputInfo& other) const
 			{ 
 				return other.playerIndex < playerIndex; 
@@ -38,7 +37,6 @@ namespace dae
 
 		struct KeyboardInputInfo
 		{
-		public:
 			bool operator<(const GamepadinputInfo& other) const
 			{
 				return other.playerIndex < playerIndex;
@@ -50,9 +48,10 @@ namespace dae
 		};
 
 
+
 		bool ProcessInput();
 		void BindCommand(const unsigned int& button, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex);
-		void BindCommand(SDL_Scancode keyboardButton, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex);
+		void BindKeyboardCommand(SDL_Scancode keys, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex);
 
 		void UnbindCommands();
 

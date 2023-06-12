@@ -84,3 +84,16 @@ std::string dae::SceneManager::GetActiveSceneName() const
 	}
 	return m_pActiveScene->GetSceneName();
 }
+
+void dae::SceneManager::RemoveScene(const std::string& name)
+{
+	int sceneID = StringToID(name, false);
+	if (sceneID == -1)
+	{
+		return;
+	}
+
+	m_scenes[sceneID]->RemoveAll();
+	m_scenes.erase(m_scenes.begin() + sceneID);
+	m_SceneIDs.erase(m_SceneIDs.begin() + sceneID);
+}

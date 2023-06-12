@@ -8,6 +8,9 @@
 #include "MiniginTimer.h"
 #include "SceneManager.h"
 
+#include "servicelocator.h"
+#include "sound_system.h"
+
 #include <iostream>
 #include <math.h>
 
@@ -204,4 +207,61 @@ void dae::LoadPreviousSceneCommand::Execute()
 	}
 
 	SceneManager::GetInstance().LoadScene(sceneManager.GetSceneNames()[currentSceneId]);
+}
+
+
+dae::MoveInDirection::MoveInDirection(GameObject* pGameObject, float moveSpeed, glm::vec2 direction)
+	: Command{ pGameObject }
+	, m_Direction{ direction }
+	, m_MoveSpeed{ moveSpeed }
+{
+
+}
+
+void dae::MoveInDirection::Execute()
+{	
+	if (m_pRigidBody == nullptr)
+	{
+		m_pRigidBody = GetGameObject()->GetComponent<RigidbodyComponent>();
+		if (m_pRigidBody == nullptr)
+		{
+			return;
+		}
+	}
+
+	glm::vec2 moveVector{ m_MoveSpeed, m_MoveSpeed };
+	m_pRigidBody->ApplyForce(moveVector * m_Direction, dae::RigidbodyComponent::ForceMode::Force);
+}
+
+dae::MuteCommand::MuteCommand(GameObject* pGameObject)
+	: Command{ pGameObject }
+{
+
+}
+
+void dae::MuteCommand::Execute()
+{
+	servicelocator<sound_system>::get_serviceLocator().Mute(!servicelocator<sound_system>::get_serviceLocator().GetMute());
+}
+
+dae::RotateDegreesCommand::RotateDegreesCommand(GameObject* pGameObject, float Degrees)
+	: Command{ pGameObject }
+	, m_DegreesStep{ Degrees }
+{
+
+}
+
+void dae::RotateDegreesCommand::Execute()
+{
+	if (m_pTransform == nullptr)
+	{
+		m_pTransform = GetGameObject()->transform();
+		if (m_pTransform == nullptr)
+		{
+			return;
+		}
+	}
+
+	auto currentAngle = m_pTransform->GetWorldRotation();
+	m_pTransform->SetLocalRotation(currentAngle + m_DegreesStep);
 }

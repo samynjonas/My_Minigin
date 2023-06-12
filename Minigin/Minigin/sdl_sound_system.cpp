@@ -124,6 +124,10 @@ public:
 		return -1;
 	}
 
+	void Mute(bool state) override
+	{
+		m_IsNotMuted = !state;
+	}
 
 	void ThreadUpdateLoop()
 	{
@@ -149,7 +153,7 @@ public:
 					return;
 				}
 
-				Mix_VolumeChunk(sound.pSound, sound.volume);
+				Mix_VolumeChunk(sound.pSound, sound.volume * m_IsNotMuted);
 				Mix_PlayChannel(-1, sound.pSound, 0);
 
 				lock.lock();
@@ -159,6 +163,10 @@ public:
 		}
 	}
 
+	bool GetMute() const override
+	{
+		return !m_IsNotMuted;
+	}
 
 private:
 	std::vector<std::string> m_WAVFilenames;
@@ -170,6 +178,8 @@ private:
 	std::condition_variable m_ThreadCondition{};
 
 	std::atomic<bool> m_IsMarkedDestroy{ false };
+
+	bool m_IsNotMuted{ true };
 };
 
 
@@ -193,4 +203,14 @@ void sdl_sound_system::AddSound(const std::string& name, int volume, const std::
 void sdl_sound_system::play(const std::string& soundName)
 {
 	pImp->play(soundName);
+}
+
+void sdl_sound_system::Mute(bool state)
+{
+	pImp->Mute(state);
+}
+
+bool sdl_sound_system::GetMute() const
+{
+	return pImp->GetMute();
 }

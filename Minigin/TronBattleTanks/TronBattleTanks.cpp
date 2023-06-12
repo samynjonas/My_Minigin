@@ -34,6 +34,7 @@
 #include "BoxColliderComponent.h"
 #include "AI_BehaviourComponent.h"
 #include "LeaderbordComponent.h"
+#include "TextInputComponent.h"
 
 #include "servicelocator.h"
 #include "sound_system.h"
@@ -69,11 +70,15 @@ void load()
 		sceneController->Initialize("Scene controller", nullptr);
 
 		auto nextScene{ std::make_unique<dae::LoadNextSceneCommand>(sceneController.get()) };
-		InputManager::GetInstance().BindCommand(SDL_SCANCODE_F4, InputManager::InputType::OnButtonUp, std::move(nextScene), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_F4, InputManager::InputType::OnButtonDown, std::move(nextScene), 0);
 
 		auto prevScene{ std::make_unique<dae::LoadPreviousSceneCommand>(sceneController.get()) };
-		InputManager::GetInstance().BindCommand(SDL_SCANCODE_F3, InputManager::InputType::OnButtonUp, std::move(prevScene), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_F3, InputManager::InputType::OnButtonDown, std::move(prevScene), 0);
+
+		auto musicMute{ std::make_unique<dae::MuteCommand>(sceneController.get()) };
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_M, InputManager::InputType::OnButtonDown, std::move(musicMute), 0);
 	}
+
 
 	auto& MainMenuScene = dae::SceneManager::GetInstance().CreateScene("MainMenu");
 	{
@@ -110,10 +115,12 @@ void load()
 			auto textComp = ChangeGamemodeText->AddComponent<TextComponent>();
 			textComp->Initialize("T/Tab to Change", font);
 			ChangeGamemodeText->transform()->SetLocalPosition({ 150.f, 300.f });
+
+			ChangeGamemodeText->AddComponent<TextInputComponent>();
 		}
 
 		auto loadGameKeyboard{		std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
-		InputManager::GetInstance().BindCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
 
 	}
 

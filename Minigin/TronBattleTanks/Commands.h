@@ -25,7 +25,6 @@ namespace dae
 
 	};
 
-
 	class TestCommand_playSound final : public Command
 	{
 	public:
@@ -38,6 +37,38 @@ namespace dae
 		TestCommand_playSound& operator=(TestCommand_playSound&& other) = delete;
 
 		void Execute() override;
+	};
+
+	class LetterUpCommand final : public Command
+	{
+		LetterUpCommand(GameObject* pGameObject);
+		~LetterUpCommand() = default;
+
+		LetterUpCommand(const LetterUpCommand& other) = delete;
+		LetterUpCommand(LetterUpCommand&& other) = delete;
+		LetterUpCommand& operator=(const LetterUpCommand& other) = delete;
+		LetterUpCommand& operator=(LetterUpCommand&& other) = delete;
+
+		void Execute() override;
+
+	private:
+
+	};
+
+	class LetterDownCommand final : public Command
+	{
+		LetterDownCommand(GameObject* pGameObject);
+		~LetterDownCommand() = default;
+
+		LetterDownCommand(const LetterDownCommand& other) = delete;
+		LetterDownCommand(LetterDownCommand&& other) = delete;
+		LetterDownCommand& operator=(const LetterDownCommand& other) = delete;
+		LetterDownCommand& operator=(LetterDownCommand&& other) = delete;
+
+		void Execute() override;
+
+	private:
+
 	};
 
 }

@@ -317,7 +317,7 @@ std::unique_ptr<dae::GameState> dae::CoopState_MAP3::GameStateNotify(Event currE
 
 void dae::VersusState::Enter()
 {
-	SceneManager::GetInstance().LoadScene("SceneMap1");
+	SceneManager::GetInstance().LoadScene("SceneMap3_Coop");
 }
 
 void dae::VersusState::Exit()
@@ -343,12 +343,13 @@ std::unique_ptr<dae::GameState> dae::VersusState::GameStateNotify(Event currEven
 	{
 		//If all enemies died
 		//Load next map
-
+		return std::make_unique<CoopState_MAP1>();
 	}
 	return nullptr;
 }
 
 // --------------------------- HighScore Menu --------------------------------------
+
 void dae::HighscoreMenuState::Enter()
 {
 	SceneManager::GetInstance().LoadScene("HighScoreMenu");

@@ -16,6 +16,8 @@
 #include "ScoreComponent.h"
 #include "TextComponent.h"
 
+#include "glm/glm.hpp"
+
 #include "../TronBattleTanks/Gamestatemachine.h"
 #include "../TronBattleTanks/CounterComponent.h"
 #include "../TronBattleTanks/AI_BehaviourComponent.h"
@@ -176,11 +178,55 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	auto player1_MoveCommand{ std::make_unique<dae::GridMoveCommand>(tank.get(), 50.f) };
 	InputManager::GetInstance().BindCommand(Controller::GamepadInput::LEFT_THUMB, InputManager::InputType::OnAnalog, std::move(player1_MoveCommand), static_cast<int>(m_VecPlayers.size()));
 	
-	auto player1_ShootCommand{ std::make_unique<dae::ShootCommand>(gun.get())	};
-	InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(player1_ShootCommand), static_cast<int>(m_VecPlayers.size()));
 
-	auto player1_GunRotationCommand{ std::make_unique<dae::RotationCommand>(gun.get(), 50.f) };
-	InputManager::GetInstance().BindCommand(Controller::GamepadInput::RIGHT_THUMB,	InputManager::InputType::OnAnalog, std::move(player1_GunRotationCommand), static_cast<int>(m_VecPlayers.size()));
+	auto tank_MoveUp{ std::make_unique<dae::MoveInDirection>(tank.get(), 50.f, glm::vec2{ 0.f, -1.f }) };
+	auto tank_MoveDown{ std::make_unique<dae::MoveInDirection>(tank.get(), 50.f, glm::vec2{ 0.f, 1.f }) };
+	auto tank_MoveLeft{ std::make_unique<dae::MoveInDirection>(tank.get(), 50.f, glm::vec2{ -1.f, 0 }) };
+	auto tank_MoveRight{ std::make_unique<dae::MoveInDirection>(tank.get(), 50.f, glm::vec2{ 1.f, 0 }) };
+
+	if (m_VecPlayers.size() == 0)
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_W, InputManager::InputType::OnButtonDown, std::move(tank_MoveUp),		static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_S, InputManager::InputType::OnButtonDown, std::move(tank_MoveDown),	static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_A, InputManager::InputType::OnButtonDown, std::move(tank_MoveLeft),	static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_D, InputManager::InputType::OnButtonDown, std::move(tank_MoveRight),	static_cast<int>(m_VecPlayers.size()));
+	}
+	else
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_I,	InputManager::InputType::OnButtonDown, std::move(tank_MoveUp),		static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_K,	InputManager::InputType::OnButtonDown, std::move(tank_MoveDown),	static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_J,	InputManager::InputType::OnButtonDown, std::move(tank_MoveLeft),	static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_L, InputManager::InputType::OnButtonDown, std::move(tank_MoveRight),	static_cast<int>(m_VecPlayers.size()));
+	}
+
+	auto Gamepad_ShootCommand{ std::make_unique<dae::ShootCommand>(gun.get()) };
+	auto Keyboard_ShootCommand{ std::make_unique<dae::ShootCommand>(gun.get()) };
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::A, InputManager::InputType::OnButtonDown, std::move(Gamepad_ShootCommand), static_cast<int>(m_VecPlayers.size()));
+
+	if (m_VecPlayers.size() == 0)
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_R, InputManager::InputType::OnButtonDown, std::move(Keyboard_ShootCommand), static_cast<int>(m_VecPlayers.size()));
+	}
+	else
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_P, InputManager::InputType::OnButtonDown, std::move(Keyboard_ShootCommand), static_cast<int>(m_VecPlayers.size()));
+	}
+
+	auto Gamepad_RotateCommand{ std::make_unique<dae::RotationCommand>(gun.get(), 50.f) };
+	InputManager::GetInstance().BindCommand(Controller::GamepadInput::RIGHT_THUMB,	InputManager::InputType::OnAnalog, std::move(Gamepad_RotateCommand), static_cast<int>(m_VecPlayers.size()));
+
+	auto Keyboard_LeftRotateCommand{ std::make_unique<dae::RotateDegreesCommand>(gun.get(), 45.f) };
+	auto Keyboard_RightRotateCommand{ std::make_unique<dae::RotateDegreesCommand>(gun.get(), -45.f) };
+	if (m_VecPlayers.size() == 0)
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_E, InputManager::InputType::OnButtonDown, std::move(Keyboard_LeftRotateCommand), static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_Q, InputManager::InputType::OnButtonDown, std::move(Keyboard_RightRotateCommand), static_cast<int>(m_VecPlayers.size()));
+	}
+	else
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_O, InputManager::InputType::OnButtonDown, std::move(Keyboard_LeftRotateCommand), static_cast<int>(m_VecPlayers.size()));
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_U, InputManager::InputType::OnButtonDown, std::move(Keyboard_RightRotateCommand), static_cast<int>(m_VecPlayers.size()));
+	}
 
 	m_VecPlayers.push_back(tank.get());
 }
@@ -349,3 +395,4 @@ void dae::MapGeneratorComponent::Notify(Event currEvent, subject*)
 		UnloadMap();
 	}
 }
+
