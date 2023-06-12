@@ -114,7 +114,7 @@ public:
 
 	int StringToID(const std::string& audio)
 	{
-		for (int i = 0; i < m_WAVFilenames.size(); i++)
+		for (int i = 0; i < static_cast<int>(m_WAVFilenames.size()); i++)
 		{
 			if (m_WAVFilenames[i] == audio)
 			{
@@ -142,7 +142,7 @@ public:
 				int audioRequest{ m_AudioQueue.front() };
 				lock.unlock();
 
-				if (audioRequest < 0 || audioRequest >= m_MusicSamples.size())
+				if (audioRequest < 0 || audioRequest >= static_cast<int>(m_MusicSamples.size()))
 				{
 					//Error
 					return;

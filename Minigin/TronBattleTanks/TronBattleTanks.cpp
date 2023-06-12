@@ -56,8 +56,8 @@ void load()
 	servicelocator<sound_system>::register_service_locator(std::make_unique<Loggin_Sound_System>(std::make_unique<sdl_sound_system>()));
 
 #else
-	servicelocator<Logger>::register_service_locator(new Console_Logger()); //TODO change to file logger
-	servicelocator<sound_system>::register_service_locator(new sdl_sound_system);
+	servicelocator<Logger>::register_service_locator(std::make_unique<Console_Logger>()); //TODO change to file logger
+	servicelocator<sound_system>::register_service_locator(std::make_unique<sdl_sound_system>());
 #endif
 
 	servicelocator<sound_system>::get_serviceLocator().AddSound("Shoot", 64, "../Data/Sounds/Shoot.wav");

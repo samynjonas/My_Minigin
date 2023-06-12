@@ -16,7 +16,7 @@ void dae::LeaderbordComponent::DisplayLeaderbord()
 
 	AddText({ 250.f, 50.f }, "HIGHSCORE", font);
 
-	for (int i = 0; i < vecScores.size(); i++)
+	for (int i = 0; i < static_cast<int>(vecScores.size()); i++)
 	{
 		if (i < MAX_SCORES_DISPLAYED)
 		{

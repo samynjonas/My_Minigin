@@ -41,7 +41,7 @@ dae::Scene* dae::SceneManager::LoadScene(const std::string& name)
 {
 	int sceneID = StringToID(name);
 
-	if (sceneID < 0 || sceneID >= m_SceneIDs.size())
+	if (sceneID < 0 || sceneID >= static_cast<int>(m_SceneIDs.size()))
 	{
 		return nullptr;
 	}
@@ -60,7 +60,7 @@ dae::Scene* dae::SceneManager::LoadScene(const std::string& name)
 
 int dae::SceneManager::StringToID(const std::string& name, bool returnValid) const
 {
-	for (int index = 0; index < m_SceneIDs.size(); index++)
+	for (int index = 0; index < static_cast<int>(m_SceneIDs.size()); index++)
 	{
 		if (m_SceneIDs[index] == name)
 		{

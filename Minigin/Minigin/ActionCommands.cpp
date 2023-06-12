@@ -172,7 +172,7 @@ void dae::LoadNextSceneCommand::Execute()
 	}
 
 	++currentSceneId;
-	if (currentSceneId >= sceneManager.GetSceneNames().size())
+	if (currentSceneId >= static_cast<int>(sceneManager.GetSceneNames().size()))
 	{
 		currentSceneId = 0;
 	}

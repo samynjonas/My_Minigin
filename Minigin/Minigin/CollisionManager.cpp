@@ -100,7 +100,7 @@ std::string dae::CollisionManager::IntToLayer(int layerID, bool returnValid) con
 }
 int dae::CollisionManager::LayerToID(const std::string& layerName, bool returnValid) const
 {
-	for (int index = 0; index < m_Layers.size(); index++)
+	for (int index = 0; index < static_cast<int>(m_Layers.size()); index++)
 	{
 		if (m_Layers[index] == layerName)
 		{

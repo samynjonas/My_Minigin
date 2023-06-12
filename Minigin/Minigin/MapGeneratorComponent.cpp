@@ -126,7 +126,7 @@ void dae::MapGeneratorComponent::CreateBlueTank(int row, int coll)
 
 void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 {
-	if (m_VecPlayers.size() >= MAX_PLAYERS)
+	if (static_cast<int>(m_VecPlayers.size()) >= MAX_PLAYERS)
 	{
 		CreateFloor(row, coll);
 		return;
@@ -278,9 +278,9 @@ void dae::MapGeneratorComponent::LoadMap()
 	m_Height = (static_cast<int>(parsedVector.size()) - 1) * static_cast<int>(m_BlockSize);
 	m_Width = (static_cast<int>(parsedVector[0].size()) - 1) * static_cast<int>(m_BlockSize);
 
-	for (int row{}; row < parsedVector.size(); ++row)
+	for (int row{}; row < static_cast<int>(parsedVector.size()); ++row)
 	{
-		for (int coll{}; coll < parsedVector[row].size(); ++coll)
+		for (int coll{}; coll < static_cast<int>(parsedVector[row].size()); ++coll)
 		{
 			//Depending on the float value
 			switch (static_cast<MapPiece>(parsedVector[row][coll]))
