@@ -132,9 +132,6 @@
     <ClInclude Include="Controller.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -143,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="Achievements.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreComponent.h">
-      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="BoxColliderComponent.h">
       <Filter>Header Files\Components</Filter>
@@ -260,9 +254,6 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Observer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -271,9 +262,6 @@
     </ClCompile>
     <ClCompile Include="Achievements.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreComponent.cpp">
-      <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="BoxColliderComponent.cpp">
       <Filter>Source Files\Components</Filter>

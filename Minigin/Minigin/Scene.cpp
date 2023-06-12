@@ -76,6 +76,12 @@ void Scene::Update()
 	{
 		if (object)
 		{
+			if (object->IsMarkedForDead())
+			{
+				Remove(object);
+				continue;
+			}
+
 			object->LateUpdate();
 		}
 	}

@@ -170,7 +170,6 @@ void dae::MapGeneratorComponent::CreatePlayer(int row, int coll)
 	trigger_2->Initialize(true, false, "Player", { "Enemy" });
 	trigger_2->AddObserver(health, { TriggerEnter });
 
-
 	auto gunComponent = gun->AddComponent<dae::GunComponent>();
 	gunComponent->Initialize("Player", { "Enemy" }, 150.f, 1.5f);
 
@@ -319,11 +318,10 @@ void dae::MapGeneratorComponent::LoadMap()
 		auto health = player->GetComponent<HealthComponent>();
 		if (health)
 		{
-			health->AddObserver(&Gamestatemachine::GetInstance(), { ObjectDied, LiveLost });
+			//health->AddObserver(&Gamestatemachine::GetInstance(), { ObjectDied, LiveLost });
 			health->AddObserver(pRemainingLives, { LiveLost });
 		}
 	}
-
 }
 
 void dae::MapGeneratorComponent::UnloadMap()
@@ -338,8 +336,6 @@ void dae::MapGeneratorComponent::UnloadMap()
 
 	m_VecPlayers.clear();
 	m_VecEnemies.clear();
-
-
 }
 
 void dae::MapGeneratorComponent::Notify(Event currEvent, subject*)

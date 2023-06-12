@@ -15,7 +15,7 @@ dae::HealthComponent::HealthComponent()
 
 dae::HealthComponent::~HealthComponent()
 {
-
+	
 }
 
 void dae::HealthComponent::Initialize(int MaxHealt, int MaxLives)
@@ -40,20 +40,20 @@ void dae::HealthComponent::Notify(Event currEvent, subject*)
 
 void dae::HealthComponent::TakeLive(int amount)
 {
-	m_Lives -= amount;
-
-	if (GetOwner()->GetName() == "Player")
+	if (GetOwner()->IsMarkedForDead())
 	{
-		std::cout << GetOwner()->GetName() << " m_Lives - 1 = " << m_Lives << std::endl;
+		return;
 	}
+
+	m_Lives -= amount;
 
 	NotifyObservers(LiveLost, this);
 	if (m_Lives < 0)
 	{
 		m_Lives = 0;
+		
 		NotifyObservers(ObjectDied, this);
-
-		//GetOwner()->MarkForDead();
+		GetOwner()->MarkForDead();
 
 	}
 	else if (m_Lives > m_MaxLives)
