@@ -5,12 +5,15 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Minigin.h"
+
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "MiniginTimer.h"
 #include "CollisionManager.h"
+#include "RenderingManager.h"
+#include <iostream>
 
 #include <chrono>
 #include <thread>
@@ -90,20 +93,37 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& time				= MiniginTimer::GetInstance();
 	auto& collisionManager	= CollisionManager::GetInstance();
 
+	constexpr float TARGET_FRAME_TIME{ 1 / 60.f };
+	float accumulatedTime{ 0.f };	
 	auto lastTime = std::chrono::high_resolution_clock::now();
+
 	bool doContinue = true;
 	while (doContinue)
 	{
 		const auto currentTime{ std::chrono::high_resolution_clock::now() };
-
 		const float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
-		time.SetDeltaTime(deltaTime);
+		lastTime = currentTime;
+
+		accumulatedTime += deltaTime;
 
 		doContinue = input.ProcessInput();
-		sceneManager.Update();
-		collisionManager.Update();
-		renderer.Render();
+		time.SetDeltaTime(deltaTime);
 
-		lastTime = currentTime;
+		while (accumulatedTime >= TARGET_FRAME_TIME)
+		{
+			sceneManager.Update();
+			collisionManager.Update();
+			accumulatedTime -= TARGET_FRAME_TIME;
+		}
+
+		renderer.Render();
+		SceneManager::GetInstance().CleanUp();
+		
+		if (accumulatedTime < TARGET_FRAME_TIME)
+		{
+			const float sleepTime = TARGET_FRAME_TIME - accumulatedTime;
+			const std::chrono::milliseconds sleepDuration(static_cast<long long>(sleepTime * 1000));
+			std::this_thread::sleep_for(sleepDuration);
+		}
 	}
 }

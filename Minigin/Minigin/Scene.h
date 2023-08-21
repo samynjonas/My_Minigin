@@ -2,15 +2,19 @@
 #include "SceneManager.h"
 #include "subject.h"
 
+#include "GameObject.h"
+
 namespace dae
 {
+	class RenderingManager;
 	class GameObject;
-	class Scene final : public subject
+
+	class Scene final : public Subject
 	{
 		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
-		void Add(std::shared_ptr<GameObject> object);
-		void Remove(std::shared_ptr<GameObject> object);
+		void Add(std::unique_ptr<GameObject> object);
+		void Remove(std::unique_ptr<GameObject> object);
 		void RemoveAll();
 
 		void Update();
@@ -19,16 +23,21 @@ namespace dae
 		void LoadScene();
 		void UnloadScene();
 
+		void ActivateAll();
+		void DeActivateAll();
+
+		void Cleanup();
+
 		std::string GetSceneName() const
 		{
 			return m_name;
 		}
-		const std::vector<std::shared_ptr<GameObject>>& GetGameObject() const
+		const std::vector<std::unique_ptr<GameObject>>& GetGameObject() const
 		{
 			return m_objects;
 		}
 
-		~Scene();
+		~Scene() = default;
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
 		Scene& operator=(const Scene& other) = delete;
@@ -38,7 +47,8 @@ namespace dae
 		explicit Scene(const std::string& name);
 
 		std::string m_name;
-		std::vector< std::shared_ptr<GameObject> > m_objects{};
+		std::vector< std::unique_ptr<GameObject> > m_objects{};
+		std::vector<RenderComponent*> m_vecRender;
 
 		static unsigned int m_idCounter;
 	};

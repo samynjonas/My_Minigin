@@ -18,7 +18,7 @@ void dae::Gamestatemachine::Start()
 	m_State->Enter();
 }
 
-void dae::Gamestatemachine::Notify(Event event, subject*)
+void dae::Gamestatemachine::Notify(Event event, Subject*)
 {
 	std::unique_ptr<GameState> state = m_State->GameStateNotify(event);
 	if (state != nullptr)

@@ -25,27 +25,7 @@ void dae::RigidbodyComponent::Update()
 	if (m_ActiveForceMode != ForceMode::None)
 	{
 		if (m_Velocity.x != 0.f || m_Velocity.y != 0.f)
-		{
-			if (m_ActiveForceMode == ForceMode::Impulse)
-			{
-				//TODO fix calculation
-
-				//Decrease velocity
-				float sign{ 1 };
-				if (m_Velocity.x < 0)
-				{
-					sign = -1;
-				}
-				m_Velocity.x += m_PhysicsMaterial.dynamicFriction * sign;
-
-				if (m_Velocity.y > 0)
-				{
-					sign = 1;
-				}
-				m_Velocity.y += m_PhysicsMaterial.dynamicFriction * sign;
-
-			}
-			
+		{			
 			GetOwner()->transform()->Translate(m_Velocity * MiniginTimer::GetInstance().GetDeltaTime(), true);
 		}
 	}
@@ -77,7 +57,7 @@ void dae::RigidbodyComponent::SetMass(float mass)
 	m_Mass = mass;
 }
 
-void dae::RigidbodyComponent::Notify(Event currEvent, subject* pSubject)
+void dae::RigidbodyComponent::Notify(Event currEvent, Subject* pSubject)
 {
 	if (currEvent == CollisionEnter)
 	{

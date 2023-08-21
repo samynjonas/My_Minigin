@@ -163,32 +163,32 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Minigin\HealthComponent.cpp" />
     <ClCompile Include="..\Minigin\MapGeneratorComponent.cpp" />
-    <ClCompile Include="..\Minigin\ScoreComponent.cpp" />
     <ClCompile Include="AI_BehaviourComponent.cpp" />
     <ClCompile Include="Commands.cpp" />
     <ClCompile Include="CounterComponent.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Gamestatemachine.cpp" />
     <ClCompile Include="GunComponent.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="LeaderbordComponent.cpp" />
+    <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreSaver.cpp" />
     <ClCompile Include="TeleportComponent.cpp" />
     <ClCompile Include="TextInputComponent.cpp" />
     <ClCompile Include="TronBattleTanks.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Minigin\HealthComponent.h" />
     <ClInclude Include="..\Minigin\MapGeneratorComponent.h" />
-    <ClInclude Include="..\Minigin\ScoreComponent.h" />
     <ClInclude Include="AI_BehaviourComponent.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="CounterComponent.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Gamestatemachine.h" />
     <ClInclude Include="GunComponent.h" />
+    <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="LeaderbordComponent.h" />
+    <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="ScoreSaver.h" />
     <ClInclude Include="TeleportComponent.h" />
     <ClInclude Include="TextInputComponent.h" />

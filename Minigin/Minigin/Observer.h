@@ -2,12 +2,13 @@
 
 namespace dae
 {
-	class subject;
+	class Subject;
 
 	enum Event //TODO improve event system
 	{
 		LevelLoad,
 		LevelUnload,
+		PausedGame,
 
 		LiveLost,
 		ObjectDied,
@@ -21,11 +22,8 @@ namespace dae
 		TriggerEnter,
 		TriggerExit,
 
-		Teleport,
-	
-		SinglePlayer,
-		Coop,
-		Versus
+		ButtonPressed,
+		OpenDoor
 	};
 
 
@@ -33,7 +31,7 @@ namespace dae
 	{
 	public:
 		virtual ~Observer() = default;
-		virtual void Notify(Event currEvent, subject* actor) = 0;
+		virtual void Notify(Event currEvent, Subject* actor) = 0;
 
 	};	
 }

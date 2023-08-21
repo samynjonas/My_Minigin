@@ -22,7 +22,7 @@ namespace dae
 		Below
 	};
 
-	//TODO Check if it is a scene
+
 	class CollisionManager final : public Singleton<CollisionManager>
 	{
 	public:
@@ -51,12 +51,13 @@ namespace dae
 		bool m_IsDirty{ false }; //Only check for collision of dirty, this will only be done when a new collider is added or movement has happend on at least one collider
 		std::vector<BoxColliderComponent*> m_pColliders;
 
-
 		bool HasSharedLayer(size_t collIndex, size_t otherCollIndex, const std::vector<std::vector<int>>& layers) const;
 		bool ContainsLayer(size_t collIndex, std::vector<std::string> layers, const std::vector<std::vector<int>>& vecLayers) const;
 		bool ContainsLayer(size_t collIndex, std::vector<int> layers, const std::vector<std::vector<int>>& vecLayers) const;
 		bool ContainsLayer(int colliderLayer, size_t otherIndex, const std::vector<std::vector<int>>& vecLayers) const;
 		bool ContainsLayer(int colliderLayer, const std::vector<std::string> layers) const;
+		bool ContainsLayer(int colliderLayer, const std::vector<int> layers) const;
+
 
 		//For user interfacing strings are easier - for logic int are less expensive
 		std::vector<std::string> m_Layers{ "None", "Default" };

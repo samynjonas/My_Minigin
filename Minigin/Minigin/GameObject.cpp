@@ -30,7 +30,6 @@ void GameObject::Initialize(const std::string& name, Scene* pScene)
 
 	//These need to be a part of every gameobject
 	m_pTransformComponent	= AddComponent<TransformComponent>();
-	m_pRenderComponent		= AddComponent<RenderComponent>();
 }
 
 void GameObject::Update()
@@ -68,23 +67,6 @@ void GameObject::LateUpdate()
 		{
 			pComponent->LateUpdate();
 		}
-	}
-}
-
-
-void GameObject::Render() const
-{
-	if (m_pRenderComponent)
-	{
-		m_pRenderComponent->Render();
-	}
-}
-
-void GameObject::LateRender() const
-{
-	if (m_pRenderComponent)
-	{
-		m_pRenderComponent->GUIRender();
 	}
 }
 

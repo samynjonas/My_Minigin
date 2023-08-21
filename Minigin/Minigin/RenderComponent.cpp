@@ -6,6 +6,9 @@
 #include "TransformComponent.h"
 #include "Texture2D.h"
 
+#include "Scene.h"
+#include "RenderingManager.h"
+
 dae::RenderComponent::RenderComponent()
 	: Component()
 {
@@ -15,7 +18,7 @@ dae::RenderComponent::RenderComponent()
 
 dae::RenderComponent::~RenderComponent()
 {
-
+	RenderingManager::GetInstance().UnregisterRenderer(this);
 }
 
 void dae::RenderComponent::Update()
@@ -23,45 +26,36 @@ void dae::RenderComponent::Update()
 
 }
 
-void dae::RenderComponent::Render()
+void dae::RenderComponent::Render(glm::vec3 transformPosition)
 {
-	if (m_RenderOrder != RenderOrder::normal)
-	{
-		return;
-	}
-
 	if (!m_pTexture)
 	{
 		return;
 	}
 
-	const auto& pos = GetOwner()->transform()->GetWorldPosition();
+	auto pos = GetOwner()->transform()->GetWorldPosition();
+
+	//Applying transformation
+	if (m_IsUI == false)
+	{
+		pos.x += transformPosition.x;
+		pos.y += transformPosition.y;
+	}
+
 	const auto& rot = GetOwner()->transform()->GetWorldRotation();
 
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y, rot);
 }
 
-void dae::RenderComponent::GUIRender()
+void dae::RenderComponent::Initialize(short depth, bool isUI)
 {
-	if (m_RenderOrder != RenderOrder::gui)
-	{
-		return;
-	}
-
-	if (!m_pTexture)
-	{
-		return;
-	}
-
-	const auto& pos = GetOwner()->transform()->GetWorldPosition();
-	const auto& rot = GetOwner()->transform()->GetWorldRotation();
-
-	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y, rot);
+	m_IsUI = isUI;
+	RenderingManager::GetInstance().RegisterRenderer(this, depth);
 }
 
 void dae::RenderComponent::SetTexture(const std::string& filename)
 {
-	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
+	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);		
 }
 
 void dae::RenderComponent::SetTexture(std::shared_ptr<Texture2D> pTexture)

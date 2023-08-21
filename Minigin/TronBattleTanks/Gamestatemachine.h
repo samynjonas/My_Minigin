@@ -18,7 +18,7 @@ namespace dae
 		Gamestatemachine& operator=(Gamestatemachine&& other) = delete;
 
 		void Update();
-		void Notify(Event event, subject* pSubject) override;
+		void Notify(Event event, Subject* pSubject) override;
 
 		void Start();
 

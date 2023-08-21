@@ -26,7 +26,7 @@ namespace dae
 		void Initialize(rect mapRect);
 		void Update() override;
 
-		void Notify(Event currEvent, subject* actor);
+		void Notify(Event currEvent, Subject* actor);
 
 	private:
 		void TeleportToRandomPosition();

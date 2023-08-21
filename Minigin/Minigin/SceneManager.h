@@ -24,6 +24,12 @@ namespace dae
 			return m_SceneIDs;
 		}
 		std::string GetActiveSceneName() const;
+		Scene* GetActiveScene()
+		{
+			return m_pActiveScene;
+		}
+
+		void CleanUp();
 
 	private:
 		friend class Singleton<SceneManager>;

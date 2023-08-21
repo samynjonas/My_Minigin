@@ -15,13 +15,8 @@ namespace dae
 	public:
 		enum class MapPiece //Depending on the parsed vector value a block will be placed
 		{
-			WallNoCollider		= 0,
 			Wall				= 1,
-			Floor				= 2,
-			Diamond				= 3,
-			BlueTankSpawner		= 4,
-			RecognizerSpawner	= 5,
-			PlayerSpawner		= 6,
+			Floor				= 2
 		};
 		
 		MapGeneratorComponent();
@@ -33,46 +28,29 @@ namespace dae
 		MapGeneratorComponent& operator=(const MapGeneratorComponent& other) = delete;
 		MapGeneratorComponent& operator=(MapGeneratorComponent&& other) = delete;
 
-		void Initialize(const std::string& jsonMapFile, const float& block_size, const int playercount = 1);
+		void Initialize(const std::string& jsonMapFile, int block_size);
 		void Update() override {}
-
-		std::vector<GameObject*> GetPlayers() const
-		{
-			return m_VecPlayers;
-		}
-		std::vector<GameObject*> GetEnemies() const
-		{
-			return m_VecEnemies;
-		}
 		
-		void Notify(Event currEvent, subject* actor) override;
+		void Notify(Event currEvent, Subject* actor) override;
 		void LoadMap();
 		void UnloadMap();
 
 	private:
 		const CSVParser m_CSVParser{};
-		
-		int MAX_PLAYERS{ 1 };
 
 		std::string m_JsonMapFile;
 
-		float m_BlockSize{};
+		int m_BlockSize{};
 
 		Scene* m_pScene{};
 		glm::vec2 m_ParentPos{};
 		int m_Width{};
 		int m_Height{};
 
-		std::vector<GameObject*> m_VecPlayers;
-		std::vector<GameObject*> m_VecEnemies;
-
 
 		void CreateWall(int row, int coll);
 		void CreateFloor(int row, int coll);
-		void CreateBlueTank(int row, int coll);
-		void CreateRecognizer(int row, int coll);
-		void CreatePlayer(int row, int coll);
-		void CreateTeleporter(int row, int coll);
+		void CreateBreakableWall(int row, int coll);
 
 	};
 }

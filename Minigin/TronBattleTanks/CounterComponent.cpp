@@ -12,7 +12,7 @@ void dae::CounterComponent::Initialize(int counterGoTo)
 	m_Count = 0;
 }
 
-void dae::CounterComponent::Notify(Event, subject*)
+void dae::CounterComponent::Notify(Event, Subject*)
 {
 	++m_Count;
 	if (m_Count >= m_CounterStop)

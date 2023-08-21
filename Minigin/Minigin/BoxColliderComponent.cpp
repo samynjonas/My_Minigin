@@ -35,11 +35,11 @@ void dae::BoxColliderComponent::Initialize(int width, int height, bool isTrigger
 }
 void dae::BoxColliderComponent::Initialize(bool isTrigger, bool isStatic, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayer)
 {
-	auto textureDim = GetOwner()->renderer()->GetTextureDimensions();
+	auto textureDim = GetOwner()->GetComponent<RenderComponent>()->GetTextureDimensions();
 	Initialize(0, 0, static_cast<int>(textureDim.x), static_cast<int>(textureDim.y), isTrigger, isStatic, layer, collideLayers, skipLayer);
 }
 
-bool dae::BoxColliderComponent::IsOverlapping(const Rect* other)
+bool dae::BoxColliderComponent::IsOverlapping(const Rect* other, BoxColliderComponent* otherCollider)
 {
 	UpdateTransform();
 	Rect* thisCollider = m_pColliderRect.get();
@@ -68,6 +68,8 @@ bool dae::BoxColliderComponent::IsOverlapping(const Rect* other)
 
 	estimateCollisionPoint(other);
 	SetOverlapping(true, m_CollisionPoint);
+
+	m_pOtherCollider = otherCollider;
 
 	return true;
 }

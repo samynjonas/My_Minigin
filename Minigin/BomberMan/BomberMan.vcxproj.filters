@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{242da883-0cb4-4ce9-9524-0c5b771fc4ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{b7a39932-56fa-4b20-aed5-b3ddd22d915b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Commands">
+      <UniqueIdentifier>{1cfbf122-a8fb-4e99-b79c-6dadb5613b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commands">
+      <UniqueIdentifier>{4710841f-6549-4e04-adc2-f296f5faf9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RapidJson">
+      <UniqueIdentifier>{dedf6a8d-7fa3-4870-8f5f-36db343dfa78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Other">
+      <UniqueIdentifier>{f32ed11d-0712-4e7a-a4c9-bd8d1e2e6833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Other">
+      <UniqueIdentifier>{60d9c9db-5eef-4b57-8abe-f98af5bfdf6b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BomberMan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BombermanBehaviourComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Bomb_Component.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Bomberman_Commands.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MapGeneratorComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CounterComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableBehaviourComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerupComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AIBehaviourComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawnerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateManagerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LeaderbordComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="StartScreenComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameModes.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreConverter.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="GameModePickerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="NumbersTracker.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="GameListener.cpp">
+      <Filter>Source Files\Other</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BombermanBehaviourComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Bomb_Component.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Bomberman_Commands.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MapGeneratorComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CounterComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableBehaviourComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerupComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AIBehaviourComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawnerComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateManagerComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LeaderbordComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StartScreenComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\allocators.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\cursorstreamwrapper.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\document.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\encodedstream.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\encodings.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\filereadstream.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\filewritestream.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\fwd.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\istreamwrapper.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\memorybuffer.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\memorystream.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\ostreamwrapper.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\pointer.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\prettywriter.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\rapidjson.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\reader.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\schema.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\stream.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\stringbuffer.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\uri.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\rapidjson\writer.h">
+      <Filter>RapidJson</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreConverter.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModes.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModePickerComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="NumbersTracker.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="GameListener.h">
+      <Filter>Header Files\Other</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BomberMan.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

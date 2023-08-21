@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <iostream>
 
 namespace dae
 {
@@ -17,8 +18,8 @@ namespace dae
 		virtual void Update();
 		virtual void LateUpdate();
 
-		virtual void Render() const;
-		virtual void LateRender() const;
+		//virtual void Render() const;
+		//virtual void LateRender() const;
 
 		void Initialize(const std::string& name, Scene* pScene);
 
@@ -32,11 +33,6 @@ namespace dae
 		TransformComponent* transform() const
 		{
 			return m_pTransformComponent;
-		}
-
-		RenderComponent* renderer() const
-		{
-			return m_pRenderComponent;
 		}
 
 		template <class T>
@@ -121,6 +117,8 @@ namespace dae
 
 		void MarkForDead()
 		{
+			//std::cout << "MarkForDead: " << GetName() << std::endl; //TODO Remove
+
 			m_IsMarkedForDead = true;
 		}
 		bool IsMarkedForDead() const
@@ -133,17 +131,31 @@ namespace dae
 			return m_Name;
 		}
 
+		void SetActiveState(bool value)
+		{
+			m_IsActive = value;
+			for (auto& child : m_pChildren)
+			{
+				child->SetActiveState(value);
+			}
+		}
+
+		bool IsActive() const
+		{
+			return m_IsActive;
+		}
+
 	private:
 		std::string m_Name{};
 
 		Scene* m_pScene{};
 
 		bool m_IsMarkedForDead{ false };
+		bool m_IsActive{ false };
 
 		//Components
 		std::vector<std::unique_ptr<Component>> m_vecComponents;
 		TransformComponent* m_pTransformComponent{ nullptr };
-		RenderComponent* m_pRenderComponent{ nullptr };
 
 		GameObject* m_pParent{ nullptr };
 		std::vector<GameObject*> m_pChildren;

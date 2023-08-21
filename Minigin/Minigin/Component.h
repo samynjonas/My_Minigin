@@ -16,6 +16,7 @@ namespace dae
 
 		virtual void Update() = 0;
 		virtual void LateUpdate() {};
+
 		void SetOwner(GameObject* pOwner);
 
 		GameObject* GetOwner() const

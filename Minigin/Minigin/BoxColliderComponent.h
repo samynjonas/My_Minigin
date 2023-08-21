@@ -51,7 +51,7 @@ namespace dae
 			return _y + _height / 2;
 		}
 	};
-	class BoxColliderComponent final : public Component, public subject
+	class BoxColliderComponent final : public Component, public Subject
 	{
 	public:
 		BoxColliderComponent();
@@ -73,7 +73,7 @@ namespace dae
 			return m_pColliderRect.get();
 		}
 
-		bool IsOverlapping(const Rect* other);
+		bool IsOverlapping(const Rect* other, BoxColliderComponent* otherCollider);
 
 		void OnCollisionEnter()
 		{
@@ -83,6 +83,11 @@ namespace dae
 		{
 			NotifyObservers(CollisionExit, this);
 
+		}
+
+		BoxColliderComponent* GetOtherCollider()
+		{
+			return m_pOtherCollider;
 		}
 
 		void OnTriggerEnter()
@@ -117,6 +122,8 @@ namespace dae
 		std::unique_ptr<Rect> m_pColliderRect{ nullptr };
 		glm::vec2 m_PositionOffset{};
 
+		BoxColliderComponent* m_pOtherCollider{ nullptr };
+
 		glm::vec2 m_CollisionPoint{};
 
 		bool m_IsSleeping{ false };		
@@ -129,8 +136,6 @@ namespace dae
 		bool m_IsDirty{ false };
 
 		std::string m_Layer{};
-
-		//TODO give a collider a single layer, you can specify against which layers you want it to collide
 
 		void UpdateTransform();
 		void estimateCollisionPoint(const Rect* other);

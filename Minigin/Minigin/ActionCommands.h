@@ -164,6 +164,20 @@ namespace dae
 
 		TransformComponent* m_pTransform{ nullptr };
 	};
+	
+	class TestCommand final : public Command
+	{
+	public:
+		TestCommand(GameObject* pGameObject);
+		~TestCommand() = default;
+
+		TestCommand(const TestCommand& other) = delete;
+		TestCommand(TestCommand&& other) = delete;
+		TestCommand& operator=(const TestCommand& other) = delete;
+		TestCommand& operator=(TestCommand&& other) = delete;
+
+		void Execute() override;
+	};
 
 }
 

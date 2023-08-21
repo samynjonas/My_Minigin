@@ -10,7 +10,7 @@ namespace dae
 		std::vector<Event> vecEvents; //List of events to observe
 	};
 
-	class subject
+	class Subject
 	{
 	public:
 		void AddObserver(Observer* observer, std::vector<Event> events)
@@ -30,7 +30,7 @@ namespace dae
 		}
 
 	protected:
-		void NotifyObservers(Event currEvent, subject* pSubject)
+		void NotifyObservers(Event currEvent, Subject* pSubject)
 		{
 			for (auto observer : m_Observers)
 			{

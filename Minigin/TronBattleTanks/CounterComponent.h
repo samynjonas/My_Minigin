@@ -5,7 +5,7 @@
 
 namespace dae
 {
-	class CounterComponent final : public Component, public subject, public Observer
+	class CounterComponent final : public Component, public Subject, public Observer
 	{
 	public:
 		CounterComponent();
@@ -19,7 +19,7 @@ namespace dae
 		void Initialize(int counterGoTo);
 		void Update() override {}
 
-		void Notify(Event currEvent, subject* actor);
+		void Notify(Event currEvent, Subject* actor);
 
 	private:
 		int m_CounterStop{ 1 };

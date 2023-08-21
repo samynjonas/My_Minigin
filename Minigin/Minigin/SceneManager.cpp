@@ -21,10 +21,10 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::Render()
 {
-	if (m_pActiveScene)
-	{
-		m_pActiveScene->Render();
-	}
+	//if (m_pActiveScene)
+	//{
+	//	m_pActiveScene->Render();
+	//}
 }
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
@@ -46,7 +46,7 @@ dae::Scene* dae::SceneManager::LoadScene(const std::string& name)
 		return nullptr;
 	}
 
-	servicelocator<Logger>::get_serviceLocator().LogWarning({ "Loading scene: " + std::to_string(sceneID) });
+	servicelocator<Logger>::get_serviceLocator().LogWarning({ "Loading scene: " + name });
 	if (m_pActiveScene)
 	{
 		m_pActiveScene->UnloadScene();
@@ -96,4 +96,9 @@ void dae::SceneManager::RemoveScene(const std::string& name)
 	m_scenes[sceneID]->RemoveAll();
 	m_scenes.erase(m_scenes.begin() + sceneID);
 	m_SceneIDs.erase(m_SceneIDs.begin() + sceneID);
+}
+
+void dae::SceneManager::CleanUp()
+{
+	m_pActiveScene->Cleanup();
 }

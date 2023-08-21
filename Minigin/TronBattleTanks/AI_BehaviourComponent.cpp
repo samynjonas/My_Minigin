@@ -53,7 +53,9 @@ void dae::AI_BehaviourComponent::Update()
 
 	dae::RaycastInfo hit{};
 	const auto& raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
-	glm::vec2 halfTexture = GetOwner()->renderer()->GetTextureDimensions() / 2.f;
+
+
+	glm::vec2 halfTexture = GetOwner()->AddComponent<RenderComponent>()->GetTextureDimensions() / 2.f;
 
 
 	//TODO Improve so it wont check all the colliders multiple timer
@@ -87,7 +89,7 @@ void dae::AI_BehaviourComponent::Update()
 	}
 }
 
-void dae::AI_BehaviourComponent::Notify(Event currEvent, subject* /*actor*/)
+void dae::AI_BehaviourComponent::Notify(Event currEvent, Subject* /*actor*/)
 {
 	if (currEvent == CollisionExit)
 	{
@@ -108,26 +110,26 @@ void dae::AI_BehaviourComponent::ChangeDirection()
 	}
 
 	dae::RaycastInfo hit;
-	const auto& raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
+	//const auto& raycastOrigin{ GetOwner()->transform()->GetWorldPosition() };
 
 	std::vector<glm::vec2> directionOptions;
 	//Check for available directions
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().x / 2.f }, Directions::Above, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{																													
-		directionOptions.push_back({ 0, -1 });																			
-	}																													
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Right, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{																													
-		directionOptions.push_back({ 1, 0 });																			
-	}																													
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Left,  hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{																													
-		directionOptions.push_back({ -1, 0 });																			
-	}																													
-	if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Below, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
-	{
-		directionOptions.push_back({ 0, 1 });
-	}
+	//if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().x / 2.f }, Directions::Above, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	//{																													
+	//	directionOptions.push_back({ 0, -1 });																			
+	//}																													
+	//if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Right, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	//{																													
+	//	directionOptions.push_back({ 1, 0 });																			
+	//}																													
+	//if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Left,  hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	//{																													
+	//	directionOptions.push_back({ -1, 0 });																			
+	//}																													
+	//if (CollisionManager::GetInstance().Raycast({ raycastOrigin.x + GetOwner()->renderer()->GetTextureDimensions().x / 2.f, raycastOrigin.y + GetOwner()->renderer()->GetTextureDimensions().y / 2.f }, Directions::Below, hit, MAX_DISTANCE, 0, { "Walls" }) == false)
+	//{
+	//	directionOptions.push_back({ 0, 1 });
+	//}
 
 	if (directionOptions.empty())
 	{

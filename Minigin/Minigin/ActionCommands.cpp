@@ -31,10 +31,9 @@ void dae::MoveCommand::Execute()
 		}
 	}
 
-	glm::vec2 moveVector{ m_AxisValue * m_MoveSpeed * MiniginTimer::GetInstance().GetDeltaTime() };
-	//std::cout << "moveVector: " << moveVector.x << " : " << moveVector.y << std::endl;
+	glm::vec2 moveVector{ m_AxisValue * m_MoveSpeed };
 
-	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Impulse);
+	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Force);
 }
 
 
@@ -78,8 +77,11 @@ void dae::GridMoveCommand::Execute()
 		moveVector.y = 0;
 	}
 
+	//std::cout << "moveVector: " << moveVector.x << " : " << moveVector.y << std::endl;
+
 	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Force);
 }
+
 
 dae::RotationCommand::RotationCommand(GameObject* pGameObject, float rotationSpeed)
 	: AnalogCommand(pGameObject)
@@ -138,13 +140,13 @@ void dae::RotationCommand::Execute()
 	m_pTransform->SetLocalRotation(angle);
 }
 
+
 dae::LoadSceneCommand::LoadSceneCommand(GameObject* pGameObject, const std::string sceneName)
 	: Command(pGameObject)
 	, m_SceneName{ sceneName }
 {
 
 }
-
 void dae::LoadSceneCommand::Execute()
 {
 	SceneManager::GetInstance().LoadScene(m_SceneName);
@@ -156,7 +158,6 @@ dae::LoadNextSceneCommand::LoadNextSceneCommand(GameObject* pGameObject)
 {
 
 }
-
 void dae::LoadNextSceneCommand::Execute()
 {
 	SceneManager& sceneManager = SceneManager::GetInstance();
@@ -180,12 +181,12 @@ void dae::LoadNextSceneCommand::Execute()
 	SceneManager::GetInstance().LoadScene(sceneManager.GetSceneNames()[currentSceneId]);
 }
 
+
 dae::LoadPreviousSceneCommand::LoadPreviousSceneCommand(GameObject* pGameObject)
 	: Command(pGameObject)
 {
 
 }
-
 void dae::LoadPreviousSceneCommand::Execute()
 {
 	SceneManager& sceneManager = SceneManager::GetInstance();
@@ -217,7 +218,6 @@ dae::MoveInDirection::MoveInDirection(GameObject* pGameObject, float moveSpeed, 
 {
 
 }
-
 void dae::MoveInDirection::Execute()
 {	
 	if (m_pRigidBody == nullptr)
@@ -230,19 +230,23 @@ void dae::MoveInDirection::Execute()
 	}
 
 	glm::vec2 moveVector{ m_MoveSpeed, m_MoveSpeed };
-	m_pRigidBody->ApplyForce(moveVector * m_Direction, dae::RigidbodyComponent::ForceMode::Force);
+
+	moveVector *= m_Direction;
+
+	m_pRigidBody->ApplyForce(moveVector, dae::RigidbodyComponent::ForceMode::Force);
 }
+
 
 dae::MuteCommand::MuteCommand(GameObject* pGameObject)
 	: Command{ pGameObject }
 {
 
 }
-
 void dae::MuteCommand::Execute()
 {
 	servicelocator<sound_system>::get_serviceLocator().Mute(!servicelocator<sound_system>::get_serviceLocator().GetMute());
 }
+
 
 dae::RotateDegreesCommand::RotateDegreesCommand(GameObject* pGameObject, float Degrees)
 	: Command{ pGameObject }
@@ -250,7 +254,6 @@ dae::RotateDegreesCommand::RotateDegreesCommand(GameObject* pGameObject, float D
 {
 
 }
-
 void dae::RotateDegreesCommand::Execute()
 {
 	if (m_pTransform == nullptr)
@@ -264,4 +267,15 @@ void dae::RotateDegreesCommand::Execute()
 
 	auto currentAngle = m_pTransform->GetWorldRotation();
 	m_pTransform->SetLocalRotation(currentAngle + m_DegreesStep);
+}
+
+
+dae::TestCommand::TestCommand(GameObject* pGameObject)
+	: Command( pGameObject )
+{
+
+}
+void dae::TestCommand::Execute()
+{
+	std::cout << "Test" << std::endl;
 }

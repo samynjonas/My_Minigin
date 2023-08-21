@@ -21,7 +21,7 @@ namespace dae
 		void Initialize(const float& moveSpeed);
 		void Update() override;
 		
-		void Notify(Event currEvent, subject* actor);
+		void Notify(Event currEvent, Subject* actor);
 
 	private:
 		void ChangeDirection();

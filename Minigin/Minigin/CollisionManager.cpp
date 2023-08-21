@@ -9,6 +9,8 @@
 
 void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std::string layer, std::vector<std::string> collideLayers, std::vector<std::string> skipLayers)
 {
+	//std::cout << "Register Collider: " << collider->GetOwner()->GetName() << std::endl;
+
 	//Colliders layer
 	{
 		int layerID{ LayerToID(layer, false) };
@@ -52,6 +54,8 @@ void dae::CollisionManager::RegisterCollider(BoxColliderComponent* collider, std
 
 void dae::CollisionManager::UnregisterCollider(BoxColliderComponent* collider)
 {
+	//std::cout << "Remove Collider: " << collider->GetOwner()->GetName() << std::endl;
+
 	for (size_t index = 0; index < m_pColliders.size(); index++)
 	{
 		if (m_pColliders[index] == collider)
@@ -60,22 +64,20 @@ void dae::CollisionManager::UnregisterCollider(BoxColliderComponent* collider)
 			m_ColliderLayer.erase(m_ColliderLayer.begin() + index);
 			m_ColliderSkipLayer.erase(m_ColliderSkipLayer.begin() + index);
 			m_ColliderLinkedLayer.erase(m_ColliderLinkedLayer.begin() + index);
+			m_IsDirty = true;
+
+			return;
 		}
 	}
-	m_IsDirty = true;
 }
+
 void dae::CollisionManager::CheckForDeadColliders()
 {
 	for (size_t index = 0; index < m_pColliders.size(); index++)
 	{
 		if (m_pColliders[index]->GetOwner()->IsMarkedForDead())
 		{
-			m_pColliders.erase(m_pColliders.begin() + index);
-			m_ColliderLayer.erase(m_ColliderLayer.begin() + index);
-			m_ColliderSkipLayer.erase(m_ColliderSkipLayer.begin() + index);
-			m_ColliderLinkedLayer.erase(m_ColliderLinkedLayer.begin() + index);
-			
-			m_IsDirty = true;
+			UnregisterCollider(m_pColliders[index]);
 		}
 	}
 }
@@ -120,7 +122,7 @@ void dae::CollisionManager::Update()
 {
 	if (m_IsDirty)
 	{
-		for (auto& collider : m_pColliders) //Running through twice - should be more effecient
+		for (auto& collider : m_pColliders)
 		{
 			collider->SetOverlapping(false);
 		}
@@ -128,6 +130,11 @@ void dae::CollisionManager::Update()
 		for (size_t index = 0; index < m_pColliders.size(); index++)
 		{
 			if (m_pColliders[index]->IsSleeping())
+			{
+				continue;
+			}
+
+			if (m_pColliders[index]->GetOwner()->IsActive() == false)
 			{
 				continue;
 			}
@@ -144,6 +151,12 @@ void dae::CollisionManager::Update()
 					continue;
 				}
 
+				if (m_pColliders[otherIndex]->GetOwner()->IsActive() == false)
+				{
+					continue;
+				}
+
+
 				if (m_pColliders[index]->IsStatic() && m_pColliders[otherIndex]->IsStatic()) //No need to check 2 static colliders
 				{
 					continue;
@@ -154,7 +167,7 @@ void dae::CollisionManager::Update()
 					continue;
 				}
 
-				if (m_pColliders[index]->IsOverlapping(m_pColliders[otherIndex]->GetRect()))
+				if (m_pColliders[index]->IsOverlapping(m_pColliders[otherIndex]->GetRect(), m_pColliders[otherIndex]))
 				{
 					m_pColliders[otherIndex]->SetOverlapping(true, m_pColliders[index]->GetCollisionPoint());
 				}
@@ -256,6 +269,17 @@ bool dae::CollisionManager::ContainsLayer(int colliderLayer, const std::vector<s
 	for (const auto& layer : layers)
 	{
 		if (colliderLayer == LayerToID(layer))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool dae::CollisionManager::ContainsLayer(int colliderLayer, const std::vector<int> layers) const
+{
+	for (const auto& layer : layers)
+	{
+		if (colliderLayer == layer)
 		{
 			return true;
 		}

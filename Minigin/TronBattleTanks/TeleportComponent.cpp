@@ -28,7 +28,7 @@ void dae::TeleportComponent::Update()
 
 }
 
-void dae::TeleportComponent::Notify(Event currEvent, subject*)
+void dae::TeleportComponent::Notify(Event currEvent, Subject*)
 {
 	if (currEvent == TriggerEnter)
 	{

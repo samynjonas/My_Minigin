@@ -5,18 +5,15 @@
 
 namespace dae
 {
+	//TODO This isnt necesary
 	struct PhysicsMaterial
 	{
 		float bounciness{ 0.f };
-		float dynamicFriction{ 0.6f };
-		float staticFriction{ 0.6f };
 	};
 
 	class RigidbodyComponent final : public Component, public Observer
 	{
 	public:
-		
-
 		RigidbodyComponent();
 		~RigidbodyComponent();
 
@@ -30,8 +27,7 @@ namespace dae
 		enum class ForceMode
 		{
 			None,
-			Force,
-			Impulse
+			Force
 		};
 
 		void ApplyForce(const glm::vec2& vector, ForceMode mode);
@@ -45,9 +41,8 @@ namespace dae
 			return m_PhysicsMaterial;
 		}
 
-		void Notify(Event currEvent, subject* actor) override;
+		void Notify(Event currEvent, Subject* actor) override;
 
-		//TODO optimize
 		glm::vec2 GetDirection() const
 		{
 			const float vectorLength = static_cast<float>(m_Velocity.length());

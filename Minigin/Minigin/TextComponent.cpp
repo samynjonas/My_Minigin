@@ -8,17 +8,12 @@
 #include "Texture2D.h"
 
 #include "RenderComponent.h"
-#include "HealthComponent.h"
-#include "ScoreComponent.h"
+#include "../TronBattleTanks/ScoreComponent.h"
+#include "../TronBattleTanks/HealthComponent.h"
 
 dae::TextComponent::TextComponent()
 	: Component()
 	, m_NeedsUpdate{ false }
-{
-
-}
-
-dae::TextComponent::~TextComponent()
 {
 
 }
@@ -29,12 +24,20 @@ void dae::TextComponent::SetFont(std::shared_ptr<Font> font)
 	m_NeedsUpdate = true;
 }
 
-void dae::TextComponent::Initialize(const std::string& text, std::shared_ptr<Font> font, SDL_Color fontColor)
+void dae::TextComponent::Initialize(const std::string& text, std::shared_ptr<Font> font, SDL_Color fontColor, short renderDepth)
 {
 	SetText(text);
 	SetFont(font);
 
 	m_TextColor = fontColor;
+	m_RenderDepth = renderDepth;
+
+	m_pRenderer = GetOwner()->GetComponent<RenderComponent>();
+	if (m_pRenderer == nullptr)
+	{
+		m_pRenderer = GetOwner()->AddComponent<RenderComponent>();
+	}
+	m_pRenderer->Initialize(renderDepth, true);
 }
 
 void dae::TextComponent::SetText(const std::string& text)
@@ -60,13 +63,31 @@ void dae::TextComponent::Update()
 		}
 		SDL_FreeSurface(surf);
 
-		GetOwner()->renderer()->SetTexture(std::make_shared<Texture2D>(texture));
+		if (m_pRenderer)
+		{
+			m_pRenderer->SetTexture(std::make_shared<Texture2D>(texture));
+		}
 
 		m_NeedsUpdate = false;
 	}
+	else
+	{
+		RetrieveNewValue();
+	}
 }
 
-void dae::TextComponent::Notify(Event currEvent, subject* pSubject)
+
+void dae::TextComponent::SetGetterFunction(std::function<int()> getterFunction)
+{
+	m_GetterFuntion_Int = getterFunction;
+}
+
+void dae::TextComponent::SetGetterFunction(std::function<std::string()> getterFunction)
+{
+	m_GetterFuntion_String = getterFunction;
+}
+
+void dae::TextComponent::Notify(Event currEvent, Subject* pSubject)
 {
 	if (currEvent == LiveLost)
 	{
@@ -87,5 +108,32 @@ void dae::TextComponent::Notify(Event currEvent, subject* pSubject)
 
 			SetText(text + std::to_string(score->GetScore()));
 		}
+	}
+}
+
+void dae::TextComponent::RetrieveNewValue()
+{
+	if (m_GetterFuntion_Int)
+	{
+		int newValue = m_GetterFuntion_Int();
+		if (newValue == m_PrevIntValue)
+		{
+			return;
+		}
+
+		m_NeedsUpdate = true;
+		m_Text = std::to_string(newValue);
+		m_PrevIntValue = newValue;
+	}
+	else if (m_GetterFuntion_String)
+	{
+		std::string newValue = m_GetterFuntion_String();
+		if (newValue == m_Text)
+		{
+			return;
+		}
+
+		m_NeedsUpdate = true;
+		m_Text = newValue;
 	}
 }

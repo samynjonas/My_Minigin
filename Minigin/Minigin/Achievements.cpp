@@ -1,9 +1,7 @@
 #include "Achievements.h"
 #include <iostream>
 
-#include "HealthComponent.h"
-
-void dae::Achievements::Notify(Event event, subject*)
+void dae::Achievements::Notify(Event event, Subject*)
 {
 	if (event == ObjectDied)
 	{

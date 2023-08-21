@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include "Renderer.h"
 #include "SceneManager.h"
+#include "RenderingManager.h"
 #include "Texture2D.h"
 
 #include "imgui.h"
@@ -45,7 +46,7 @@ void dae::Renderer::Render()
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_renderer);
 
-	SceneManager::GetInstance().Render();
+	RenderingManager::GetInstance().Render();
 
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);

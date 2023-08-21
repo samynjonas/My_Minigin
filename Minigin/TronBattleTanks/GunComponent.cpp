@@ -57,11 +57,11 @@ void dae::GunComponent::Fire()
 	}
 
 	//Spawn in a bullet at players position -- should later be changed to gun barrel
-	Bullet
-	(
-		GetOwner()->transform()->GetWorldPosition().x + GetOwner()->renderer()->GetTextureDimensions().x / 2,
-		GetOwner()->transform()->GetWorldPosition().y + GetOwner()->renderer()->GetTextureDimensions().y / 2
-	);
+	//Bullet
+	//(
+	//	GetOwner()->transform()->GetWorldPosition().x + GetOwner()->renderer()->GetTextureDimensions().x / 2,
+	//	GetOwner()->transform()->GetWorldPosition().y + GetOwner()->renderer()->GetTextureDimensions().y / 2
+	//);
 
 
 	//Playing shoot sound
@@ -71,7 +71,7 @@ void dae::GunComponent::Fire()
 	m_HasShot = true;
 }
 
-std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
+std::unique_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
 {
 	std::shared_ptr<dae::GameObject> pBullet = std::make_shared<dae::GameObject>();
 
@@ -81,7 +81,7 @@ std::shared_ptr<dae::GameObject> dae::GunComponent::Bullet(float x, float y)
 	pBullet->Initialize("Bullet", scene);
 	scene->Add(pBullet);
 
-	pBullet->renderer()->SetTexture("Sprites/BulletPlayer.png");
+	//pBullet->renderer()->SetTexture("Sprites/BulletPlayer.png");
 	pBullet->transform()->SetLocalPosition({ x, y });
 
 	auto rb = pBullet->AddComponent<RigidbodyComponent>();

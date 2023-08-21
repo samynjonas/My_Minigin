@@ -3,23 +3,33 @@
 #include "InputManager.h"
 #include "CollisionManager.h"
 
+#include "RenderComponent.h"
+#include "RenderingManager.h"
+
+#include "CameraComponent.h"
+
+#include <iostream>
+
 using namespace dae;
 
 unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(const std::string& name) : m_name(name) 
 {
-	
+
 }
 
-Scene::~Scene() = default;
-
-void Scene::Add(std::shared_ptr<GameObject> object)
+void Scene::Add(std::unique_ptr<GameObject> object)
 {
+	if (this == SceneManager::GetInstance().GetActiveScene())
+	{
+		object->SetActiveState(true);
+	}
+
 	m_objects.emplace_back(std::move(object));
 }
 
-void Scene::Remove(std::shared_ptr<GameObject> object)
+void Scene::Remove(std::unique_ptr<GameObject> object)
 {
 	if (object != nullptr)
 	{
@@ -28,6 +38,8 @@ void Scene::Remove(std::shared_ptr<GameObject> object)
 
 	//InputManager::GetInstance().UnbindCommands();
 	CollisionManager::GetInstance().CheckForDeadColliders();
+	RenderingManager::GetInstance().CheckForDead();
+	
 
 	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
 }
@@ -43,7 +55,7 @@ void Scene::RemoveAll()
 		object->MarkForDead();
 	}
 
-	//InputManager::GetInstance().UnbindCommands();
+	InputManager::GetInstance().UnbindCommands();
 	//CollisionManager::GetInstance().CheckForDeadColliders();
 
 	m_objects.clear();
@@ -51,37 +63,38 @@ void Scene::RemoveAll()
 
 void Scene::Update()
 {
-	for(auto& object : m_objects)
+	// Mark objects for removal
+	for (auto& object : m_objects)
 	{
-		if (object == nullptr)
+		if (object != nullptr && object->IsMarkedForDead())
 		{
-			Remove(object);
-			continue;
-		}	
+			object->MarkForDead();
+		}
+	}
 
-		if (object)
-		{
-			//Check if object is marked for dead
-			if (object->IsMarkedForDead())
+	// Remove marked objects
+	m_objects.erase(
+		std::remove_if(m_objects.begin(), m_objects.end(),
+			[](const std::unique_ptr<dae::GameObject>& obj) 
 			{
-				Remove(object);
-				continue;
-			}
+				return obj != nullptr && obj->IsMarkedForDead();
+			}),
+		m_objects.end()
+	);
 
+	// Update remaining objects
+	for (const auto& object : m_objects)
+	{
+		if (object && !object->IsMarkedForDead())
+		{
 			object->Update();
 		}
 	}
 
-	for (auto& object : m_objects)
+	for (const auto& object : m_objects)
 	{
-		if (object)
+		if (object && !object->IsMarkedForDead())
 		{
-			if (object->IsMarkedForDead())
-			{
-				Remove(object);
-				continue;
-			}
-
 			object->LateUpdate();
 		}
 	}
@@ -89,30 +102,57 @@ void Scene::Update()
 
 void Scene::Render() const
 {
-	for (const auto& object : m_objects)
-	{
-		if (object)
-		{
-			object->Render();
-		}
-	}
-
-	for (const auto& object : m_objects)
-	{
-		if (object)
-		{
-			object->LateRender();
-		}
-	}
+	//RenderingManager::GetInstance().Render();
 }
 
 void Scene::LoadScene()
 {
 	NotifyObservers(LevelLoad, this);
+	ActivateAll();
 }
 
 void Scene::UnloadScene()
 {
 	NotifyObservers(LevelUnload, this);
+	DeActivateAll();
 }
 
+void Scene::ActivateAll()
+{
+	for (auto& object : m_objects)
+	{
+		if (object != nullptr)
+		{
+			object->SetActiveState(true);
+		
+			auto camera = object->GetComponent<CameraComponent>();
+			if (camera)
+			{
+				RenderingManager::GetInstance().SetActiveCamera(camera);
+			}
+		
+		}
+	}
+}
+
+void Scene::DeActivateAll()
+{
+	for (auto& object : m_objects)
+	{
+		if (object != nullptr)
+		{
+			object->SetActiveState(false);
+		}
+	}
+}
+
+void Scene::Cleanup()
+{
+	//for (auto& object : m_objects)
+	//{
+	//	if (object->IsMarkedForDead())
+	//	{
+	//		m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
+	//	}
+	//}
+}

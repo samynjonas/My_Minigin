@@ -70,13 +70,13 @@ void load()
 		sceneController->Initialize("Scene controller", nullptr);
 
 		auto nextScene{ std::make_unique<dae::LoadNextSceneCommand>(sceneController.get()) };
-		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_F4, InputManager::InputType::OnButtonDown, std::move(nextScene), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_F4, InputManager::InputType::OnButtonDown, std::move(nextScene));
 
 		auto prevScene{ std::make_unique<dae::LoadPreviousSceneCommand>(sceneController.get()) };
-		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_F3, InputManager::InputType::OnButtonDown, std::move(prevScene), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_F3, InputManager::InputType::OnButtonDown, std::move(prevScene));
 
 		auto musicMute{ std::make_unique<dae::MuteCommand>(sceneController.get()) };
-		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_M, InputManager::InputType::OnButtonDown, std::move(musicMute), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_M, InputManager::InputType::OnButtonDown, std::move(musicMute));
 	}
 
 
@@ -120,7 +120,7 @@ void load()
 		}
 
 		auto loadGameKeyboard{		std::make_unique<dae::LoadSceneCommand>(StartGameText.get(), "SceneMap1") };
-		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard), 0);
+		InputManager::GetInstance().BindKeyboardCommand(SDL_SCANCODE_SPACE, InputManager::InputType::OnButtonDown, std::move(loadGameKeyboard));
 
 	}
 
@@ -179,7 +179,7 @@ void load()
 		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
 
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
-		mapComponent->Initialize("../Data/Level/LevelLayout1.csv", 16, 2);
+		mapComponent->Initialize("../Data/Level/LevelLayout1.csv", 16);
 
 		sceneLevel1_coop.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
@@ -194,7 +194,7 @@ void load()
 		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
 
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
-		mapComponent->Initialize("../Data/Level/LevelLayout2.csv", 16, 2);
+		mapComponent->Initialize("../Data/Level/LevelLayout2.csv", 16);
 
 		sceneLevel2_coop.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}
@@ -209,7 +209,7 @@ void load()
 		map_1->transform()->SetLocalPosition({ 50.f, 0.f });
 
 		auto mapComponent = map_1->AddComponent<dae::MapGeneratorComponent>();
-		mapComponent->Initialize("../Data/Level/LevelLayout3.csv", 16, 2);
+		mapComponent->Initialize("../Data/Level/LevelLayout3.csv", 16);
 
 		sceneLevel3_coop.AddObserver(mapComponent, { LevelLoad, LevelUnload });
 	}

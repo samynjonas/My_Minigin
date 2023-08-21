@@ -32,6 +32,14 @@ bool dae::InputManager::ProcessInput()
 						{
 							continue;
 						}
+						if (command->GetGameObject() != nullptr)
+						{
+							if (command->GetGameObject()->IsActive() == false)
+							{
+								continue;
+							}
+						}
+
 						command->Execute();
 					}
 				}
@@ -50,6 +58,14 @@ bool dae::InputManager::ProcessInput()
 						{
 							continue;
 						}
+						if (command->GetGameObject() != nullptr)
+						{
+							if (command->GetGameObject()->IsActive() == false)
+							{
+								continue;
+							}
+						}
+
 						command->Execute();
 					}
 				}
@@ -71,6 +87,14 @@ bool dae::InputManager::ProcessInput()
 		{
 			//Take command out of vector
 			continue;
+		}
+
+		if (command->GetGameObject())
+		{
+			if (command->GetGameObject()->IsActive() == false)
+			{
+				continue;
+			}
 		}
 
 		switch (m_ControllerInputInfo[index].type)
@@ -122,11 +146,14 @@ bool dae::InputManager::ProcessInput()
 
 void dae::InputManager::BindCommand(const unsigned int& button, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
 {
+	//Check if player is connected to a controller
 	if (playerIndex >= static_cast<int>(m_pControllers.size()))
 	{
+		//If not - connect
 		HandleControllerID(playerIndex);
 	}
 
+	//Put the info in a struct to save
 	GamepadinputInfo info{};
 	info.button			= button;
 	info.type			= inputType;
@@ -136,17 +163,11 @@ void dae::InputManager::BindCommand(const unsigned int& button, InputType inputT
 	m_ControllerCommands.push_back(std::move(pCommand));
 }
 
-void dae::InputManager::BindKeyboardCommand(SDL_Scancode key, InputType inputType, std::unique_ptr<Command> pCommand, int playerIndex)
+void dae::InputManager::BindKeyboardCommand(SDL_Scancode key, InputType inputType, std::unique_ptr<Command> pCommand)
 {
-	if (playerIndex >= static_cast<int>(m_pControllers.size()))
-	{
-		HandleControllerID(playerIndex);
-	}
-
 	KeyboardInputInfo info{};
 	info.button = key;
 	info.type = inputType;
-	info.playerIndex = playerIndex;
 
 	m_KeyboardInputInfo.push_back(info);
 	m_KeyboardCommands.push_back(std::move(pCommand));
@@ -154,32 +175,39 @@ void dae::InputManager::BindKeyboardCommand(SDL_Scancode key, InputType inputTyp
 
 void dae::InputManager::HandleControllerID(int playerIndex)
 {
-	for (int index = static_cast<int>(m_pControllers.size()) - 1; index < playerIndex + 1; ++index)
+	for (int index = static_cast<int>(m_pControllers.size()); index <= playerIndex; ++index)
 	{
-		std::cout << "Controller: " << playerIndex << "connected" << std::endl;
+		std::cout << "Controller " << index << ": CONNECTED" << std::endl;
 
 		//Add new controller to vector
-		m_pControllers.push_back(std::make_unique<Controller>(static_cast<int>(m_pControllers.size())));
+		m_pControllers.push_back(std::make_unique<Controller>(index));
 	}
 }
 
 void dae::InputManager::UnbindCommands()
 {
-	for (size_t index = 0; index < m_ControllerCommands.size(); index++)
-	{
-		if (m_ControllerCommands[index]->GetGameObject()->IsMarkedForDead())
-		{
-			m_ControllerCommands.erase(m_ControllerCommands.begin() + index);
-			m_ControllerInputInfo.erase(m_ControllerInputInfo.begin() + index);
-		}
-	}
+	m_ControllerCommands.clear();
+	m_ControllerInputInfo.clear();
 
-	for (size_t index = 0; index < m_KeyboardCommands.size(); index++)
-	{
-		if (m_KeyboardCommands[index]->GetGameObject()->IsMarkedForDead())
-		{
-			m_KeyboardCommands.erase(m_KeyboardCommands.begin() + index);
-			m_KeyboardInputInfo.erase(m_KeyboardInputInfo.begin() + index);
-		}
-	}
+	m_KeyboardCommands.clear();
+	m_KeyboardInputInfo.clear();
+
+
+	//for (size_t index = 0; index < m_ControllerCommands.size(); index++)
+	//{
+	//	if (m_ControllerCommands[index]->GetGameObject()->IsMarkedForDead())
+	//	{
+	//		m_ControllerCommands.erase(m_ControllerCommands.begin() + index);
+	//		m_ControllerInputInfo.erase(m_ControllerInputInfo.begin() + index);
+	//	}
+	//}
+	//
+	//for (size_t index = 0; index < m_KeyboardCommands.size(); index++)
+	//{
+	//	if (m_KeyboardCommands[index]->GetGameObject()->IsMarkedForDead())
+	//	{
+	//		m_KeyboardCommands.erase(m_KeyboardCommands.begin() + index);
+	//		m_KeyboardInputInfo.erase(m_KeyboardInputInfo.begin() + index);
+	//	}
+	//}
 }
